@@ -1,4 +1,5 @@
-from type.order import Order, OrderBook
+from converter import Converter
+from type import Order
 
 orders = [{'price': 100.0, 'volume': 0.1},
           {'price': 101.0, 'volume': 0.2},
@@ -7,5 +8,4 @@ orders = [{'price': 100.0, 'volume': 0.1},
           {'price': 104.0, 'volume': 0.5},
           ]
 
-new_orders = OrderBook(orders)
-print(new_orders)
+print(Converter.convert_price_from_order({'price': 100.0, 'volume': 0.1}, 100))
