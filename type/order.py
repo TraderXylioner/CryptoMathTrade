@@ -10,6 +10,11 @@ class Order:
     def from_dict(cls, order_data: dict[float, float]) -> 'Order':
         price = order_data.get("price")
         volume = order_data.get("volume")
+        if not price:
+            raise ValueError("'price' must be present in order_data")
+        if not volume:
+            raise ValueError("'volume' must be present in order_data")
+
         return cls(price=price, volume=volume)
 
 
