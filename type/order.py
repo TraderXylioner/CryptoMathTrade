@@ -2,6 +2,7 @@ class Order:
     def __init__(self, price: float, volume: float):
         self.price: float = price
         self.volume: float = volume
+        # self.order_type = 'native'
 
     def __repr__(self):
         return f'{self.__class__.__name__}{vars(self)}'
