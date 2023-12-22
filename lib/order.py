@@ -1,9 +1,13 @@
-from pydantic import BaseModel
-
-
-class Order(BaseModel):
-    price: float
-    volume: float
-
+class Order:
     def __init__(self, price: float, volume: float):
-        super().__init__(price=price, volume=volume)
+        self.price: float = price
+        self.volume: float = volume
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}{vars(self)}'
+
+    @classmethod
+    def from_dict(cls, order_data: dict[float, float]) -> 'Order':
+        price = order_data.get("price")
+        volume = order_data.get("volume")
+        return cls(price=price, volume=volume)
