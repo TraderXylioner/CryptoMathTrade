@@ -18,7 +18,7 @@ class Order:
         return cls(price=price, volume=volume)
 
 
-class OrderBook:
+class OrderList:
     def __init__(self, orders: list[Order] | list[dict[float, float]]):
         if all(isinstance(item, Order) for item in orders):
             self.orders = orders
@@ -33,3 +33,29 @@ class OrderBook:
 
         orders_repr = ', '.join(repr(order) for order in self.orders)
         return f'{self.__class__.__name__}([{orders_repr}])'
+
+
+class OrderBook:
+    def __init__(self,
+                 asks: OrderList | list[Order] | list[dict[float, float]],
+                 bids: OrderList | list[Order] | list[dict[float, float]]):
+        if isinstance(asks, OrderList):
+            self.asks = asks
+        elif all(isinstance(item, Order) for item in asks):
+            self.asks = OrderList(asks)
+        elif all(isinstance(item, dict) for item in asks):
+            self.asks = OrderList(asks)
+        else:
+            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
+
+        if isinstance(bids, OrderList):
+            self.bids = bids
+        elif all(isinstance(item, Order) for item in bids):
+            self.bids = OrderList(bids)
+        elif all(isinstance(item, dict) for item in bids):
+            self.bids = OrderList(bids)
+        else:
+            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}(asks:[{self.asks}],\bbids:[{self.bids}])'
