@@ -4,7 +4,7 @@ class Order:
         self.volume: float = volume
 
     def __repr__(self):
-        return f'{self.__class__.__name__}{vars(self)}'
+        return f'{self.__dict__}'
 
     @classmethod
     def from_dict(cls, order_data: dict[float, float]) -> 'Order':
@@ -31,8 +31,7 @@ class OrderList:
         if not all(isinstance(order, Order) for order in self.orders):
             raise TypeError('All items in orders must be of type Order')
 
-        orders_repr = ', '.join(repr(order) for order in self.orders)
-        return f'{self.__class__.__name__}([{orders_repr}])'
+        return f'{self.orders}'
 
 
 class OrderBook:
@@ -58,4 +57,4 @@ class OrderBook:
             raise TypeError('value must be a valid list of Orders or list of order dictionaries')
 
     def __repr__(self):
-        return f'{self.__class__.__name__}(asks:[{self.asks}],\bbids:[{self.bids}])'
+        return f'asks: {self.asks}\nbids: {self.bids}'
