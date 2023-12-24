@@ -2,7 +2,6 @@ class Order:
     def __init__(self, price: float, volume: float):
         self.price: float = price
         self.volume: float = volume
-        # self.order_type = 'native'
 
     def __repr__(self):
         return f'{self.__class__.__name__}{vars(self)}'
@@ -20,9 +19,17 @@ class Order:
 
 
 class OrderBook:
-    def __init__(self, orders: list[Order]):
-        self.orders = [Order.from_dict(order) for order in orders]
+    def __init__(self, orders: list[Order] | list[dict[float, float]]):
+        if all(isinstance(item, Order) for item in orders):
+            self.orders = orders
+        elif all(isinstance(item, dict) for item in orders):
+            self.orders = [Order.from_dict(order) for order in orders]
+        else:
+            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
 
     def __repr__(self):
+        if not all(isinstance(order, Order) for order in self.orders):
+            raise TypeError('All items in orders must be of type Order')
+
         orders_repr = ', '.join(repr(order) for order in self.orders)
-        return f'{self.__class__.__name__}[{orders_repr}]'
+        return f'{self.__class__.__name__}([{orders_repr}])'
