@@ -1,7 +1,5 @@
 from decimal import Decimal
 
-from type.utils import validate_order_list
-
 
 class Order:
     def __init__(self, price: float, volume: float):
@@ -9,12 +7,13 @@ class Order:
         self.volume: Decimal = Decimal(volume)
 
     def __repr__(self):
-        return f'{self.__dict__}'
+        return '{' + f"'price': {float(self.price)}, " \
+                     f"'volume': {float(self.volume)}" + '}'
 
     @classmethod
     def from_dict(cls, order_data: dict[float, float]) -> 'Order':
-        price = order_data.get("price")
-        volume = order_data.get("volume")
+        price = order_data.get('price')
+        volume = order_data.get('volume')
         if not price:
             raise ValueError("'price' must be present in order_data")
         if not volume:
@@ -25,12 +24,18 @@ class Order:
 
 class OrderList:
     def __init__(self, orders: list[Order] | list[dict[float, float]]):
-        self.orders = validate_order_list(orders)
+        self.orders = self.__validate_order_list(orders)
+
+    @staticmethod
+    def __validate_order_list(orders: list[Order] | list[dict[float, float]]) -> list:
+        if all(isinstance(item, Order) for item in orders):
+            return orders
+        elif all(isinstance(item, dict) for item in orders):
+            return [Order.from_dict(order) for order in orders]
+        else:
+            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
 
     def __repr__(self):
-        if not all(isinstance(order, Order) for order in self.orders):
-            raise TypeError('All items in orders must be of type Order')
-
         return f'{self.orders}'
 
     def __len__(self):
@@ -59,8 +64,19 @@ class OrderBook:
     def __init__(self,
                  asks: OrderList | list[Order] | list[dict[float, float]],
                  bids: OrderList | list[Order] | list[dict[float, float]]):
-        self.asks = validate_order_list(asks)
-        self.bids = validate_order_list(bids)
+        self.asks = self.__validate_orderbook(asks)
+        self.bids = self.__validate_orderbook(bids)
+
+    @staticmethod
+    def __validate_orderbook(orders: OrderList | list[Order] | list[dict[float, float]]) -> list:
+        if isinstance(orders, OrderList):
+            return orders
+        elif all(isinstance(item, Order) for item in orders):
+            return OrderList(orders)
+        elif all(isinstance(item, dict) for item in orders):
+            return OrderList(orders)
+        else:
+            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
 
     def __repr__(self):
         return f'asks: {self.asks}\nbids: {self.bids}'
