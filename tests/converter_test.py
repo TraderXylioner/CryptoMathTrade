@@ -12,5 +12,5 @@ orders = [{'price': 100.0, 'volume': 0.1},
 order1 = Order.from_dict({'price': 1010.0, 'volume': 0.1})
 order2 = Order.from_dict({'price': 101.0, 'volume': 0.1})
 order3 = Order.from_dict({'price': 102.0, 'volume': 0.1})
-data = OrderBook(orders, orders)
+data = Converter.convert_price_from_orderbook(orders, 100)
 print(data)

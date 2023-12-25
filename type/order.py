@@ -24,10 +24,10 @@ class Order:
 
 class OrderList:
     def __init__(self, orders: list[Order] | list[dict[float, float]]):
-        self.orders = self.__validate_order_list(orders)
+        self.orders = self.validate_order_list(orders)
 
     @staticmethod
-    def __validate_order_list(orders: list[Order] | list[dict[float, float]]) -> list:
+    def validate_order_list(orders: list[Order] | list[dict[float, float]]) -> list:
         if all(isinstance(item, Order) for item in orders):
             return orders
         elif all(isinstance(item, dict) for item in orders):
@@ -64,19 +64,20 @@ class OrderBook:
     def __init__(self,
                  asks: OrderList | list[Order] | list[dict[float, float]],
                  bids: OrderList | list[Order] | list[dict[float, float]]):
-        self.asks = self.__validate_orderbook(asks)
-        self.bids = self.__validate_orderbook(bids)
+        self.asks = self.validate_orderbook(asks)
+        self.bids = self.validate_orderbook(bids)
 
     @staticmethod
-    def __validate_orderbook(orders: OrderList | list[Order] | list[dict[float, float]]) -> list:
-        if isinstance(orders, OrderList):
-            return orders
-        elif all(isinstance(item, Order) for item in orders):
-            return OrderList(orders)
-        elif all(isinstance(item, dict) for item in orders):
-            return OrderList(orders)
+    def validate_orderbook(orderbook: OrderList | list[Order] | list[dict[float, float]]) -> list:
+        if isinstance(orderbook, OrderList):
+            orderbook = orderbook
+        elif isinstance(orderbook, list) and all(isinstance(item, Order) for item in orderbook):
+            orderbook = OrderList(orderbook)
+        elif isinstance(orderbook, list) and all(isinstance(item, dict) for item in orderbook):
+            orderbook = OrderList(orderbook)
         else:
-            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
+            raise TypeError('element must be a valid OrderBook, list of Orders, or list of order dictionaries')
+        return orderbook
 
     def __repr__(self):
         return f'asks: {self.asks}\nbids: {self.bids}'
