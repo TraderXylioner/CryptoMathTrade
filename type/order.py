@@ -21,6 +21,16 @@ class Order:
 
         return cls(price=Decimal(price), volume=Decimal(volume))
 
+    @classmethod
+    def validate_order(cls, order):
+        if isinstance(order, Order):
+            order = order
+        elif isinstance(order, dict):
+            order = Order.from_dict(order)
+        else:
+            raise TypeError('order must be valid dict or Order')
+        return order
+
 
 class OrderList:
     def __init__(self, orders: list[Order] | list[dict[float, float]]):
@@ -67,8 +77,8 @@ class OrderBook:
         self.asks = self.validate_orderbook(asks)
         self.bids = self.validate_orderbook(bids)
 
-    @staticmethod
-    def validate_orderbook(orderbook: OrderList | list[Order] | list[dict[float, float]]) -> list:
+    @classmethod
+    def validate_orderbook(cls, orderbook: OrderList | list[Order] | list[dict[float, float]]) -> list:
         if isinstance(orderbook, OrderList):
             orderbook = orderbook
         elif isinstance(orderbook, list) and all(isinstance(item, Order) for item in orderbook):

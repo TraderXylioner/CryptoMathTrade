@@ -1,19 +1,9 @@
 from type import Order, OrderList, OrderBook
 
 
-def validate_order(order):
-    if isinstance(order, Order):
-        order = order
-    elif isinstance(order, dict):
-        order = Order.from_dict(order)
-    else:
-        raise TypeError('order must be valid dict or Order')
-    return order
-
-
 def __order_type_check(func):
     def wrapper(order: dict[float, float] | Order, *args, **kwargs) -> Order:
-        return func(validate_order(order), *args, **kwargs)
+        return func(Order.validate_order(order), *args, **kwargs)
     return wrapper
 
 
