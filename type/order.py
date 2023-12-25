@@ -33,6 +33,24 @@ class OrderList:
 
         return f'{self.orders}'
 
+    def __len__(self):
+        return len(self.orders)
+
+    def __getitem__(self, index):
+        return self.orders[index]
+
+    def __setitem__(self, index, value):
+        self.orders[index] = value
+
+    def __delitem__(self, index):
+        del self.orders[index]
+
+    def pop(self, index=None):
+        if index is None:
+            index = -1
+        item = self.orders.pop(index)
+        return item
+
 
 class OrderBook:
     def __init__(self,
