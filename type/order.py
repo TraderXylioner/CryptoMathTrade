@@ -1,7 +1,10 @@
+from decimal import Decimal
+
+
 class Order:
     def __init__(self, price: float, volume: float):
-        self.price: float = price
-        self.volume: float = volume
+        self.price: Decimal = Decimal(price)
+        self.volume: Decimal = Decimal(volume)
 
     def __repr__(self):
         return f'{self.__dict__}'
@@ -15,7 +18,7 @@ class Order:
         if not volume:
             raise ValueError("'volume' must be present in order_data")
 
-        return cls(price=price, volume=volume)
+        return cls(price=Decimal(price), volume=Decimal(volume))
 
 
 class OrderList:
