@@ -12,8 +12,7 @@ class ArbitrageDeal:
         return '{' + f"'price_buy': {float(self.price_buy)}, " \
                f"price_sell: {float(self.price_sell)}, " \
                f"'volume': {float(self.volume)}, " \
-               f"'spread': {float(self.spread)}" \
-               + '}'
+               f"'spread': {float(self.spread)}" + '}'
 
 
 class ArbitrageDeals:

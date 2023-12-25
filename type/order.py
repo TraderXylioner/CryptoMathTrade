@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from type.utils import validate_order_list
+
 
 class Order:
     def __init__(self, price: float, volume: float):
@@ -23,12 +25,7 @@ class Order:
 
 class OrderList:
     def __init__(self, orders: list[Order] | list[dict[float, float]]):
-        if all(isinstance(item, Order) for item in orders):
-            self.orders = orders
-        elif all(isinstance(item, dict) for item in orders):
-            self.orders = [Order.from_dict(order) for order in orders]
-        else:
-            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
+        self.orders = validate_order_list(orders)
 
     def __repr__(self):
         if not all(isinstance(order, Order) for order in self.orders):
@@ -54,28 +51,16 @@ class OrderList:
         item = self.orders.pop(index)
         return item
 
+    def append(self, order):
+        self.orders.append(order)
+
 
 class OrderBook:
     def __init__(self,
                  asks: OrderList | list[Order] | list[dict[float, float]],
                  bids: OrderList | list[Order] | list[dict[float, float]]):
-        if isinstance(asks, OrderList):
-            self.asks = asks
-        elif all(isinstance(item, Order) for item in asks):
-            self.asks = OrderList(asks)
-        elif all(isinstance(item, dict) for item in asks):
-            self.asks = OrderList(asks)
-        else:
-            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
-
-        if isinstance(bids, OrderList):
-            self.bids = bids
-        elif all(isinstance(item, Order) for item in bids):
-            self.bids = OrderList(bids)
-        elif all(isinstance(item, dict) for item in bids):
-            self.bids = OrderList(bids)
-        else:
-            raise TypeError('value must be a valid list of Orders or list of order dictionaries')
+        self.asks = validate_order_list(asks)
+        self.bids = validate_order_list(bids)
 
     def __repr__(self):
         return f'asks: {self.asks}\nbids: {self.bids}'
