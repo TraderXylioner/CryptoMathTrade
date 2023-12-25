@@ -1,5 +1,6 @@
 from converter.utils import __order_type_check, __orderbook_type_check
 from type import Order, OrderList
+from decimal import Decimal
 
 
 def __order_type_check_for_converter(func):
@@ -22,9 +23,9 @@ def convert_price_from_order(order: Order, relative_price: float) -> Order:
     ETH/USDT = 2000, and you want to convert in USDT.
     18 x 2000 = 36000 price BTC in USDT.
     """
-    return Order(price=order.price * relative_price, volume=order.volume)  # maybe не создавать новый объект, а менять старый?
+    return Order(price=order.price * Decimal(relative_price), volume=order.volume)
 
 
 @__orderbook_type_check_for_converter
 def convert_price_from_orderbook(orderbook: OrderList, relative_price: float) -> OrderList:
-    return OrderList([convert_price_from_order(order, relative_price) for order in orderbook.orders])   # maybe не создавать новый объект, а менять старый?
+    return OrderList([convert_price_from_order(order, relative_price) for order in orderbook.orders])
