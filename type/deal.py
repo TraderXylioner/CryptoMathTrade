@@ -1,26 +1,30 @@
-from decimal import Decimal
+from type import Order
 
 
-class ArbitrageDeal:
-    def __init__(self, price_buy: float, price_sell: float, volume: float, spread: float | None = None):
-        self.price_buy: Decimal = Decimal(price_buy)
-        self.price_sell: Decimal = Decimal(price_sell)
-        self.volume: Decimal = Decimal(volume)
-        self.spread: Decimal = Decimal(spread) if spread else None
+class Deal(Order):
+    ...
+
+
+class Deals:
+    def __init__(self, deals: list[Deal] | list[dict[float, float]] | None = None):
+        self.deals = self.validate_deals(deals)
+
+    @staticmethod
+    def validate_deals(deals: list[Deal] | list[dict[float, float]] | None) -> list:
+        if not deals:
+            return []
+        elif all(isinstance(item, Deal) for item in deals):
+            return deals
+        elif all(isinstance(item, dict) for item in deals):
+            return [Deal.from_dict(deal) for deal in deals]
+        else:
+            raise TypeError('value must be a valid list of Deals or list of deal dictionaries')
 
     def __repr__(self):
-        return '{' + f"'price_buy': {float(self.price_buy)}, " \
-               f"price_sell: {float(self.price_sell)}, " \
-               f"'volume': {float(self.volume)}, " \
-               f"'spread': {float(self.spread)}" + '}'
+        return f'{self.deals}'
 
-
-class ArbitrageDeals:
-    def __init__(self, deals: list[ArbitrageDeal] = None):
-        self.deals = deals if deals else []
-
-    def __repr__(self):
-        return f'{self.__dict__}'
+    def __len__(self):
+        return len(self.deals)
 
     def __getitem__(self, index):
         return self.deals[index]
