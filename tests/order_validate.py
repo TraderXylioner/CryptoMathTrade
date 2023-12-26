@@ -1,4 +1,4 @@
-from type.order import Order, OrderList
+from CryptoMathTrade.type import Order, OrderList
 
 orders = [{'price': 100.0, 'volume': 0.1},
           {'price': 101.0, 'volume': 0.2},

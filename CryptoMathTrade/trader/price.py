@@ -1,5 +1,5 @@
-from trader.utils import __order_type_check_for_convert_price, __orderbook_type_check_for_convert_price
-from type import Order, OrderList
+from CryptoMathTrade.trader.utils import __order_type_check_for_convert_price, __orderbook_type_check_for_convert_price
+from CryptoMathTrade.type import Order, OrderList
 from decimal import Decimal
 
 

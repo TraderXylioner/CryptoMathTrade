@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from trader.calculate import get_spread
+from CryptoMathTrade.trader.calculate import get_spread
 
 
 class ArbitrageDeal:

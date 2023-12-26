@@ -1,8 +1,8 @@
 from decimal import Decimal
 
-from trader.calculate import get_spread
-from trader.utils import check_fee, __orderbook_type_check
-from type import OrderList, Order, ArbitrageDeals, ArbitrageDeal, Deal, Deals, OrderBook
+from CryptoMathTrade.trader.calculate import get_spread
+from CryptoMathTrade.trader.utils import check_fee, __orderbook_type_check
+from CryptoMathTrade.type import OrderList, Order, ArbitrageDeals, ArbitrageDeal, Deal, Deals, OrderBook
 
 
 def calculate_spread(asks: OrderList | list[Order] | list[dict[float, float]],

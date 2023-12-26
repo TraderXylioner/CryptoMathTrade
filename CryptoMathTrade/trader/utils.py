@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from type import Order, OrderList, OrderBook
+from CryptoMathTrade.type import Order, OrderList, OrderBook
 
 
 def __order_type_check(func):

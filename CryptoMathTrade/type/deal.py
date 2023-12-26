@@ -1,4 +1,4 @@
-from type import Order
+from CryptoMathTrade.type import Order
 
 
 class Deal(Order):

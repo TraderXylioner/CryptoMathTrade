@@ -1,5 +1,5 @@
-from trader import Trader
-from type import Order, OrderList, OrderBook
+from CryptoMathTrade.trader import Trader
+from CryptoMathTrade.type import Order
 
 orders = [{'price': 100.0, 'volume': 0.1},
           {'price': 101.0, 'volume': 0.2},

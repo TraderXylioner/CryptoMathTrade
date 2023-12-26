@@ -1,10 +1,10 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='CryptoMathTrade',
-    version='0.1',
+    version='0.3',
     author='Trader_Xylioner',
     author_email='treider.xylioner@gmail.com',
     description='tools for trades',
-    packages=['trader', 'type'],
+    packages=find_packages(),
 )
