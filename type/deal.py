@@ -9,8 +9,8 @@ class Deals:
     def __init__(self, deals: list[Deal] | list[dict[float, float]] | None = None):
         self.deals = self.validate_deals(deals)
 
-    @staticmethod
-    def validate_deals(deals: list[Deal] | list[dict[float, float]] | None) -> list:
+    @classmethod
+    def validate_deals(cls, deals: list[Deal] | list[dict[float, float]] | None) -> list:
         if not deals:
             return []
         elif all(isinstance(item, Deal) for item in deals):

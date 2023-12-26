@@ -36,8 +36,8 @@ class OrderList:
     def __init__(self, orders: list[Order] | list[dict[float, float]]):
         self.orders = self.validate_order_list(orders)
 
-    @staticmethod
-    def validate_order_list(orders: list[Order] | list[dict[float, float]]) -> list:
+    @classmethod
+    def validate_order_list(cls, orders: list[Order] | list[dict[float, float]]) -> list:
         if all(isinstance(item, Order) for item in orders):
             return orders
         elif all(isinstance(item, dict) for item in orders):
