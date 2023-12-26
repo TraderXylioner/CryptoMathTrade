@@ -1,4 +1,4 @@
-from converter import Converter
+from trader import Trader
 from type import Order, OrderList
 from decimal import Decimal
 
@@ -15,9 +15,5 @@ bids = [{'price': 100.0, 'volume': 0.2},
           {'price': 96.0, 'volume': 0.5}]
 
 
-order1 = Order.from_dict({'price': 100.0, 'volume': 1})
-order2 = Order.from_dict({'price': 200.0, 'volume': 2})
-# order3 = Order.from_dict({'price': 102.0, 'volume': 0.1})
-# data = Converter.convert_price_from_orderbook(orders, 100)
-data = Converter.calculate_spread(asks, bids, 0.01, 0.01)
-print(data[0])
+data = Trader.convert_price_in_orderbook(asks, 100)
+print(data)
