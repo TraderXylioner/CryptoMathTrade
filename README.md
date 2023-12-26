@@ -1,6 +1,4 @@
 # CryptoMathTrade
 tools for trades
 # Functionality
-1. convert price
-2. compare books
-3. buy/sell
+1. mb add fee in trade_by
