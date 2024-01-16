@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from CryptoMathTrade.trader.calculate import get_spread
+# from CryptoMathTrade.trader.calculate import get_spread
 
 
 class ArbitrageDeal:
@@ -15,9 +15,7 @@ class ArbitrageDeal:
         self.volume: Decimal = Decimal(volume)
         self.fee_buy: Decimal = Decimal(fee_buy)
         self.fee_sell: Decimal = Decimal(fee_sell)
-        self.spread: Decimal = Decimal(spread) if spread else get_spread(self.price_buy * (Decimal(1) + self.fee_buy),
-                                                                         self.price_sell * (Decimal(1) - self.fee_sell)
-                                                                         )
+        self.spread: Decimal = Decimal(spread) if spread else None  # get_spread(self.price_buy * (Decimal(1) + self.fee_buy), self.price_sell * (Decimal(1) - self.fee_sell))
 
     def __repr__(self):
         return '{' + f"'price_buy': {float(self.price_buy)}, " \
@@ -43,6 +41,9 @@ class ArbitrageDeals:
 
     def __delitem__(self, index):
         del self.deals[index]
+
+    def __bool__(self):
+        return bool(self.deals)
 
     def pop(self, index=None):
         if index is None:

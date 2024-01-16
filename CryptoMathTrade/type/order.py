@@ -33,14 +33,16 @@ class Order:
 
 
 class OrderList:
-    def __init__(self, orders: list[Order] | list[dict[float, float]]):
+    def __init__(self, orders: list[Order] | list[dict[float, float]] | None = None):
         self.orders = self.validate_order_list(orders)
 
     @classmethod
     def validate_order_list(cls, orders: list[Order] | list[dict[float, float]]) -> list:
-        if all(isinstance(item, Order) for item in orders):
+        if not orders:
+            return []
+        elif isinstance(orders, list) and all(isinstance(item, Order) for item in orders):
             return orders
-        elif all(isinstance(item, dict) for item in orders):
+        elif isinstance(orders, list) and all(isinstance(item, dict) for item in orders):
             return [Order.from_dict(order) for order in orders]
         else:
             raise TypeError('value must be a valid list of Orders or list of order dictionaries')
@@ -72,14 +74,16 @@ class OrderList:
 
 class OrderBook:
     def __init__(self,
-                 asks: OrderList | list[Order] | list[dict[float, float]],
-                 bids: OrderList | list[Order] | list[dict[float, float]]):
+                 asks: OrderList | list[Order] | list[dict[float, float]] | None = None,
+                 bids: OrderList | list[Order] | list[dict[float, float]] | None = None):
         self.asks = self.validate_orderbook(asks)
         self.bids = self.validate_orderbook(bids)
 
     @classmethod
     def validate_orderbook(cls, orderbook: OrderList | list[Order] | list[dict[float, float]]) -> list:
-        if isinstance(orderbook, OrderList):
+        if not orderbook:
+            orderbook = OrderList(orderbook)
+        elif isinstance(orderbook, OrderList):
             orderbook = orderbook
         elif isinstance(orderbook, list) and all(isinstance(item, Order) for item in orderbook):
             orderbook = OrderList(orderbook)
