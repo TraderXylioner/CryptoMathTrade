@@ -1,7 +1,7 @@
 import aiohttp
 import requests
 
-from CryptoMathTrade.exchange.utils import clean_none_value, _prepare_params
+from CryptoMathTrade.exchange.utils import clean_none_value, _prepare_params, _dispatch_request
 
 
 class Request:
@@ -20,7 +20,7 @@ class Request:
                                    'timeout': self.timeout,
                                    'proxies': self.proxies,
                                    })
-        response = self._dispatch_request(method)(**params)
+        response = _dispatch_request(self.session, method)(**params)
         return response
 
     def _dispatch_request(self, http_method):
