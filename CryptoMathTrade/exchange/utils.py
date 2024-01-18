@@ -61,3 +61,21 @@ def check_api_keys(func):
             raise ValueError("API key and secret are required for this operation.")
         return func(self, *args, **kwargs)
     return wrapper
+
+
+def _dispatch_request(session, http_method):
+    return {
+        'GET': session.get,
+        'DELETE': session.delete,
+        'PUT': session.put,
+        'POST': session.post,
+    }.get(http_method, 'GET')
+
+
+def convert_kwargs_to_dict(func):
+    def wrapper(*args, **kwargs):
+        res = {key: value for key, value in kwargs.items() if value is not None}
+        if res.get('symbols'):
+            res['symbols'] = convert_list_to_json_array(res.get('symbols'))
+        return func(*args, res)
+    return wrapper
