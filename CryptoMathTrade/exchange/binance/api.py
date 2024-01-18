@@ -1,5 +1,4 @@
-from CryptoMathTrade.exchange._request import Request
-from .setting import BASE_URL
+from CryptoMathTrade.exchange._request import Request, AsyncRequest
 from ..utils import get_timestamp, rsa_signature, hmac_hashing, _prepare_params, ed25519_signature, check_api_keys
 
 
@@ -9,19 +8,26 @@ class API:
         self.api_secret = api_secret
         self.private_key = private_key
         self.private_key_pass = private_key_pass
+        self.headers = {"X-MBX-APIKEY": self.api_key} if self.api_key else {}
 
-    @classmethod
-    def _query(cls, url, params):
-        return Request().send_request('GET', BASE_URL + url, params)
+    def _query(self, url, params, method: str = 'GET', headers=None):
+        if headers:
+            self.headers.update(headers)
+        return Request(headers=self.headers).send_request(method, url, params)
+
+    async def _async_query(self, url, params, method: str = 'GET', headers=None):
+        if headers:
+            self.headers.update(headers)
+        return await AsyncRequest(headers=self.headers).send_request(method, url, params)
 
     @check_api_keys
-    def sign_request(self, http_method, url_path, payload=None):
+    def get_payload(self, payload=None):
         if payload is None:
             payload = {}
         payload["timestamp"] = get_timestamp()
         query_string = _prepare_params(payload)
         payload["signature"] = self._get_sign(query_string)
-        return Request(headers={"X-MBX-APIKEY": self.api_key}).send_request(http_method, BASE_URL + url_path, payload)
+        return payload
 
     def _get_sign(self, payload):
         if self.private_key is not None:
