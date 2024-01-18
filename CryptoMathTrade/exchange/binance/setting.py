@@ -3,6 +3,9 @@ DEPTH_URL = '/api/v3/depth'
 TRADES_URL = '/api/v3/trades'
 PRICE_URL = '/api/v3/ticker/price'
 TICKER_URL = '/api/v3/ticker'
+
 ORDER_URL = '/api/v3/order'
 GET_ORDERS_URL = '/api/v3/allOrders'
 OPEN_ORDERS_URL = '/api/v3/openOrders'
+
+GET_DEPOSIT_ADDRESS = '/sapi/v1/capital/deposit/address'
