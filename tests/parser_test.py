@@ -7,7 +7,7 @@ from tests.settings import KEY, SECRET
 
 
 async def main():
-    tasks = [asyncio.create_task(AsyncMarket().get_depth('BTCUSDT')) for i in range(20)]
+    tasks = [asyncio.create_task(AsyncMarket().get_ticker('BTCUSDT')) for i in range(30)]
     for i in tasks:
         await i
         print(i.result())
@@ -18,6 +18,5 @@ async def main():
 spot = Spot(KEY, SECRET)
 market = Market()
 # data = spot.get_orders('BTCUSDT')
-data = market.get_depth(symbol='ETHUSDT').json()
-data = OrderBook(data)
+data = market.get_price(symbol='ETHUSDT')
 print(data)
