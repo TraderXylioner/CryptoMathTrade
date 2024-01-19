@@ -18,12 +18,14 @@ class ArbitrageDeal:
         self.spread: Decimal = Decimal(spread) if spread else None  # get_spread(self.price_buy * (Decimal(1) + self.fee_buy), self.price_sell * (Decimal(1) - self.fee_sell))
 
     def __repr__(self):
-        return '{' + f"'price_buy': {float(self.price_buy)}, " \
-               f"price_sell: {float(self.price_sell)}, " \
-               f"'volume': {float(self.volume)}, " \
-               f"'fee_buy': {float(self.fee_buy)}, " \
-               f"'fee_sell': {float(self.fee_sell)}, " \
-               f"'spread': {float(self.spread)}" + '}'
+        return '{' +\
+               f'"price_buy": {float(self.price_buy)}, ' \
+               f'"price_sell": {float(self.price_sell)}, ' \
+               f'"volume": {float(self.volume)}, ' \
+               f'"fee_buy": {float(self.fee_buy)}, ' \
+               f'"fee_sell": {float(self.fee_sell)}, ' \
+               f'"spread": {float(self.spread)}'\
+               + '}'
 
 
 class ArbitrageDeals:

@@ -35,20 +35,20 @@ def hmac_hashing(api_secret, payload):
 
 def rsa_signature(private_key, payload, private_key_pass=None):
     private_key = RSA.import_key(private_key, passphrase=private_key_pass)
-    h = SHA256.new(payload.encode("utf-8"))
+    h = SHA256.new(payload.encode('utf-8'))
     signature = pkcs1_15.new(private_key).sign(h)
     return b64encode(signature)
 
 
 def ed25519_signature(private_key, payload, private_key_pass=None):
     private_key = ECC.import_key(private_key, passphrase=private_key_pass)
-    signer = eddsa.new(private_key, "rfc8032")
-    signature = signer.sign(payload.encode("utf-8"))
+    signer = eddsa.new(private_key, 'rfc8032')
+    signature = signer.sign(payload.encode('utf-8'))
     return b64encode(signature)
 
 
 def encoded_string(query):
-    return urlencode(query, True).replace("%40", "@")
+    return urlencode(query, True).replace('%40', '@')
 
 
 def _prepare_params(params):
@@ -58,7 +58,7 @@ def _prepare_params(params):
 def check_api_keys(func):
     def wrapper(self, *args, **kwargs):
         if not self.api_key or not self.api_secret:
-            raise ValueError("API key and secret are required for this operation.")
+            raise ValueError('API key and secret are required for this operation.')
         return func(self, *args, **kwargs)
     return wrapper
 

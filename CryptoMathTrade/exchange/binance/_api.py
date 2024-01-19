@@ -8,7 +8,7 @@ class API:
         self.api_secret = api_secret
         self.private_key = private_key
         self.private_key_pass = private_key_pass
-        self.headers = {"X-MBX-APIKEY": self.api_key} if self.api_key else {}
+        self.headers = {'X-MBX-APIKEY': self.api_key} if self.api_key else {}
 
     def _query(self, url, params, method: str = 'GET', headers=None):
         if headers:
@@ -24,9 +24,9 @@ class API:
     def get_payload(self, payload=None):
         if payload is None:
             payload = {}
-        payload["timestamp"] = get_timestamp()
+        payload['timestamp'] = get_timestamp()
         query_string = _prepare_params(payload)
-        payload["signature"] = self._get_sign(query_string)
+        payload['signature'] = self._get_sign(query_string)
         return payload
 
     def _get_sign(self, payload):
