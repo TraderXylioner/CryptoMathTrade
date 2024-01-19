@@ -1,4 +1,4 @@
-from CryptoMathTrade.exchange.binance.setting import BASE_URL, DEPTH_URL, TRADES_URL, PRICE_URL, TICKER_URL, \
+from CryptoMathTrade.exchange.binance.urls import BASE_URL, DEPTH_URL, TRADES_URL, PRICE_URL, TICKER_URL, \
     GET_ORDERS_URL, OPEN_ORDERS_URL, ORDER_URL, GET_DEPOSIT_ADDRESS
 from CryptoMathTrade.exchange.utils import convert_kwargs_to_dict
 

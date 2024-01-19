@@ -1,7 +1,7 @@
-from CryptoMathTrade.exchange.binance.api import API
+from CryptoMathTrade.exchange.binance._api import API
 from CryptoMathTrade.exchange.binance.core import get_orders_args, delete_open_orders_args, get_open_orders_args, \
     get_open_order_args, new_order_args
-from CryptoMathTrade.type.order import Side, TimeInForce
+from CryptoMathTrade.type import Side, TimeInForce
 
 
 class Spot(API):

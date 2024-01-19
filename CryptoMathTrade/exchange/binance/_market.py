@@ -1,5 +1,6 @@
-from .api import API
+from ._api import API
 from .core import get_depth_args, get_trades_args, get_ticker_args, get_price_args
+from ...type import OrderBook, Trades, Trade, Price, Ticker
 
 
 class Market(API):
