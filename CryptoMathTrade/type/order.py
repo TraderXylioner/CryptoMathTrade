@@ -96,6 +96,11 @@ class OrderBook:
     def __repr__(self):
         return f'asks: {self.asks}\nbids: {self.bids}'
 
+    @classmethod
+    def from_list(cls, orderbook: dict):
+        return cls(asks=[{'price': order[0], 'volume': order[1]} for order in orderbook.get('asks')],
+                   bids=[{'price': order[0], 'volume': order[1]} for order in orderbook.get('bids')])
+
 
 class TimeInForce:
     """
