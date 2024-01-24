@@ -1,13 +1,13 @@
 import asyncio
 
-from CryptoMathTrade.exchange.binance import Market, AsyncMarket, Spot
-from CryptoMathTrade.exchange.binance.core import get_orders_args, new_order_args, get_ticker_args
-from CryptoMathTrade.type.order import TimeInForce, Side, OrderBook
-from tests.settings import KEY, SECRET
+from CryptoMathTrade.exchange import bingx
+from CryptoMathTrade.exchange import binance
+from CryptoMathTrade.exchange import okx
+from tests.settings import BINANCE_KEY, BINANCE_SECRET
 
 
 async def main():
-    tasks = [asyncio.create_task(AsyncMarket().get_ticker('BTCUSDT')) for i in range(30)]
+    tasks = [asyncio.create_task(okx.AsyncMarket().get_ticker()) for i in range(1)]
     for i in tasks:
         await i
         print(i.result())
@@ -15,8 +15,14 @@ async def main():
 
 # asyncio.run(main())
 
-spot = Spot(KEY, SECRET)
-market = Market()
-# data = spot.get_orders('BTCUSDT')
-data = market.get_price(symbol='ETHUSDT')
-print(data)
+binance_market = binance.Market()
+bingx_market = bingx.Market()
+okx_market = okx.Market()
+
+binance_spot = binance.Spot(BINANCE_KEY, BINANCE_SECRET)
+bingx_spot = bingx.Spot()
+okx_spot = okx.Spot()
+
+
+# data = okx_market.get_depth(symbol='BTC-USDT')
+# print(data)
