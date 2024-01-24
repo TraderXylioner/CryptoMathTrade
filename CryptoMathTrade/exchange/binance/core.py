@@ -167,6 +167,31 @@ def cancel_open_orders_args(SpotObj, params: dict) -> dict:
 
 @convert_kwargs_to_dict
 def new_order_args(SpotObj, params: dict) -> dict:
+    """New Order (TRADE)
+
+    Post a new order
+
+    POST /api/v3/order
+
+    https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
+
+    params:
+        symbol (str)
+        side (str)
+        type (str)
+        timeInForce (str, optional)
+        quantity (float, optional)
+        quoteOrderQty (float, optional)
+        price (float, optional)
+        newClientOrderId (str, optional): A unique id among open orders. Automatically generated if not sent.
+        strategyId (int, optional)
+        strategyType (int, optional): The value cannot be less than 1000000.
+        stopPrice (float, optional): Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
+        icebergQty (float, optional): Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+        newOrderRespType (str, optional): Set the response JSON. ACK, RESULT, or FULL;
+                MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+        recvWindow (int, optional): The value cannot be greater than 60000
+    """
     return {'method': 'POST', 'url': BASE_URL + ORDER_URL, 'params': SpotObj.get_payload(params)}
 
 
