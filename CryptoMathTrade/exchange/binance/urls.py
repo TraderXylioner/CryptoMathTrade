@@ -2,7 +2,6 @@
 BASE_URL = 'https://api.binance.com'
 DEPTH_URL = '/api/v3/depth'
 TRADES_URL = '/api/v3/trades'
-PRICE_URL = '/api/v3/ticker/price'
 TICKER_URL = '/api/v3/ticker'
 
 ORDER_URL = '/api/v3/order'
