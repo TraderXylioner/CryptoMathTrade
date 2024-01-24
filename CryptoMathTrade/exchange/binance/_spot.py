@@ -1,5 +1,5 @@
 from ._api import API
-from .core import get_orders_args, delete_open_orders_args, get_open_orders_args, get_open_order_args, new_order_args
+from .core import get_orders_args, cancel_open_orders_args, get_open_orders_args, get_open_order_args, new_order_args
 from CryptoMathTrade.type import Side, TimeInForce
 
 
@@ -32,11 +32,11 @@ class Spot(API):
                         ):
         return self._query(**get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
-    def delete_open_orders(self,
+    def cancel_open_orders(self,
                            symbol: str,
                            recvWindow: int | None = None,
                            ):
-        return self._query(**delete_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        return self._query(**cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
     def new_market_order(self,
                          symbol: str,

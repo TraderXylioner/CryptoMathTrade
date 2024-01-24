@@ -59,7 +59,22 @@ def get_open_orders_args(SpotObj, params: dict) -> dict:
 
 
 @convert_kwargs_to_dict
-def delete_open_orders_args(SpotObj, params: dict) -> dict:
+def cancel_open_orders_args(SpotObj, params: dict) -> dict:
+    """Cancel Order (TRADE)
+
+    Cancel an active order.
+
+    DELETE /api/v3/order
+
+    https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+
+    params:
+        symbol (str)
+        orderId (int, optional)
+        origClientOrderId (str, optional)
+        newClientOrderId (str, optional)
+        recvWindow (int, optional): The value cannot be greater than 60000
+    """
     return {'method': 'DELETE', 'url': BASE_URL + OPEN_ORDERS_URL, 'params': SpotObj.get_payload(params)}
 
 
