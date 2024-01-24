@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-from CryptoMathTrade.exchange._request import Request, AsyncRequest, WebSocketRequest
+from .._request import Request, AsyncRequest, WebSocketRequest
 from ..utils import get_timestamp, rsa_signature, hmac_hashing, _prepare_params, ed25519_signature, check_api_keys
 
 
@@ -13,12 +13,12 @@ class API:
         self.private_key_pass = private_key_pass
         self.headers = {'X-MBX-APIKEY': self.api_key} if self.api_key else {}
 
-    def _query(self, url, params, method: str = 'GET', headers=None):
+    def _query(self, url: str, params: dict, method: str = 'GET', headers=None):
         if headers:
             self.headers.update(headers)
         return Request(headers=self.headers).send_request(method, url, params)
 
-    async def _async_query(self, url, params, method: str = 'GET', headers=None):
+    async def _async_query(self, url: str, params: dict, method: str = 'GET', headers=None):
         if headers:
             self.headers.update(headers)
         return await AsyncRequest(headers=self.headers).send_request(method, url, params)
@@ -47,7 +47,7 @@ class API:
         payload['signature'] = self._get_sign(query_string)
         return payload
 
-    def _get_sign(self, payload):
+    def _get_sign(self, payload: dict):
         if self.private_key is not None:
             try:
                 return ed25519_signature(
