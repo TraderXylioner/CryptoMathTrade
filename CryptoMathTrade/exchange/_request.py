@@ -1,3 +1,5 @@
+import json
+import websockets
 import aiohttp
 import requests
 
@@ -41,3 +43,11 @@ class AsyncRequest:
         async with aiohttp.ClientSession() as session:
             async with _dispatch_request(session, method)(**params) as response:
                 return await response.json()
+
+
+class WebSocketRequest:
+    @classmethod
+    async def open_connect(cls, url: str, payload: dict):
+        async with websockets.connect(url) as client:
+            await client.send(json.dumps(payload))
+            yield client

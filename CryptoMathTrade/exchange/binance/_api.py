@@ -1,4 +1,7 @@
-from CryptoMathTrade.exchange._request import Request, AsyncRequest
+import asyncio
+import json
+
+from CryptoMathTrade.exchange._request import Request, AsyncRequest, WebSocketRequest
 from ..utils import get_timestamp, rsa_signature, hmac_hashing, _prepare_params, ed25519_signature, check_api_keys
 
 
@@ -19,6 +22,21 @@ class API:
         if headers:
             self.headers.update(headers)
         return await AsyncRequest(headers=self.headers).send_request(method, url, params)
+
+    @classmethod
+    async def _ws_query(cls, url: str, params: str, method: str = 'SUBSCRIBE', timeout_seconds=10):
+        payload = {
+            "method": method,
+            "params": [params],
+        }
+        connect = WebSocketRequest().open_connect(url=url, payload=payload)
+        async for client in connect:
+            while True:
+                data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
+                if not data:
+                    raise ConnectionError
+                json_data = json.loads(data)
+                yield json_data
 
     @check_api_keys
     def get_payload(self, payload=None):

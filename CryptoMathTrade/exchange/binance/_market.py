@@ -52,3 +52,15 @@ class AsyncMarket(API):
                          symbols: list | None = None):
         res = await self._async_query(**get_ticker_args(symbol=symbol, symbols=symbols))
         return Ticker(**res)
+
+
+class WebsSocketMarket(API):
+    async def get_depth(self,
+                        symbol: str,
+                        ):
+        return self._ws_query(**ws_get_depth_args(symbol=symbol))
+
+    async def get_trades(self,
+                         symbol: str,
+                         ):
+        return self._ws_query(**ws_get_trades_args(symbol=symbol))
