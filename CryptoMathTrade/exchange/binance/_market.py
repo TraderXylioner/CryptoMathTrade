@@ -1,7 +1,7 @@
 from ._api import API
-from .core import get_depth_args, get_trades_args, get_ticker_args, get_price_args, ws_get_depth_args, \
+from .core import get_depth_args, get_trades_args, get_ticker_args, ws_get_depth_args, \
     ws_get_trades_args
-from ...type import OrderBook, Trade, Price, Ticker
+from ...type import OrderBook, Trade, Ticker
 
 
 class Market(API):
@@ -48,13 +48,6 @@ class AsyncMarket(API):
                          ):
         res = await self._async_query(**get_trades_args(symbol=symbol, limit=limit))
         return [Trade(**trade) for trade in res]
-
-    async def get_price(self,
-                        symbol: str | None = None,
-                        symbols: list | None = None,
-                        ):
-        res = await self._async_query(**get_price_args(symbol=symbol, symbols=symbols))
-        return Price(**res)
 
     async def get_ticker(self,
                          symbol: str | None = None,
