@@ -1,9 +1,6 @@
 from .urls import BASE_URL, DEPTH_URL, TRADES_URL, TICKER_URL, GET_ORDERS_URL, OPEN_ORDERS_URL, ORDER_URL, \
     GET_DEPOSIT_ADDRESS, WS_BASE_URL
-from CryptoMathTrade.exchange.utils import convert_kwargs_to_dict
-
-
-'''need add check required args'''
+from ..utils import convert_kwargs_to_dict
 
 
 # WS Market
