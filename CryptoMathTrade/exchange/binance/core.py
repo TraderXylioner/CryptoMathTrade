@@ -1,10 +1,9 @@
-from .urls import BASE_URL, DEPTH_URL, TRADES_URL, TICKER_URL, GET_ORDERS_URL, OPEN_ORDERS_URL, ORDER_URL, \
-    GET_DEPOSIT_ADDRESS, WS_BASE_URL
-from ..utils import convert_kwargs_to_dict
+from . import URLS
+from ..utils import _convert_kwargs_to_dict
 
 
 # WS Market
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def ws_get_depth_args(params: dict) -> dict:
     """Partial Book Depth Streams
 
@@ -17,10 +16,10 @@ def ws_get_depth_args(params: dict) -> dict:
 
     Update Speed: 1000ms or 100ms
     """
-    return {'method': 'SUBSCRIBE', 'url': WS_BASE_URL, 'params': f'{params["symbol"]}@depth'}
+    return {'method': 'SUBSCRIBE', 'url': URLS.WS_BASE_URL, 'params': f'{params["symbol"]}@depth'}
 
 
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def ws_get_trades_args(params: dict) -> dict:
     """Trade Streams
 
@@ -33,11 +32,11 @@ def ws_get_trades_args(params: dict) -> dict:
 
      Update Speed: Real-time
      """
-    return {'method': 'SUBSCRIBE', 'url': WS_BASE_URL, 'params': f'{params["symbol"]}@trade'}
+    return {'method': 'SUBSCRIBE', 'url': URLS.WS_BASE_URL, 'params': f'{params["symbol"]}@trade'}
 
 
 # Market
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def get_depth_args(params: dict) -> dict:
     """Get orderbook.
 
@@ -49,10 +48,10 @@ def get_depth_args(params: dict) -> dict:
         symbol (str): the trading pair
         limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
     """
-    return {'method': 'GET', 'url': BASE_URL + DEPTH_URL, 'params': params}
+    return {'method': 'GET', 'url': URLS.BASE_URL + URLS.DEPTH_URL, 'params': params}
 
 
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def get_trades_args(params: dict) -> dict:
     """Recent Trades List
     Get recent trades (up to last 500).
@@ -65,10 +64,10 @@ def get_trades_args(params: dict) -> dict:
         symbol (str): the trading pair
         limit (int, optional): limit the results. Default 500; max 1000.
     """
-    return {'method': 'GET', 'url': BASE_URL + TRADES_URL, 'params': params}
+    return {'method': 'GET', 'url': URLS.BASE_URL + URLS.TRADES_URL, 'params': params}
 
 
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def get_ticker_args(params: dict) -> dict:
     """24hr Ticker Price Change Statistics
 
@@ -82,11 +81,11 @@ def get_ticker_args(params: dict) -> dict:
     """
     if params.get('symbol') and params.get('symbols'):
         raise ValueError('symbol and symbols cannot be sent together.')
-    return {'method': 'GET', 'url': BASE_URL + TICKER_URL, 'params': params}
+    return {'method': 'GET', 'url': URLS.BASE_URL + URLS.TICKER_URL, 'params': params}
 
 
 # Spot
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def get_orders_args(SpotObj, params: dict) -> dict:
     """All Orders (USER_DATA)
 
@@ -104,10 +103,10 @@ def get_orders_args(SpotObj, params: dict) -> dict:
         limit (int, optional): Default 500; max 1000.
         recvWindow (int, optional): The value cannot be greater than 60000
     """
-    return {'method': 'GET', 'url': BASE_URL + GET_ORDERS_URL, 'params': SpotObj.get_payload(params)}
+    return {'method': 'GET', 'url': URLS.BASE_URL + URLS.GET_ORDERS_URL, 'params': SpotObj.get_payload(params)}
 
 
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def get_open_order_args(SpotObj, params: dict) -> dict:
     """Query Order (USER_DATA)
 
@@ -125,10 +124,10 @@ def get_open_order_args(SpotObj, params: dict) -> dict:
     """
     if not params.get('orderId') and not params.get('origClientOrderId'):
         raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
-    return {'method': 'GET', 'url': BASE_URL + ORDER_URL, 'params': SpotObj.get_payload(params)}
+    return {'method': 'GET', 'url': URLS.BASE_URL + URLS.ORDER_URL, 'params': SpotObj.get_payload(params)}
 
 
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def get_open_orders_args(SpotObj, params: dict) -> dict:
     """Current Open Orders (USER_DATA)
 
@@ -142,10 +141,30 @@ def get_open_orders_args(SpotObj, params: dict) -> dict:
         symbol (str, optional)
         recvWindow (int, optional): The value cannot be greater than 60000
     """
-    return {'method': 'GET', 'url': BASE_URL + OPEN_ORDERS_URL, 'params': SpotObj.get_payload(params)}
+    return {'method': 'GET', 'url': URLS.BASE_URL + URLS.OPEN_ORDERS_URL, 'params': SpotObj.get_payload(params)}
 
 
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
+def cancel_open_order_args(SpotObj, params: dict) -> dict:
+    """Cancel Order (TRADE)
+
+    Cancel an active order.
+
+    DELETE /api/v3/order
+
+    https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+
+    params:
+        symbol (str)
+        orderId (int, optional)
+        origClientOrderId (str, optional)
+        newClientOrderId (str, optional)
+        recvWindow (int, optional): The value cannot be greater than 60000
+    """
+    return {'method': 'DELETE', 'url': URLS.BASE_URL + URLS.ORDER_URL, 'params': SpotObj.get_payload(params)}
+
+
+@_convert_kwargs_to_dict
 def cancel_open_orders_args(SpotObj, params: dict) -> dict:
     """Cancel Order (TRADE)
 
@@ -162,10 +181,10 @@ def cancel_open_orders_args(SpotObj, params: dict) -> dict:
         newClientOrderId (str, optional)
         recvWindow (int, optional): The value cannot be greater than 60000
     """
-    return {'method': 'DELETE', 'url': BASE_URL + OPEN_ORDERS_URL, 'params': SpotObj.get_payload(params)}
+    return {'method': 'DELETE', 'url': URLS.BASE_URL + URLS.OPEN_ORDERS_URL, 'params': SpotObj.get_payload(params)}
 
 
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def new_order_args(SpotObj, params: dict) -> dict:
     """New Order (TRADE)
 
@@ -192,10 +211,10 @@ def new_order_args(SpotObj, params: dict) -> dict:
                 MARKET and LIMIT order types default to FULL, all other orders default to ACK.
         recvWindow (int, optional): The value cannot be greater than 60000
     """
-    return {'method': 'POST', 'url': BASE_URL + ORDER_URL, 'params': SpotObj.get_payload(params)}
+    return {'method': 'POST', 'url': URLS.BASE_URL + URLS.ORDER_URL, 'params': SpotObj.get_payload(params)}
 
 
 # Account
-@convert_kwargs_to_dict
+@_convert_kwargs_to_dict
 def get_deposit_address_args(AccountObj, params: dict) -> dict:
-    return {'method': 'GET', 'url': BASE_URL + GET_DEPOSIT_ADDRESS, 'params': AccountObj.get_payload(params)}
+    return {'method': 'GET', 'url': URLS.BASE_URL + URLS.GET_DEPOSIT_ADDRESS, 'params': AccountObj.get_payload(params)}
