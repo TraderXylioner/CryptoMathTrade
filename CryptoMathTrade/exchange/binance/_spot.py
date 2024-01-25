@@ -1,5 +1,6 @@
 from ._api import API
-from .core import get_orders_args, cancel_open_orders_args, get_open_orders_args, get_open_order_args, new_order_args
+from .core import get_orders_args, cancel_open_orders_args, get_open_orders_args, get_open_order_args, new_order_args, \
+    cancel_open_order_args
 from CryptoMathTrade.type import Side, TimeInForce
 
 
@@ -74,6 +75,32 @@ class Spot(API):
         """
         return self._query(**get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
+    def cancel_open_order(self,
+                          symbol: str,
+                          orderId: int | None = None,
+                          origClientOrderId: str | None = None,
+                          newClientOrderId: str | None = None,
+                          recvWindow: int | None = None,
+                          ):
+        """Cancel Order (TRADE)
+
+        Cancel an active order.
+
+        DELETE /api/v3/order
+
+        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+
+        params:
+            symbol (str)
+            orderId (int, optional)
+            origClientOrderId (str, optional)
+            newClientOrderId (str, optional)
+            recvWindow (int, optional): The value cannot be greater than 60000
+        """
+        return self._query(
+            **cancel_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
+                                     newClientOrderId=newClientOrderId, recvWindow=recvWindow))
+
     def cancel_open_orders(self,
                            symbol: str,
                            recvWindow: int | None = None,
@@ -112,11 +139,11 @@ class Spot(API):
         params:
             symbol (str)
             side (str)
-            type (str)
             quantity (float, optional)
             quoteOrderQty (float, optional)
         """
-        return self._query(**new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity, quoteOrderQty=quoteOrderQty))
+        return self._query(**new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity,
+                                            quoteOrderQty=quoteOrderQty))
 
     def new_limit_order(self,
                         symbol: str,
@@ -140,4 +167,6 @@ class Spot(API):
             quantity (float, optional)
             price (float, optional)
         """
-        return self._query(**new_order_args(self, symbol=symbol, side=side, type='LIMIT', timeInForce=timeInForce, quantity=quantity, price=price))
+        return self._query(
+            **new_order_args(self, symbol=symbol, side=side, type='LIMIT', timeInForce=timeInForce, quantity=quantity,
+                             price=price))
