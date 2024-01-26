@@ -2,15 +2,14 @@ import asyncio
 import json
 
 from .._request import Request, AsyncRequest, WebSocketRequest
-from ..utils import get_timestamp, rsa_signature, hmac_hashing, _prepare_params, ed25519_signature, check_api_keys
+from ..utils import get_timestamp, hmac_hashing, _prepare_params, check_api_keys
 
 
 class API:
-    def __init__(self, api_key=None, api_secret=None, private_key=None, private_key_pass=None):
+    def __init__(self, api_key=None, api_secret=None):
         self.api_key = api_key
         self.api_secret = api_secret
-        self.private_key = private_key
-        self.private_key_pass = private_key_pass
+
         self.headers = {'X-MBX-APIKEY': self.api_key} if self.api_key else {}
 
     def _query(self, url: str, params: dict, method: str = 'GET', headers=None):
@@ -34,7 +33,7 @@ class API:
             while True:
                 data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
                 if not data:
-                    raise ConnectionError
+                    raise ConnectionError  # custom error
                 json_data = json.loads(data)
                 yield json_data
 
@@ -48,12 +47,4 @@ class API:
         return payload
 
     def _get_sign(self, payload: dict):
-        if self.private_key is not None:
-            try:
-                return ed25519_signature(
-                    self.private_key, payload, self.private_key_pass
-                )
-            except ValueError:
-                return rsa_signature(self.private_key, payload, self.private_key_pass)
-        else:
-            return hmac_hashing(self.api_secret, payload)
+        return hmac_hashing(self.api_secret, payload)

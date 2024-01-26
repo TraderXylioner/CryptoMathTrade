@@ -1,4 +1,4 @@
-from . import URLS
+from ._urls import URLS
 from ..utils import _convert_kwargs_to_dict
 
 
@@ -80,7 +80,7 @@ def get_ticker_args(params: dict) -> dict:
         symbols (list, optional): list of trading pairs
     """
     if params.get('symbol') and params.get('symbols'):
-        raise ValueError('symbol and symbols cannot be sent together.')
+        raise ValueError('symbol and symbols cannot be sent together.')  # custom error
     return {'method': 'GET', 'url': URLS.BASE_URL + URLS.TICKER_URL, 'params': params}
 
 
@@ -123,7 +123,7 @@ def get_open_order_args(SpotObj, params: dict) -> dict:
         recvWindow (int, optional): The value cannot be greater than 60000
     """
     if not params.get('orderId') and not params.get('origClientOrderId'):
-        raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
+        raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')   # custom error
     return {'method': 'GET', 'url': URLS.BASE_URL + URLS.ORDER_URL, 'params': SpotObj.get_payload(params)}
 
 
