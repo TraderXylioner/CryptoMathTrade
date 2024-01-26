@@ -22,21 +22,21 @@ class API:
             self.headers.update(headers)
         return await AsyncRequest(headers=self.headers).send_request(method, url, params)
 
-    # @classmethod
-    # async def _ws_query(cls, url: str, params: str, method: str = 'SUBSCRIBE', timeout_seconds=10):
-    #     payload = {
-    #         "method": method,
-    #         "params": [params],
-    #     }
-    #     connect = WebSocketRequest().open_connect(url=url, payload=payload)
-    #     async for client in connect:
-    #         while True:
-    #             data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
-    #             if not data:
-    #                 raise ConnectionError  # custom error
-    #             json_data = json.loads(data)
-    #             yield json_data
-    #
+    @classmethod
+    async def _ws_query(cls, url: str, params: str, method: str = 'subscribe', timeout_seconds=10):
+        payload = {
+            "op": method,
+            "args": [params],
+        }
+        connect = WebSocketRequest().open_connect(url=url, payload=payload)
+        async for client in connect:
+            while True:
+                data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
+                if not data:
+                    raise ConnectionError  # custom error
+                json_data = json.loads(data)
+                yield json_data
+
     # @check_api_keys
     # def get_payload(self, payload=None):
     #     if payload is None:
