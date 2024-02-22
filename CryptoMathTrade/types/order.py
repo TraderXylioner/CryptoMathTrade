@@ -3,6 +3,13 @@ from pydantic import BaseModel
 
 
 class Order(BaseModel):
+    """
+    Model representing an individual order.
+
+    Attributes:
+        price (Decimal): The price of the order.
+        volume (Decimal): The volume of the order.
+    """
     price: Decimal
     volume: Decimal
 
