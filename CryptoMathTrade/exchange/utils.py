@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 import hmac
 import hashlib
 
-from CryptoMathTrade.exchange.errors import ParameterRequiredError
+from .errors import ParameterRequiredError
 
 
 def clean_none_value(d) -> dict:

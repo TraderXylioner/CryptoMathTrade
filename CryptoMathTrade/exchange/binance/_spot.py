@@ -1,7 +1,6 @@
 from ._api import API
-from .core import get_orders_args, cancel_open_orders_args, get_open_orders_args, get_open_order_args, new_order_args, \
-    cancel_open_order_args
-from CryptoMathTrade.type import Side, TimeInForce
+from .core import Core
+from CryptoMathTrade.types import Side, TimeInForce
 
 
 class Spot(API):
@@ -30,8 +29,9 @@ class Spot(API):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
-            **get_orders_args(self, symbol=symbol, orderId=orderId, startTime=startTime, endTime=endTime, limit=limit,
-                              recvWindow=recvWindow))
+            **Core.get_orders_args(self, symbol=symbol, orderId=orderId, startTime=startTime, endTime=endTime,
+                                   limit=limit,
+                                   recvWindow=recvWindow))
 
     def get_open_order(self,
                        symbol: str,
@@ -54,8 +54,8 @@ class Spot(API):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
-            **get_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
-                                  recvWindow=recvWindow))
+            **Core.get_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
+                                       recvWindow=recvWindow))
 
     def get_open_orders(self,
                         symbol: str | None = None,
@@ -73,7 +73,7 @@ class Spot(API):
             symbol (str, optional)
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        return self._query(**Core.get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
     def cancel_open_order(self,
                           symbol: str,
@@ -98,8 +98,8 @@ class Spot(API):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
-            **cancel_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
-                                     newClientOrderId=newClientOrderId, recvWindow=recvWindow))
+            **Core.cancel_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
+                                          newClientOrderId=newClientOrderId, recvWindow=recvWindow))
 
     def cancel_open_orders(self,
                            symbol: str,
@@ -120,7 +120,7 @@ class Spot(API):
             newClientOrderId (str, optional)
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        return self._query(**Core.cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
     def new_market_order(self,
                          symbol: str,
@@ -142,8 +142,8 @@ class Spot(API):
             quantity (float, optional)
             quoteOrderQty (float, optional)
         """
-        return self._query(**new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity,
-                                            quoteOrderQty=quoteOrderQty))
+        return self._query(**Core.new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity,
+                                                 quoteOrderQty=quoteOrderQty))
 
     def new_limit_order(self,
                         symbol: str,
@@ -168,5 +168,6 @@ class Spot(API):
             price (float, optional)
         """
         return self._query(
-            **new_order_args(self, symbol=symbol, side=side, type='LIMIT', timeInForce=timeInForce, quantity=quantity,
-                             price=price))
+            **Core.new_order_args(self, symbol=symbol, side=side, type='LIMIT', timeInForce=timeInForce,
+                                  quantity=quantity,
+                                  price=price))
