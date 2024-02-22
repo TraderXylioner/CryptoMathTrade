@@ -2,7 +2,7 @@ from typing import Generator
 
 from ._api import API
 from .core import Core
-from CryptoMathTrade.types import OrderBook, Trade, Ticker
+from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
 
 
 class Market(API):
@@ -21,7 +21,10 @@ class Market(API):
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
         res = self._query(**Core.get_depth_args(symbol=symbol, limit=limit))
-        return OrderBook.from_list(res.json())
+        json_data = res.json()
+        return OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
+                         bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
+                         )
 
     def get_trades(self,
                    symbol: str,
@@ -75,7 +78,10 @@ class AsyncMarket(API):
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
         res = await self._async_query(**Core.get_depth_args(symbol=symbol, limit=limit))
-        return OrderBook.from_list(res)
+        json_data = res
+        return OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
+                         bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
+                         )
 
     async def get_trades(self,
                          symbol: str,
