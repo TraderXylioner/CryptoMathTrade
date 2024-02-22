@@ -1,7 +1,8 @@
 from decimal import Decimal
 
 from .utils import check_fee, get_spread
-from CryptoMathTrade.types import Order, ArbitrageDeal
+from ..types.order import Order
+from ..types.arbitrage import ArbitrageDeal
 
 
 def convert_price_in_order(order: Order, relative_price: float | Decimal) -> Order:

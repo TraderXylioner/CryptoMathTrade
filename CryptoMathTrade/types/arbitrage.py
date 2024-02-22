@@ -2,8 +2,6 @@ from decimal import Decimal
 
 from pydantic import BaseModel
 
-from ..trader.utils import get_spread
-
 
 class ArbitrageDeal(BaseModel):
     """
@@ -38,6 +36,7 @@ class ArbitrageDeal(BaseModel):
         """
         Method to calculate the spread based on the buy and sell prices and fees.
         """
+        from ..trader.utils import get_spread
         return get_spread(
             ask=self.price_buy * (Decimal(1) + self.fee_buy),
             bid=self.price_sell * (Decimal(1) - self.fee_sell)
