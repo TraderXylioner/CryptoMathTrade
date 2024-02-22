@@ -20,4 +20,4 @@ class Deals(BaseModel):
     Attributes:
         deals (list[Deal]): A list of Deal objects, each representing an individual deal.
     """
-    deals: list[Deal]
+    deals: list[Deal] = []
