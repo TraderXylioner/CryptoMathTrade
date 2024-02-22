@@ -40,3 +40,61 @@ def convert_price_in_order_list(order_list: list[Order], relative_price: float |
         list[Order]: The list of modified orders with the prices converted.
     """
     return [convert_price_in_order(order, relative_price) for order in order_list]
+
+
+def calculate_spread(asks: list[Order],
+                     bids: list[Order],
+                     asks_fee: Decimal | float,
+                     bids_fee: Decimal | float) -> list[ArbitrageDeal]:
+    """
+    Calculates arbitrage deals based on the provided ask and bid orders,
+    taking into account the ask and bid fees.
+
+    Args:
+        asks (list[Order]): The list of ask orders.
+        bids (list[Order]): The list of bid orders.
+        asks_fee (Decimal | float): The fee percentage for ask orders.
+            It can be specified as a Decimal or a float.
+        bids_fee (Decimal | float): The fee percentage for bid orders.
+            It can be specified as a Decimal or a float.
+
+    Returns:
+        list[ArbitrageDeal]: A list of ArbitrageDeal objects representing
+        the arbitrage deals calculated.
+    """
+    asks_fee, bids_fee = check_fee(asks_fee), check_fee(bids_fee)
+
+    deals = []
+
+    while min(len(asks), len(bids)) > 0:
+        ask = asks[0]
+        bid = bids[0]
+
+        adjusted_ask_price = ask.price * (Decimal(1) + asks_fee)
+        adjusted_bid_price = bid.price * (Decimal(1) - bids_fee)
+
+        spread = get_spread(adjusted_ask_price, adjusted_bid_price)
+
+        if spread <= 0:
+            break
+
+        difference_in_volume = bid.volume - ask.volume
+        if difference_in_volume < 0:
+            ask.volume = difference_in_volume * -1
+            bids.pop(0)
+        elif difference_in_volume == 0:
+            bids.pop(0)
+            asks.pop(0)
+        else:
+            bid.volume = difference_in_volume
+            asks.pop(0)
+        volume = min(ask.volume, bid.volume)
+        deals.append(ArbitrageDeal(
+            price_buy=ask.price,
+            price_sell=bid.price,
+            volume=volume,
+            fee_buy=asks_fee,
+            fee_sell=bids_fee
+        ))
+
+    return deals
