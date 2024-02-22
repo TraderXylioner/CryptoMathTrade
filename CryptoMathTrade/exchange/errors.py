@@ -43,7 +43,7 @@ class ParameterRequiredError(Error):
 #         self.params = params
 #
 #     def __str__(self):
-#         return f"{self.params[0]} data type has to be {self.params[1]}"
+#         return f"{self.params[0]} data old_type has to be {self.params[1]}"
 #
 #
 # class ParameterArgumentError(Error):

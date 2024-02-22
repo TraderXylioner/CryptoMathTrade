@@ -197,7 +197,7 @@ def new_order_args(SpotObj, params: dict) -> dict:
     params:
         symbol (str)
         side (str)
-        type (str)
+        old_type (str)
         timeInForce (str, optional)
         quantity (float, optional)
         quoteOrderQty (float, optional)
