@@ -3,7 +3,7 @@ import websockets
 import aiohttp
 import requests
 
-from CryptoMathTrade.exchange.utils import clean_none_value, _prepare_params, _dispatch_request
+from .utils import clean_none_value, _prepare_params, _dispatch_request
 
 
 class Request:
