@@ -1,4 +1,5 @@
 from .binance.core import Core as binance_core
+from .kucoin.core import Core as kucoin_core
 
 
 class ExchangeCores:
@@ -6,7 +7,8 @@ class ExchangeCores:
     Class representing cores of different exchanges.
     """
     cores = {
-        'binance': binance_core(),
+        'binance': binance_core,
+        'kucoin': kucoin_core,
     }
 
     @classmethod
