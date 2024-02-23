@@ -1,5 +1,6 @@
 from .binance.core import Core as binance_core
 from .kucoin.core import Core as kucoin_core
+from .okx.core import Core as okx_core
 
 
 class ExchangeCores:
@@ -9,6 +10,7 @@ class ExchangeCores:
     cores = {
         'binance': binance_core,
         'kucoin': kucoin_core,
+        'okx': okx_core,
     }
 
     @classmethod
