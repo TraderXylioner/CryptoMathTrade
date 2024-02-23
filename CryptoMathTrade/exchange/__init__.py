@@ -1,12 +1,12 @@
-from .binance.core import Core as binance_core
-from .kucoin.core import Core as kucoin_core
-from .okx.core import Core as okx_core
-from .htx.core import Core as htx_core
-from .bitmart.core import Core as bitmart_core
-from .gate.core import Core as gate_core
-from .mexc.core import Core as mexc_core
-from .bitget.core import Core as bitget_core
-from .ascendex.core import Core as ascendex_core
+from .binance.core import Core as binanceCore
+from .kucoin.core import Core as kucoinCore
+from .okx.core import Core as okxCore
+from .htx.core import Core as htxCore
+from .bitmart.core import Core as bitmartCore
+from .gate.core import Core as gateCore
+from .mexc.core import Core as mexcCore
+from .bitget.core import Core as bitgetCore
+from .ascendex.core import Core as ascendexCore
 
 
 class ExchangeCores:
@@ -14,15 +14,15 @@ class ExchangeCores:
     Class representing cores of different exchanges.
     """
     cores = {
-        'binance': binance_core,
-        'kucoin': kucoin_core,
-        'okx': okx_core,
-        'htx': htx_core,
-        'bitmart': bitmart_core,
-        'gate': gate_core,
-        'mexc': mexc_core,
-        'bitget': bitget_core,
-        'ascendex': ascendex_core,
+        'binance': binanceCore,
+        'kucoin': kucoinCore,
+        'okx': okxCore,
+        'htx': htxCore,
+        'bitmart': bitmartCore,
+        'gate': gateCore,
+        'mexc': mexcCore,
+        'bitget': bitgetCore,
+        'ascendex': ascendexCore,
     }
 
     @classmethod
