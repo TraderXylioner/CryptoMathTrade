@@ -1,6 +1,7 @@
 # CryptoMathTrade
 tools for trades
-# Functionality
-1. convert price
-2. compare books
-3. buy/sell
+
+
+tasks:
+
+    1.need add check required args
