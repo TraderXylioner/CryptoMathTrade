@@ -3,6 +3,7 @@ from typing import Generator
 from ._api import API
 from .core import MarketCore, WSMarketCore
 from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
+from ..utils import validate_response
 
 
 class Market(API):
