@@ -1,12 +1,12 @@
-from .binance.core import Core as binanceCore
-from .kucoin.core import Core as kucoinCore
-from .okx.core import Core as okxCore
-from .htx.core import Core as htxCore
-from .bitmart.core import Core as bitmartCore
-from .gate.core import Core as gateCore
-from .mexc.core import Core as mexcCore
-from .bitget.core import Core as bitgetCore
-from .ascendex.core import Core as ascendexCore
+from .binance import core as binanceCore
+from .kucoin import core as kucoinCore
+from .okx import core as okxCore
+from .htx import core as htxCore
+from .bitmart import core as bitmartCore
+from .gate import core as gateCore
+from .mexc import core as mexcCore
+from .bitget import core as bitgetCore
+from .ascendex import core as ascendexCore
 
 
 class ExchangeCores:
