@@ -1,7 +1,7 @@
 from typing import Generator
 
 from ._api import API
-from .core import Core
+from .core import MarketCore, WSMarketCore
 from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
 
 
@@ -20,7 +20,7 @@ class Market(API):
             symbol (str): the trading pair
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
-        res = self._query(**Core.get_depth_args(symbol=symbol, limit=limit))
+        res = self._query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit))
         json_data = res.json()
         return OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
                          bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
@@ -41,7 +41,7 @@ class Market(API):
             symbol (str): the trading pair
             limit (int, optional): limit the results. Default 500; max 1000.
         """
-        res = self._query(**Core.get_trades_args(symbol=symbol, limit=limit))
+        res = self._query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit))
         return [Trade(**trade) for trade in res.json()]
 
     def get_ticker(self,
@@ -58,7 +58,7 @@ class Market(API):
             symbol (str, optional): the trading pair
             symbols (list, optional): list of trading pairs
         """
-        res = self._query(**Core.get_ticker_args(symbol=symbol, symbols=symbols))
+        res = self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol, symbols=symbols))
         return Ticker(**res.json())
 
 
@@ -77,7 +77,7 @@ class AsyncMarket(API):
             symbol (str): the trading pair
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
-        res = await self._async_query(**Core.get_depth_args(symbol=symbol, limit=limit))
+        res = await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit))
         json_data = res
         return OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
                          bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
@@ -98,7 +98,7 @@ class AsyncMarket(API):
             symbol (str): the trading pair
             limit (int, optional): limit the results. Default 500; max 1000.
         """
-        res = await self._async_query(**Core.get_trades_args(symbol=symbol, limit=limit))
+        res = await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit))
         return [Trade(**trade) for trade in res]
 
     async def get_ticker(self,
@@ -115,7 +115,7 @@ class AsyncMarket(API):
             symbol (str, optional): the trading pair
             symbols (list, optional): list of trading pairs
         """
-        res = await self._async_query(**Core.get_ticker_args(symbol=symbol, symbols=symbols))
+        res = await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol, symbols=symbols))
         return Ticker(**res)
 
 

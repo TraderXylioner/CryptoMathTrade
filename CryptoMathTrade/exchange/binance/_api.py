@@ -32,9 +32,6 @@ class API:
             params (dict): Query parameters for the API request.
             method (str): HTTP method for the request (default is 'GET').
             headers (dict): Additional headers for the request.
-
-        Returns:
-            dict: Response data from the API request.
         """
         return Request(headers=headers).send_request(method, url, params)
 
