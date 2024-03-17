@@ -37,6 +37,7 @@ class MarketCore(Core):
 
         param:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
         return self.return_args(method='GET', url=URLS.BASE_URL+URLS.DEPTH_URL, params=params)
@@ -52,6 +53,7 @@ class MarketCore(Core):
 
         params:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 500; max 1000.
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
@@ -66,6 +68,7 @@ class MarketCore(Core):
 
         params:
             symbol (str, optional): the trading pair
+
             symbols (list, optional): list of trading pairs
         """
         if params.get('symbol') and params.get('symbols'):
@@ -86,10 +89,15 @@ class SpotCore(Core):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             startTime (int, optional)
+
             endTime (int, optional)
+
             limit (int, optional): Default 500; max 1000.
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=SpotObj.get_payload(params))
@@ -106,8 +114,11 @@ class SpotCore(Core):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             origClientOrderId (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         if not params.get('orderId') and not params.get('origClientOrderId'):
@@ -126,6 +137,7 @@ class SpotCore(Core):
 
         params:
             symbol (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=SpotObj.get_payload(params))
@@ -142,9 +154,13 @@ class SpotCore(Core):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             origClientOrderId (str, optional)
+
             newClientOrderId (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self.return_args(method='DELETE', url=URLS.BASE_URL + URLS.ORDER_URL, params=SpotObj.get_payload(params))
@@ -161,9 +177,13 @@ class SpotCore(Core):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             origClientOrderId (str, optional)
+
             newClientOrderId (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self.return_args(method='DELETE', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=SpotObj.get_payload(params))
@@ -180,19 +200,32 @@ class SpotCore(Core):
 
         params:
             symbol (str)
+
             side (str)
+
             old_type (str)
+
             timeInForce (str, optional)
+
             quantity (float, optional)
+
             quoteOrderQty (float, optional)
+
             price (float, optional)
+
             newClientOrderId (str, optional): A unique id among open orders. Automatically generated if not sent.
+
             strategyId (int, optional)
+
             strategyType (int, optional): The value cannot be less than 1000000.
+
             stopPrice (float, optional): Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
+
             icebergQty (float, optional): Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+
             newOrderRespType (str, optional): Set the response JSON. ACK, RESULT, or FULL;
                     MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self.return_args(method='POST', url=URLS.BASE_URL + URLS.ORDER_URL, params=SpotObj.get_payload(params))
