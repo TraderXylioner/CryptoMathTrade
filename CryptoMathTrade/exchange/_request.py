@@ -36,13 +36,14 @@ class AsyncRequest:
         if payload is None:
             payload = {}
         params = clean_none_value({'url': url,
-                                   'params': _prepare_params(payload),
+                                   'params': clean_none_value(payload),
                                    'timeout': self.timeout,
                                    'proxies': self.proxies,
                                    })
         async with aiohttp.ClientSession() as session:
             async with _dispatch_request(session, method)(**params) as response:
-                return await response.json()
+                response.json = await response.json()
+                return response
 
 
 class WebSocketRequest:
