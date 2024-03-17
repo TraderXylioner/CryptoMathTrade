@@ -3,7 +3,7 @@ from typing import Generator
 from ._api import API
 from .core import MarketCore, WSMarketCore
 from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
-from ..utils import validate_response
+from ..utils import validate_response, validate_async_response
 
 
 class Market(API):
@@ -80,7 +80,7 @@ class Market(API):
 class AsyncMarket(API):
     async def get_depth(self,
                         symbol: str,
-                        limit: int | None = None,
+                        limit: int = 100,
                         ) -> OrderBook:
         """Get orderbook.
 
@@ -90,17 +90,18 @@ class AsyncMarket(API):
 
         param:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
-        res = await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit))
-        json_data = res
+        res = validate_async_response(await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
+        json_data = res.json
         return OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
                          bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
                          )
 
     async def get_trades(self,
                          symbol: str,
-                         limit: int | None = None,
+                         limit: int = 500,
                          ) -> list[Trade]:
         """Recent Trades List
         Get recent trades (up to last 500).
@@ -111,10 +112,16 @@ class AsyncMarket(API):
 
         params:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 500; max 1000.
         """
-        res = await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit))
-        return [Trade(**trade) for trade in res]
+        res = validate_async_response(await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+        json_data = res.json
+        return [Trade(id=trade.get('id'),
+                      price=trade.get('price'),
+                      quantity=trade.get('qty'),
+                      time=trade.get('time'),
+                      ) for trade in json_data]
 
     async def get_ticker(self,
                          symbol: str | None = None,
@@ -128,10 +135,17 @@ class AsyncMarket(API):
 
         params:
             symbol (str, optional): the trading pair
+
             symbols (list, optional): list of trading pairs
         """
-        res = await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol, symbols=symbols))
-        return Ticker(**res)
+        res = validate_async_response(await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol, symbols=symbols)))
+        json_data = res.json
+        if isinstance(json_data, list):
+            return [Ticker(**ticker) for ticker in json_data]
+        elif isinstance(json_data, dict):
+            return [Ticker(**json_data)]
+        else:
+            raise Exception  # custom exc
 
 
 class WebsSocketMarket(API):
