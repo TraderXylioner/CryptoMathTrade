@@ -29,8 +29,11 @@ class API:
         """
         params:
             url (str): URL for the API endpoint.
+
             params (dict): Query parameters for the API request.
+
             method (str): HTTP method for the request (default is 'GET').
+
             headers (dict): Additional headers for the request.
         """
         return Request(headers=headers).send_request(method, url, params)
@@ -45,12 +48,12 @@ class API:
         """
         params:
             url (str): URL for the API endpoint.
-            params (dict): Query parameters for the API request.
-            method (str): HTTP method for the request (default is 'GET').
-            headers (dict): Additional headers for the request.
 
-        Returns:
-            dict: Response data from the API request.
+            params (dict): Query parameters for the API request.
+
+            method (str): HTTP method for the request (default is 'GET').
+
+            headers (dict): Additional headers for the request.
         """
         return await AsyncRequest(headers=headers).send_request(method, url, params)
 
@@ -64,8 +67,11 @@ class API:
         """
         params:
             url (str): WebSocket URL for the API.
+
             params (str): Parameters for the WebSocket request.
+
             method (str): Method for the WebSocket request (default is 'SUBSCRIBE').
+
             timeout_seconds (int): Timeout duration for the WebSocket connection.
         """
         payload = {
