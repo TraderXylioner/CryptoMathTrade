@@ -1,5 +1,5 @@
 from ._api import API
-from .core import Core
+from .core import SpotCore
 from CryptoMathTrade.types import Side, TimeInForce
 
 
@@ -29,9 +29,8 @@ class Spot(API):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
-            **Core.get_orders_args(self, symbol=symbol, orderId=orderId, startTime=startTime, endTime=endTime,
-                                   limit=limit,
-                                   recvWindow=recvWindow))
+            **SpotCore.get_orders_args(self, symbol=symbol, orderId=orderId, startTime=startTime, endTime=endTime,
+                                       limit=limit, recvWindow=recvWindow))
 
     def get_open_order(self,
                        symbol: str,
@@ -54,8 +53,8 @@ class Spot(API):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
-            **Core.get_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
-                                       recvWindow=recvWindow))
+            **SpotCore.get_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
+                                           recvWindow=recvWindow))
 
     def get_open_orders(self,
                         symbol: str | None = None,
@@ -73,7 +72,7 @@ class Spot(API):
             symbol (str, optional)
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**Core.get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        return self._query(**SpotCore.get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
     def cancel_open_order(self,
                           symbol: str,
@@ -98,8 +97,8 @@ class Spot(API):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
-            **Core.cancel_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
-                                          newClientOrderId=newClientOrderId, recvWindow=recvWindow))
+            **SpotCore.cancel_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
+                                              newClientOrderId=newClientOrderId, recvWindow=recvWindow))
 
     def cancel_open_orders(self,
                            symbol: str,
@@ -120,7 +119,7 @@ class Spot(API):
             newClientOrderId (str, optional)
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**Core.cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        return self._query(**SpotCore.cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
     def new_market_order(self,
                          symbol: str,
@@ -142,8 +141,8 @@ class Spot(API):
             quantity (float, optional)
             quoteOrderQty (float, optional)
         """
-        return self._query(**Core.new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity,
-                                                 quoteOrderQty=quoteOrderQty))
+        return self._query(**SpotCore.new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity,
+                                                     quoteOrderQty=quoteOrderQty))
 
     def new_limit_order(self,
                         symbol: str,
@@ -168,6 +167,5 @@ class Spot(API):
             price (float, optional)
         """
         return self._query(
-            **Core.new_order_args(self, symbol=symbol, side=side, type='LIMIT', timeInForce=timeInForce,
-                                  quantity=quantity,
-                                  price=price))
+            **SpotCore.new_order_args(self, symbol=symbol, side=side, type='LIMIT', timeInForce=timeInForce,
+                                      quantity=quantity, price=price))
