@@ -47,8 +47,12 @@ class AsyncRequest:
 
 
 class WebSocketRequest:
-    @classmethod
-    async def open_connect(cls, url: str, payload: dict):
-        async with websockets.connect(url) as client:
+    def __init__(self, timeout=None, proxies=None, headers=None):
+        self.timeout = timeout
+        self.proxies = proxies
+        self.headers = headers
+
+    async def open_connect(self, url: str, payload: dict):
+        async with websockets.connect(url, extra_headers=self.headers) as client:
             await client.send(json.dumps(payload))
             yield client

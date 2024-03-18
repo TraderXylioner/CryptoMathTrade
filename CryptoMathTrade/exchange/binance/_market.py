@@ -1,7 +1,7 @@
 from typing import Generator
 
 from ._api import API
-from .core import MarketCore  # , WSMarketCore
+from .core import MarketCore, WSMarketCore
 from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
 from ..utils import validate_response, validate_async_response
 from .._response import Response
@@ -168,35 +168,36 @@ class AsyncMarket(API):
                         response_object=response,
                         )
 
-# class WebsSocketMarket(API):
-#     async def get_depth(self,
-#                         symbol: str,
-#                         ) -> Generator:
-#         """Partial Book Depth Streams
-#
-#         Top bids and asks, Valid are 5, 10, or 20.
-#
-#         Stream Names: <symbol>@depth<levels> OR <symbol>@depth<levels>@100ms.
-#
-#         param:
-#             symbol (str): the trading pair
-#
-#         Update Speed: 1000ms or 100ms
-#         """
-#         return self._ws_query(**WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol))
-#
-#     async def get_trades(self,
-#                          symbol: str,
-#                          ) -> Generator:
-#         """Trade Streams
-#
-#          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
-#
-#          Stream Name: <symbol>@trade
-#
-#          param:
-#             symbol (str): the trading pair
-#
-#          Update Speed: Real-time
-#          """
-#         return self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol))
+
+class WebsSocketMarket(API):
+    async def get_depth(self,
+                        symbol: str,
+                        ) -> Generator:
+        """Partial Book Depth Streams
+
+        Top bids and asks, Valid are 5, 10, or 20.
+
+        Stream Names: <symbol>@depth<levels> OR <symbol>@depth<levels>@100ms.
+
+        param:
+            symbol (str): the trading pair
+
+        Update Speed: 1000ms or 100ms
+        """
+        return self._ws_query(**WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol))
+
+    async def get_trades(self,
+                         symbol: str,
+                         ) -> Generator:
+        """Trade Streams
+
+         The Trade Streams push raw trade information; each trade has a unique buyer and seller.
+
+         Stream Name: <symbol>@trade
+
+         param:
+            symbol (str): the trading pair
+
+         Update Speed: Real-time
+         """
+        return self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol))
