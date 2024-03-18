@@ -219,8 +219,9 @@ class Spot(API):
     def new_limit_order(self,
                         symbol: str,
                         side: Side,
-                        quantity: float,
                         price: float,
+                        quantity: float | None = None,
+                        quoteOrderQty: float | None = None,
                         timeInForce: TimeInForce = TimeInForce.GTC,
                         ):
         """New Limit Order (TRADE)
@@ -247,6 +248,7 @@ class Spot(API):
                                                                                                  side=side.value,
                                                                                                  type='LIMIT',
                                                                                                  quantity=quantity,
+                                                                                                 quoteOrderQty=quoteOrderQty,
                                                                                                  price=price,
                                                                                                  timeInForce=timeInForce.value,
                                                                                                  )))
