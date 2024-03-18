@@ -74,6 +74,8 @@ class API:
             method (str): Method for the WebSocket request (default is 'SUBSCRIBE').
 
             timeout_seconds (int): Timeout duration for the WebSocket connection.
+
+            headers (dict): Additional headers for the request.
         """
         payload = {
             "method": method,
