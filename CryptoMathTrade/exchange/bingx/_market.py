@@ -1,16 +1,18 @@
 from typing import Generator
 
 from ._api import API
-from .core import get_depth_args, get_trades_args, get_ticker_args, ws_get_depth_args, ws_get_trades_args
-from ...type import OrderBook, Trade, Ticker
+from .core import MarketCore, WSMarketCore
+from .._response import Response
+from ..utils import validate_response, validate_async_response
+from ...types import OrderBook, Trade, Ticker, Order
 
 
 class Market(API):
     def get_depth(self,
                   symbol: str,
-                  limit: int | None = None,
+                  limit: int = 100,
                   recvWindow: int | None = None,
-                  ):
+                  ) -> Response:
         """Get orderbook.
 
         GET /openApi/spot/v1/market/depth
@@ -19,19 +21,26 @@ class Market(API):
 
         param:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 100; max 1000. If limit > 1000, then the response will truncate to 1000
+
             recvWindow (int, optional).
         """
-        res = self._query(**get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow))
-        res = res.json()['data']
-        res['asks'] = res['asks'][::-1]
-        return OrderBook.from_list(res)
+        response = validate_response(self._query(
+            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
+        json_data = response.json()['data']
+        json_data['asks'] = json_data['asks'][::-1]
+        return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
+                                       bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
+                                       ),
+                        response_object=response,
+                        )
 
     def get_trades(self,
                    symbol: str,
-                   limit: int | None = None,
+                   limit: int = 100,
                    recvWindow: int | None = None,
-                   ):
+                   ) -> Response:
         """Recent Trades List
         Get recent trades (up to last 100).
 
@@ -41,18 +50,21 @@ class Market(API):
 
         params:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 100; max 100
+
             recvWindow (int, optional).
         """
-        res = self._query(**get_trades_args(symbol=symbol, limit=limit, recvWindow=recvWindow)).json()['data']
-        return [Trade(id=trade.get('id'),
-                      price=trade.get('price'),
-                      qty=trade.get('qty'),
-                      time=trade.get('time'),
-                      isBuyerMaker=trade.get('buyerMaker'),
-                      quoteQty=trade.get('quoteQty'),
-                      isBestMatch=trade.get('isBestMatch'),
-                      ) for trade in res]
+        response = validate_response(self._query(
+            **MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
+        json_data = response.json()['data']
+        return Response(data=[Trade(id=trade.get('id'),
+                                    price=trade.get('price'),
+                                    quantity=trade.get('qty'),
+                                    time=trade.get('time'),
+                                    ) for trade in json_data],
+                        response_object=response,
+                        )
 
     def get_ticker(self,
                    symbol: str | None = None
@@ -66,26 +78,28 @@ class Market(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        res = self._query(**get_ticker_args(symbol=symbol))
-        res = res.json()['data']
-        return [Ticker(symbol=ticker.get('symbol'),
-                       priceChange=ticker.get('priceChange'),
-                       priceChangePercent=ticker.get('priceChangePercent'),
-                       openPrice=ticker.get('openPrice'),
-                       highPrice=ticker.get('highPrice'),
-                       lowPrice=ticker.get('lowPrice'),
-                       lastPrice=ticker.get('lastPrice'),
-                       volume=ticker.get('volume'),
-                       quoteVolume=ticker.get('quoteVolume'),
-                       openTime=ticker.get('openTime'),
-                       closeTime=ticker.get('closeTime'),
-                       ) for ticker in res]
+        response = validate_response(self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+        json_data = response.json()['data']
+        return Response(data=[Ticker(symbol=ticker.get('symbol'),
+                                     priceChange=ticker.get('priceChange'),
+                                     priceChangePercent=ticker.get('priceChangePercent')[:-1],
+                                     openPrice=ticker.get('openPrice'),
+                                     highPrice=ticker.get('highPrice'),
+                                     lowPrice=ticker.get('lowPrice'),
+                                     lastPrice=ticker.get('lastPrice'),
+                                     volume=ticker.get('volume'),
+                                     quoteVolume=ticker.get('quoteVolume'),
+                                     openTime=ticker.get('openTime'),
+                                     closeTime=ticker.get('closeTime'),
+                                     ) for ticker in json_data],
+                        response_object=response,
+                        )
 
 
 class AsyncMarket(API):
     async def get_depth(self,
                         symbol: str,
-                        limit: int | None = None,
+                        limit: int = 100,
                         recvWindow: int | None = None
                         ):
         """Get orderbook.
@@ -96,17 +110,24 @@ class AsyncMarket(API):
 
         param:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 100; max 1000. If limit > 1000, then the response will truncate to 1000
+
             recvWindow (int, optional).
         """
-        res = await self._async_query(**get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow))
-        res = res['data']
-        res['asks'] = res['asks'][::-1]
-        return OrderBook.from_list(res)
+        response = validate_async_response(await self._async_query(
+            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
+        json_data = response.json['data']
+        json_data['asks'] = json_data['asks'][::-1]
+        return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
+                                       bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
+                                       ),
+                        response_object=response,
+                        )
 
     async def get_trades(self,
                          symbol: str,
-                         limit: int | None = None):
+                         limit: int = 100):
         """Recent Trades List
         Get recent trades (up to last 100).
 
@@ -116,19 +137,18 @@ class AsyncMarket(API):
 
         params:
             symbol (str): the trading pair
+
             limit (int, optional): limit the results. Default 100; max 100
-            recvWindow (int, optional).
         """
-        res = await self._async_query(**get_trades_args(symbol=symbol, limit=limit))
-        res = res['data']
-        return [Trade(id=trade.get('id'),
-                      price=trade.get('price'),
-                      qty=trade.get('qty'),
-                      time=trade.get('time'),
-                      isBuyerMaker=trade.get('buyerMaker'),
-                      quoteQty=trade.get('quoteQty'),
-                      isBestMatch=trade.get('isBestMatch'),
-                      ) for trade in res]
+        response = validate_async_response(await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+        json_data = response.json['data']
+        return Response(data=[Trade(id=trade.get('id'),
+                                    price=trade.get('price'),
+                                    quantity=trade.get('qty'),
+                                    time=trade.get('time'),
+                                    ) for trade in json_data],
+                        response_object=response,
+                        )
 
     async def get_ticker(self,
                          symbol: str | None = None
@@ -142,20 +162,22 @@ class AsyncMarket(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        res = await self._async_query(**get_ticker_args(symbol=symbol))
-        res = res['data']
-        return [Ticker(symbol=ticker.get('symbol'),
-                       priceChange=ticker.get('priceChange'),
-                       priceChangePercent=ticker.get('priceChangePercent'),
-                       openPrice=ticker.get('openPrice'),
-                       highPrice=ticker.get('highPrice'),
-                       lowPrice=ticker.get('lowPrice'),
-                       lastPrice=ticker.get('lastPrice'),
-                       volume=ticker.get('volume'),
-                       quoteVolume=ticker.get('quoteVolume'),
-                       openTime=ticker.get('openTime'),
-                       closeTime=ticker.get('closeTime'),
-                       ) for ticker in res]
+        response = validate_async_response(await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+        json_data = response.json['data']
+        return Response(data=[Ticker(symbol=ticker.get('symbol'),
+                                     priceChange=ticker.get('priceChange'),
+                                     priceChangePercent=ticker.get('priceChangePercent')[:-1],
+                                     openPrice=ticker.get('openPrice'),
+                                     highPrice=ticker.get('highPrice'),
+                                     lowPrice=ticker.get('lowPrice'),
+                                     lastPrice=ticker.get('lastPrice'),
+                                     volume=ticker.get('volume'),
+                                     quoteVolume=ticker.get('quoteVolume'),
+                                     openTime=ticker.get('openTime'),
+                                     closeTime=ticker.get('closeTime'),
+                                     ) for ticker in json_data],
+                        response_object=response,
+                        )
 
 
 class WebsSocketMarket(API):
