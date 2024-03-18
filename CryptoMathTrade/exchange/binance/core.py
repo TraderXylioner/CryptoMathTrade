@@ -178,12 +178,6 @@ class SpotCore(Core):
         params:
             symbol (str)
 
-            orderId (int, optional)
-
-            origClientOrderId (str, optional)
-
-            newClientOrderId (str, optional)
-
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self.return_args(method='DELETE', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=SpotObj.get_payload(params))

@@ -9,7 +9,7 @@ class Spot(API):
                    orderId: int | None = None,
                    startTime: int | None = None,
                    endTime: int | None = None,
-                   limit: int | None = None,
+                   limit: int = 500,
                    recvWindow: int | None = None,
                    ):
         """All Orders (USER_DATA)
@@ -34,8 +34,14 @@ class Spot(API):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
-            **SpotCore.get_orders_args(self, symbol=symbol, orderId=orderId, startTime=startTime, endTime=endTime,
-                                       limit=limit, recvWindow=recvWindow))
+            **SpotCore(headers=self.headers).get_orders_args(self,
+                                                             symbol=symbol,
+                                                             orderId=orderId,
+                                                             startTime=startTime,
+                                                             endTime=endTime,
+                                                             limit=limit,
+                                                             recvWindow=recvWindow,
+                                                             ))
 
     def get_open_order(self,
                        symbol: str,
@@ -60,9 +66,12 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(
-            **SpotCore.get_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
-                                           recvWindow=recvWindow))
+        return self._query(**SpotCore(headers=self.headers).get_open_order_args(self,
+                                                                                symbol=symbol,
+                                                                                orderId=orderId,
+                                                                                origClientOrderId=origClientOrderId,
+                                                                                recvWindow=recvWindow,
+                                                                                ))
 
     def get_open_orders(self,
                         symbol: str | None = None,
@@ -81,7 +90,11 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**SpotCore.get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        return self._query(
+            **SpotCore(headers=self.headers).get_open_orders_args(self,
+                                                                  symbol=symbol,
+                                                                  recvWindow=recvWindow,
+                                                                  ))
 
     def cancel_open_order(self,
                           symbol: str,
@@ -109,9 +122,13 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(
-            **SpotCore.cancel_open_order_args(self, symbol=symbol, orderId=orderId, origClientOrderId=origClientOrderId,
-                                              newClientOrderId=newClientOrderId, recvWindow=recvWindow))
+        return self._query(**SpotCore(headers=self.headers).cancel_open_order_args(self,
+                                                                                   symbol=symbol,
+                                                                                   orderId=orderId,
+                                                                                   origClientOrderId=origClientOrderId,
+                                                                                   newClientOrderId=newClientOrderId,
+                                                                                   recvWindow=recvWindow,
+                                                                                   ))
 
     def cancel_open_orders(self,
                            symbol: str,
@@ -128,15 +145,10 @@ class Spot(API):
         params:
             symbol (str)
 
-            orderId (int, optional)
-
-            origClientOrderId (str, optional)
-
-            newClientOrderId (str, optional)
-
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**SpotCore.cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        return self._query(
+            **SpotCore(headers=self.headers).cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
 
     def new_market_order(self,
                          symbol: str,
@@ -161,8 +173,14 @@ class Spot(API):
 
             quoteOrderQty (float, optional)
         """
-        return self._query(**SpotCore.new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity,
-                                                     quoteOrderQty=quoteOrderQty))
+        return self._query(
+            **SpotCore(headers=self.headers).new_order_args(self,
+                                                            symbol=symbol,
+                                                            side=side,
+                                                            type='MARKET',
+                                                            quantity=quantity,
+                                                            quoteOrderQty=quoteOrderQty,
+                                                            ))
 
     def new_limit_order(self,
                         symbol: str,
@@ -190,6 +208,11 @@ class Spot(API):
 
             price (float, optional)
         """
-        return self._query(
-            **SpotCore.new_order_args(self, symbol=symbol, side=side, type='LIMIT', timeInForce=timeInForce,
-                                      quantity=quantity, price=price))
+        return self._query(**SpotCore(headers=self.headers).new_order_args(self,
+                                                                           symbol=symbol,
+                                                                           side=side,
+                                                                           type='LIMIT',
+                                                                           timeInForce=timeInForce,
+                                                                           quantity=quantity,
+                                                                           price=price,
+                                                                           ))
