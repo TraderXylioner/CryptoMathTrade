@@ -2,6 +2,7 @@ from ._api import API
 from .core import SpotCore
 from .._response import Response
 from CryptoMathTrade.types import Side, TimeInForce
+from ..utils import validate_response
 
 
 class Spot(API):
@@ -34,7 +35,7 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = self._query(
+        response = validate_response(self._query(
             **SpotCore(headers=self.headers).get_orders_args(self,
                                                              symbol=symbol,
                                                              limit=limit,
@@ -42,7 +43,7 @@ class Spot(API):
                                                              startTime=startTime,
                                                              endTime=endTime,
                                                              recvWindow=recvWindow,
-                                                             ))
+                                                             )))
         json_data = response.json()
         return Response(data=json_data,
                         response_object=response,
@@ -71,12 +72,12 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = self._query(**SpotCore(headers=self.headers).get_open_order_args(self,
-                                                                                    symbol=symbol,
-                                                                                    orderId=orderId,
-                                                                                    origClientOrderId=origClientOrderId,
-                                                                                    recvWindow=recvWindow,
-                                                                                    ))
+        response = validate_response(self._query(**SpotCore(headers=self.headers).get_open_order_args(self,
+                                                                                                      symbol=symbol,
+                                                                                                      orderId=orderId,
+                                                                                                      origClientOrderId=origClientOrderId,
+                                                                                                      recvWindow=recvWindow,
+                                                                                                      )))
         json_data = response.json()
         return Response(data=json_data,
                         response_object=response,
@@ -99,11 +100,11 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = self._query(
+        response = validate_response(self._query(
             **SpotCore(headers=self.headers).get_open_orders_args(self,
                                                                   symbol=symbol,
                                                                   recvWindow=recvWindow,
-                                                                  ))
+                                                                  )))
         json_data = response.json()
         return Response(data=json_data,
                         response_object=response,
@@ -135,13 +136,13 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = self._query(**SpotCore(headers=self.headers).cancel_open_order_args(self,
-                                                                                       symbol=symbol,
-                                                                                       orderId=orderId,
-                                                                                       origClientOrderId=origClientOrderId,
-                                                                                       newClientOrderId=newClientOrderId,
-                                                                                       recvWindow=recvWindow,
-                                                                                       ))
+        response = validate_response(self._query(**SpotCore(headers=self.headers).cancel_open_order_args(self,
+                                                                                                         symbol=symbol,
+                                                                                                         orderId=orderId,
+                                                                                                         origClientOrderId=origClientOrderId,
+                                                                                                         newClientOrderId=newClientOrderId,
+                                                                                                         recvWindow=recvWindow,
+                                                                                                         )))
         json_data = response.json()
         return Response(data=json_data,
                         response_object=response,
@@ -164,8 +165,8 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = self._query(
-            **SpotCore(headers=self.headers).cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        response = validate_response(self._query(
+            **SpotCore(headers=self.headers).cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow)))
         json_data = response.json()
         return Response(data=json_data,
                         response_object=response,
@@ -194,14 +195,14 @@ class Spot(API):
 
             quoteOrderQty (float, optional)
         """
-        response = self._query(
+        response = validate_response(self._query(
             **SpotCore(headers=self.headers).new_order_args(self,
                                                             symbol=symbol,
                                                             side=side.value,
                                                             type='MARKET',
                                                             quantity=quantity,
                                                             quoteOrderQty=quoteOrderQty,
-                                                            ))
+                                                            )))
         json_data = response.json()
         return Response(data=json_data,
                         response_object=response,
@@ -233,14 +234,14 @@ class Spot(API):
 
             timeInForce (str, optional)
         """
-        response = self._query(**SpotCore(headers=self.headers).new_order_args(self,
-                                                                               symbol=symbol,
-                                                                               side=side.value,
-                                                                               type='LIMIT',
-                                                                               quantity=quantity,
-                                                                               price=price,
-                                                                               timeInForce=timeInForce.value,
-                                                                               ))
+        response = validate_response(self._query(**SpotCore(headers=self.headers).new_order_args(self,
+                                                                                                 symbol=symbol,
+                                                                                                 side=side.value,
+                                                                                                 type='LIMIT',
+                                                                                                 quantity=quantity,
+                                                                                                 price=price,
+                                                                                                 timeInForce=timeInForce.value,
+                                                                                                 )))
         json_data = response.json()
         return Response(data=json_data,
                         response_object=response,
