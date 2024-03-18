@@ -1,17 +1,18 @@
 from ._api import API
 from .core import SpotCore
+from .._response import Response
 from CryptoMathTrade.types import Side, TimeInForce
 
 
 class Spot(API):
     def get_orders(self,
                    symbol: str,
+                   limit: int = 500,
                    orderId: int | None = None,
                    startTime: int | None = None,
                    endTime: int | None = None,
-                   limit: int = 500,
                    recvWindow: int | None = None,
-                   ):
+                   ) -> Response:
         """All Orders (USER_DATA)
 
         Get all account orders; active, canceled, or filled.
@@ -23,25 +24,29 @@ class Spot(API):
         params:
             symbol (str)
 
+            limit (int, optional): Default 500; max 1000.
+
             orderId (int, optional)
 
             startTime (int, optional)
 
             endTime (int, optional)
 
-            limit (int, optional): Default 500; max 1000.
-
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(
+        response = self._query(
             **SpotCore(headers=self.headers).get_orders_args(self,
                                                              symbol=symbol,
+                                                             limit=limit,
                                                              orderId=orderId,
                                                              startTime=startTime,
                                                              endTime=endTime,
-                                                             limit=limit,
                                                              recvWindow=recvWindow,
                                                              ))
+        json_data = response.json()
+        return Response(data=json_data,
+                        response_object=response,
+                        )
 
     def get_open_order(self,
                        symbol: str,
@@ -66,12 +71,16 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**SpotCore(headers=self.headers).get_open_order_args(self,
-                                                                                symbol=symbol,
-                                                                                orderId=orderId,
-                                                                                origClientOrderId=origClientOrderId,
-                                                                                recvWindow=recvWindow,
-                                                                                ))
+        response = self._query(**SpotCore(headers=self.headers).get_open_order_args(self,
+                                                                                    symbol=symbol,
+                                                                                    orderId=orderId,
+                                                                                    origClientOrderId=origClientOrderId,
+                                                                                    recvWindow=recvWindow,
+                                                                                    ))
+        json_data = response.json()
+        return Response(data=json_data,
+                        response_object=response,
+                        )
 
     def get_open_orders(self,
                         symbol: str | None = None,
@@ -90,11 +99,15 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(
+        response = self._query(
             **SpotCore(headers=self.headers).get_open_orders_args(self,
                                                                   symbol=symbol,
                                                                   recvWindow=recvWindow,
                                                                   ))
+        json_data = response.json()
+        return Response(data=json_data,
+                        response_object=response,
+                        )
 
     def cancel_open_order(self,
                           symbol: str,
@@ -122,13 +135,17 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(**SpotCore(headers=self.headers).cancel_open_order_args(self,
-                                                                                   symbol=symbol,
-                                                                                   orderId=orderId,
-                                                                                   origClientOrderId=origClientOrderId,
-                                                                                   newClientOrderId=newClientOrderId,
-                                                                                   recvWindow=recvWindow,
-                                                                                   ))
+        response = self._query(**SpotCore(headers=self.headers).cancel_open_order_args(self,
+                                                                                       symbol=symbol,
+                                                                                       orderId=orderId,
+                                                                                       origClientOrderId=origClientOrderId,
+                                                                                       newClientOrderId=newClientOrderId,
+                                                                                       recvWindow=recvWindow,
+                                                                                       ))
+        json_data = response.json()
+        return Response(data=json_data,
+                        response_object=response,
+                        )
 
     def cancel_open_orders(self,
                            symbol: str,
@@ -147,12 +164,16 @@ class Spot(API):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self._query(
+        response = self._query(
             **SpotCore(headers=self.headers).cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
+        json_data = response.json()
+        return Response(data=json_data,
+                        response_object=response,
+                        )
 
     def new_market_order(self,
                          symbol: str,
-                         side: Side | str,
+                         side: Side,
                          quantity: float | None = None,
                          quoteOrderQty: float | None = None,
                          ):
@@ -173,21 +194,25 @@ class Spot(API):
 
             quoteOrderQty (float, optional)
         """
-        return self._query(
+        response = self._query(
             **SpotCore(headers=self.headers).new_order_args(self,
                                                             symbol=symbol,
-                                                            side=side,
+                                                            side=side.value,
                                                             type='MARKET',
                                                             quantity=quantity,
                                                             quoteOrderQty=quoteOrderQty,
                                                             ))
+        json_data = response.json()
+        return Response(data=json_data,
+                        response_object=response,
+                        )
 
     def new_limit_order(self,
                         symbol: str,
-                        side: Side | str,
-                        timeInForce: TimeInForce | str,
+                        side: Side,
                         quantity: float,
                         price: float,
+                        timeInForce: TimeInForce = TimeInForce.GTC,
                         ):
         """New Limit Order (TRADE)
 
@@ -202,17 +227,21 @@ class Spot(API):
 
             side (str)
 
-            timeInForce (str, optional)
-
             quantity (float, optional)
 
             price (float, optional)
+
+            timeInForce (str, optional)
         """
-        return self._query(**SpotCore(headers=self.headers).new_order_args(self,
-                                                                           symbol=symbol,
-                                                                           side=side,
-                                                                           type='LIMIT',
-                                                                           timeInForce=timeInForce,
-                                                                           quantity=quantity,
-                                                                           price=price,
-                                                                           ))
+        response = self._query(**SpotCore(headers=self.headers).new_order_args(self,
+                                                                               symbol=symbol,
+                                                                               side=side.value,
+                                                                               type='LIMIT',
+                                                                               quantity=quantity,
+                                                                               price=price,
+                                                                               timeInForce=timeInForce.value,
+                                                                               ))
+        json_data = response.json()
+        return Response(data=json_data,
+                        response_object=response,
+                        )
