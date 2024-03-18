@@ -5,9 +5,12 @@ class URLS:
     TRADES_URL = '/openApi/spot/v1/market/trades'
     TICKER_URL = '/openApi/spot/v1/ticker/24hr'
 
-    # ORDER_URL = '/api/v3/order'
-    GET_ORDERS_URL = '/openApi/spot/v1/trade/query'
-    # OPEN_ORDERS_URL = '/api/v3/openOrders'
+    ORDER_URL = '/openApi/spot/v1/trade/query'
+    CREATE_ORDER_URL = '/openApi/spot/v1/trade/order'
+    GET_ORDERS_URL = '/openApi/spot/v1/trade/historyOrders'
+    OPEN_ORDERS_URL = '/openApi/spot/v1/trade/openOrders'
+    CANCEL_ORDER_URL = '/openApi/spot/v1/trade/cancel'
+    CANCEL_ORDERS_URL = '/openApi/spot/v1/trade/cancelOpenOrders'
 
     # GET_DEPOSIT_ADDRESS = '/sapi/v1/capital/deposit/address'
 

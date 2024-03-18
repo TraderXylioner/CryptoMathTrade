@@ -60,32 +60,27 @@ class SpotCore(Core):
     def get_orders_args(self, SpotObj, params):
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=SpotObj.get_payload(params))
 
-    # @convert_kwargs_to_dict
-    # def get_open_order_args(SpotObj, params):
-    #     if not params.get('orderId') and not params.get('origClientOrderId'):
-    #         raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
-    #     return {'method': 'GET', 'url': BASE_URL + ORDER_URL, 'params': SpotObj.get_payload(params)}
-    #
-    #
-    # @convert_kwargs_to_dict
-    # def get_open_orders_args(SpotObj, params):
-    #     return {'method': 'GET', 'url': BASE_URL + OPEN_ORDERS_URL, 'params': SpotObj.get_payload(params)}
-    #
-    #
-    # @convert_kwargs_to_dict
-    # def delete_open_orders_args(SpotObj, params):
-    #     return {'method': 'DELETE', 'url': BASE_URL + OPEN_ORDERS_URL, 'params': SpotObj.get_payload(params)}
-    #
-    #
-    # @convert_kwargs_to_dict
-    # def new_order_args(SpotObj, params):
-    #     return {'method': 'POST', 'url': BASE_URL + ORDER_URL, 'params': SpotObj.get_payload(params)}
-    #
-    #
-    # # Account
-    # @convert_kwargs_to_dict
-    # def get_deposit_address_args(AccountObj, params):
-    #     return {'method': 'GET', 'url': BASE_URL + GET_DEPOSIT_ADDRESS, 'params': AccountObj.get_payload(params)}
+    @_convert_kwargs_to_dict
+    def get_open_order_args(self, SpotObj, params):
+        if not params.get('orderId') and not params.get('origClientOrderId'):
+            raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.ORDER_URL, params=SpotObj.get_payload(params))
+
+    @_convert_kwargs_to_dict
+    def get_open_orders_args(self, SpotObj, params):
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=SpotObj.get_payload(params))
+
+    @_convert_kwargs_to_dict
+    def cancel_open_order_args(self, SpotObj, params: dict) -> dict:
+        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL, params=SpotObj.get_payload(params))
+
+    @_convert_kwargs_to_dict
+    def cancel_open_orders_args(self, SpotObj, params: dict) -> dict:
+        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CANCEL_ORDERS_URL, params=SpotObj.get_payload(params))
+
+    @_convert_kwargs_to_dict
+    def new_order_args(self, SpotObj, params: dict) -> dict:
+        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CREATE_ORDER_URL, params=SpotObj.get_payload(params))
 
 
 class WSMarketCore(Core):
