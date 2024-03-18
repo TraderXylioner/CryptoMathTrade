@@ -22,10 +22,15 @@ class Spot(API):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             startTime (int, optional)
+
             endTime (int, optional)
+
             limit (int, optional): Default 500; max 1000.
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
@@ -48,8 +53,11 @@ class Spot(API):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             origClientOrderId (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
@@ -70,6 +78,7 @@ class Spot(API):
 
         params:
             symbol (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(**SpotCore.get_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
@@ -91,9 +100,13 @@ class Spot(API):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             origClientOrderId (str, optional)
+
             newClientOrderId (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(
@@ -114,9 +127,13 @@ class Spot(API):
 
         params:
             symbol (str)
+
             orderId (int, optional)
+
             origClientOrderId (str, optional)
+
             newClientOrderId (str, optional)
+
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self._query(**SpotCore.cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow))
@@ -137,8 +154,11 @@ class Spot(API):
 
         params:
             symbol (str)
+
             side (str)
+
             quantity (float, optional)
+
             quoteOrderQty (float, optional)
         """
         return self._query(**SpotCore.new_order_args(self, symbol=symbol, side=side, type='MARKET', quantity=quantity,
@@ -161,9 +181,13 @@ class Spot(API):
 
         params:
             symbol (str)
+
             side (str)
+
             timeInForce (str, optional)
+
             quantity (float, optional)
+
             price (float, optional)
         """
         return self._query(
