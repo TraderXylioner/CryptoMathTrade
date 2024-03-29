@@ -110,3 +110,18 @@ class WSMarketCore(Core):
             symbol (str): the trading pair
          """
         return self.return_args(method='sub', url=URLS.WS_BASE_URL, params=f'{params["symbol"]}@trade')
+
+
+class AccountCore(Core):
+    @_convert_kwargs_to_dict
+    def get_balance_args(self, AccountObj, params):
+        """Query Assets
+
+        GET /openApi/spot/v1/account/balance
+
+        https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
+
+        params:
+            recvWindow (int, optional): The value cannot be greater than 60000
+        """
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_BALANCE, params=AccountObj.get_payload(params))

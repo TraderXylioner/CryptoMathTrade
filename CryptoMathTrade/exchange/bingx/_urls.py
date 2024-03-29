@@ -12,7 +12,7 @@ class URLS:
     CANCEL_ORDER_URL = '/openApi/spot/v1/trade/cancel'
     CANCEL_ORDERS_URL = '/openApi/spot/v1/trade/cancelOpenOrders'
 
-    # GET_DEPOSIT_ADDRESS = '/sapi/v1/capital/deposit/address'
+    GET_BALANCE = '/openApi/spot/v1/account/balance'
 
     # WS
     WS_BASE_URL = 'wss://open-api-ws.bingx.com/market'
