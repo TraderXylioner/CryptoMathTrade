@@ -12,6 +12,7 @@ class URLS:
     OPEN_ORDERS_URL = '/api/v3/openOrders'  # https://binance-docs.github.io/apidocs/spot/en/#current-open-orders-user_data
 
     GET_DEPOSIT_ADDRESS = '/sapi/v1/capital/deposit/address'
+    GET_BALANCE = '/sapi/v3/asset/getUserAsset'
 
     # WS
     WS_BASE_URL = 'wss://stream.binance.com:9443/ws'
