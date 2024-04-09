@@ -1,7 +1,4 @@
 # CryptoMathTrade
 tools for trades
 
-
-tasks:
-
-    1.need add check required args
+docs: https://trader-xylioner.notion.site/Docs-e7ecdbbc46064894ae05b9f71e686b54
