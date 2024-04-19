@@ -1,7 +1,7 @@
 from ._api import API
 from .core import SpotCore
 from .._response import Response
-from CryptoMathTrade.types import Side, TimeInForce
+from ...types import Side, TimeInForce
 from ..utils import validate_response
 
 
