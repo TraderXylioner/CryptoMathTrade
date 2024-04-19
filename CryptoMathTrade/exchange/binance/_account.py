@@ -2,10 +2,11 @@ from ._api import API
 from .core import AccountCore
 from .._response import Response
 from ..utils import validate_response
+from ...types.balance import Balance
 
 
 class Account(API):
-    def get_balance(self, asset: str | None = None):
+    def get_balance(self, asset: str | None = None) -> Balance:
         """Query Assets
 
         POST /sapi/v3/asset/getUserAsset
@@ -19,6 +20,9 @@ class Account(API):
                                                                                                       asset=asset,
                                                                                                       )))
         json_data = response.json()
-        return Response(data=json_data,
+        return Response(data=[Balance(**i) for i in json_data],
                         response_object=response,
                         )
+
+#  TODO: async
+#  TODO: Socket

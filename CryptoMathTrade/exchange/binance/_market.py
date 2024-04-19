@@ -2,16 +2,13 @@ from typing import Generator
 
 from ._api import API
 from .core import MarketCore, WSMarketCore
-from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
+from ...types import OrderBook, Trade, Ticker, Order, Side
 from ..utils import validate_response, validate_async_response
 from .._response import Response
 
 
 class Market(API):
-    def get_depth(self,
-                  symbol: str,
-                  limit: int = 100,
-                  ) -> Response:
+    def get_depth(self, symbol: str, limit: int = 100) -> Response:
         """Get orderbook.
 
         GET /api/v3/depth
@@ -32,10 +29,7 @@ class Market(API):
                         response_object=response,
                         )
 
-    def get_trades(self,
-                   symbol: str,
-                   limit: int = 500,
-                   ) -> Response:
+    def get_trades(self, symbol: str, limit: int = 500) -> Response:
         """Recent Trades List
         Get recent trades (up to last 500).
 
@@ -54,15 +48,13 @@ class Market(API):
         return Response(data=[Trade(id=trade.get('id'),
                                     price=trade.get('price'),
                                     quantity=trade.get('qty'),
+                                    side=Side.SELL if trade.get('isBuyerMaker') else Side.BUY,
                                     time=trade.get('time'),
                                     ) for trade in json_data],
                         response_object=response,
                         )
 
-    def get_ticker(self,
-                   symbol: str | None = None,
-                   symbols: list | None = None,
-                   ) -> Response:
+    def get_ticker(self, symbol: str | None = None, symbols: list | None = None) -> Response:
         """24hr Ticker Price Change Statistics
 
         GET /api/v3/ticker/24hr
@@ -77,22 +69,19 @@ class Market(API):
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol, symbols=symbols)))
         json_data = response.json()
+
         if isinstance(json_data, list):
             data = [Ticker(**ticker) for ticker in json_data]
         elif isinstance(json_data, dict):
             data = [Ticker(**json_data)]
         else:
-            raise Exception  # custom exc
-        return Response(data=data,
-                        response_object=response,
-                        )
+            raise Exception(json_data)
+
+        return Response(data=data, response_object=response)
 
 
 class AsyncMarket(API):
-    async def get_depth(self,
-                        symbol: str,
-                        limit: int = 100,
-                        ) -> Response:
+    async def get_depth(self, symbol: str, limit: int = 100) -> Response:
         """Get orderbook.
 
         GET /api/v3/depth
@@ -113,10 +102,7 @@ class AsyncMarket(API):
                         response_object=response,
                         )
 
-    async def get_trades(self,
-                         symbol: str,
-                         limit: int = 500,
-                         ) -> Response:
+    async def get_trades(self, symbol: str, limit: int = 500) -> Response:
         """Recent Trades List
         Get recent trades (up to last 500).
 
@@ -135,15 +121,13 @@ class AsyncMarket(API):
         return Response(data=[Trade(id=trade.get('id'),
                                     price=trade.get('price'),
                                     quantity=trade.get('qty'),
+                                    side=Side.SELL if trade.get('isBuyerMaker') else Side.BUY,
                                     time=trade.get('time'),
                                     ) for trade in json_data],
                         response_object=response,
                         )
 
-    async def get_ticker(self,
-                         symbol: str | None = None,
-                         symbols: list | None = None,
-                         ) -> Response:
+    async def get_ticker(self, symbol: str | None = None, symbols: list | None = None) -> Response:
         """24hr Ticker Price Change Statistics
 
         GET /api/v3/ticker/24hr
@@ -158,17 +142,20 @@ class AsyncMarket(API):
         response = validate_async_response(
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol, symbols=symbols)))
         json_data = response.json
+
         if isinstance(json_data, list):
             data = [Ticker(**ticker) for ticker in json_data]
         elif isinstance(json_data, dict):
             data = [Ticker(**json_data)]
         else:
-            raise Exception  # custom exc
+            raise Exception(json_data)
+
         return Response(data=data,
                         response_object=response,
                         )
 
 
+#  TODO: Socket
 class WebsSocketMarket(API):
     async def get_depth(self,
                         symbol: str,
