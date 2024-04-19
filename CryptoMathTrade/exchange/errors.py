@@ -30,12 +30,17 @@ class ParameterRequiredError(Error):
         return "%s is mandatory, but received empty." % (", ".join(self.params))
 
 
-# class ParameterValueError(Error):
-#     def __init__(self, params):
-#         self.params = params
-#
-#    def __str__(self):
-#        return "the enum value %s is invalid." % (", ".join(self.params))
+class ParameterValueError(Error):
+    def __init__(self, msg=None, params=None):
+        self.msg = msg
+        self.params = params
+
+    def __str__(self):
+        if self.msg:
+            text = self.msg
+        else:
+            text = "the enum value %s is invalid." % (", ".join(self.params))
+        return text
 
 
 # class ParameterTypeError(Error):
