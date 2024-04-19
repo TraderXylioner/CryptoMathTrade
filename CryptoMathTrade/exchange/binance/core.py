@@ -1,5 +1,6 @@
 from ._urls import URLS
 from .._core import Core
+from ..errors import ParameterValueError
 from ..utils import _convert_kwargs_to_dict
 
 
@@ -17,7 +18,7 @@ class MarketCore(Core):
 
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL+URLS.DEPTH_URL, params=params)
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
 
     @_convert_kwargs_to_dict
     def get_trades_args(self, params: dict) -> dict:
@@ -49,7 +50,7 @@ class MarketCore(Core):
             symbols (list, optional): list of trading pairs
         """
         if params.get('symbol') and params.get('symbols'):
-            raise ValueError('symbol and symbols cannot be sent together.')  # custom error
+            raise ParameterValueError(msg='symbol and symbols cannot be sent together.')
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TICKER_URL, params=params)
 
 
@@ -77,7 +78,10 @@ class SpotCore(Core):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='GET',
+                                url=URLS.BASE_URL + URLS.GET_ORDERS_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def get_open_order_args(self, SpotObj, params: dict) -> dict:
@@ -99,7 +103,7 @@ class SpotCore(Core):
             recvWindow (int, optional): The value cannot be greater than 60000
         """
         if not params.get('orderId') and not params.get('origClientOrderId'):
-            raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')   # custom error
+            raise ParameterValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.ORDER_URL, params=SpotObj.get_payload(params))
 
     @_convert_kwargs_to_dict
@@ -117,7 +121,10 @@ class SpotCore(Core):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='GET',
+                                url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def cancel_open_order_args(self, SpotObj, params: dict) -> dict:
@@ -140,7 +147,7 @@ class SpotCore(Core):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='DELETE', url=URLS.BASE_URL + URLS.ORDER_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='DELETE', url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL, params=SpotObj.get_payload(params))
 
     @_convert_kwargs_to_dict
     def cancel_open_orders_args(self, SpotObj, params: dict) -> dict:
@@ -157,7 +164,10 @@ class SpotCore(Core):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='DELETE', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='DELETE',
+                                url=URLS.BASE_URL + URLS.CANCEL_ORDERS_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def new_order_args(self, SpotObj, params: dict) -> dict:
@@ -199,7 +209,7 @@ class SpotCore(Core):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.ORDER_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CREATE_ORDER_URL, params=SpotObj.get_payload(params))
 
 
 class AccountCore(Core):
@@ -214,7 +224,10 @@ class AccountCore(Core):
         params:
             asset (int, optional): If asset is blank, then query all positive assets user have.
         """
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.GET_BALANCE, params=AccountObj.get_payload(params))
+        return self.return_args(method='POST',
+                                url=URLS.BASE_URL + URLS.GET_BALANCE,
+                                params=AccountObj.get_payload(params),
+                                )
 
 
 class WSMarketCore(Core):
