@@ -4,7 +4,7 @@ from .order import Side
 
 
 class Trade(BaseModel):
-    id: int
+    id: int | None = None
     price: float
     quantity: float
     side: Side
