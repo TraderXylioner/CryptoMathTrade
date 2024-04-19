@@ -230,6 +230,7 @@ class AccountCore(Core):
                                 )
 
 
+#  TODO: Socket
 class WSMarketCore(Core):
     @_convert_kwargs_to_dict
     def get_depth_args(self, params: dict) -> dict:

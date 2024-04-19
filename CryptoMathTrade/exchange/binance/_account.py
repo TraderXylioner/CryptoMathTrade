@@ -23,3 +23,6 @@ class Account(API):
         return Response(data=[Balance(**i) for i in json_data],
                         response_object=response,
                         )
+
+#  TODO: async
+#  TODO: Socket

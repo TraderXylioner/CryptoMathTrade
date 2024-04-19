@@ -5,6 +5,7 @@ from ...types import Side, TimeInForce
 from ..utils import validate_response
 
 
+#  TODO: add Order type
 class Spot(API):
     def get_orders(self,
                    symbol: str,
@@ -246,3 +247,7 @@ class Spot(API):
         return Response(data=json_data,
                         response_object=response,
                         )
+
+
+#  TODO: async
+#  TODO: Socket

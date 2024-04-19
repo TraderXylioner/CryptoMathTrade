@@ -155,6 +155,7 @@ class AsyncMarket(API):
                         )
 
 
+#  TODO: Socket
 class WebsSocketMarket(API):
     async def get_depth(self,
                         symbol: str,
