@@ -13,7 +13,20 @@ class Order(BaseModel):
         volume (Decimal): The volume of the order.
     """
     price: Decimal
-    volume: Decimal
+    volume: Decimal  #
+
+    symbol: str = None
+    orderId: None = None
+    origQty: None = None  #
+    executedQty: None = None
+    cummulativeQuoteQty: None = None
+    status: None = None
+    type: None = None
+    side: None = None
+    time: None = None
+    updateTime: None = None
+    origQuoteOrderQty: None = None
+    clientOrderID: None = None
 
 
 class OrderBook(BaseModel):
