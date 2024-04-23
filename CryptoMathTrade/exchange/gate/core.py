@@ -10,7 +10,7 @@ class MarketCore(Core):
 
         GET /api/v4/spot/order_book
 
-        https://www.gate.io/docs/developers/apiv4/en/#retrieve-ticker-information
+        https://www.gate.io/docs/developers/apiv4/en/#retrieve-order-book
 
         param:
             symbol (str): the trading pair
@@ -27,13 +27,12 @@ class MarketCore(Core):
 
         GET /api/v4/spot/trades
 
-        https://www.gate.io/docs/developers/apiv4/en/#retrieve-order-book
+        https://www.gate.io/docs/developers/apiv4/en/#retrieve-market-trades
 
         params:
             symbol (str): the trading pair
 
             limit (int, optional): limit the results. Default 100; max 1000.
-            # TODO: add another params
         """
         if 'symbol' in params:
             params['currency_pair'] = params['symbol']
