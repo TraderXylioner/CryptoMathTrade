@@ -1,12 +1,11 @@
 from ._urls import URLS
+from .._core import Core
 from ..utils import _convert_kwargs_to_dict
 
 
-class Core:
-    # Market
-    @classmethod
+class MarketCore(Core):
     @_convert_kwargs_to_dict
-    def get_depth_args(cls, params: dict) -> dict:
+    def get_depth_args(self, params: dict) -> dict:
         """Get orderbook.
 
         GET /api/v5/market/books
@@ -15,11 +14,53 @@ class Core:
 
         param:
             symbol (str): the trading pair
-            limit (int, optional): limit the results. Default ; max 400.
+
+            limit (int, optional): limit the results. Default 1; max 400.
         """
         if 'symbol' in params:
-            params['instId'] = params.pop('symbol')
+            params['instId'] = params['symbol']
+            params.pop('symbol')
         if 'limit' in params:
-            params['sz'] = params.pop('limit')
+            params['sz'] = params['limit']
+            params.pop('limit')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
 
-        return {'method': 'GET', 'url': URLS.BASE_URL + URLS.DEPTH_URL, 'params': params}
+    @_convert_kwargs_to_dict
+    def get_trades_args(self, params: dict) -> dict:
+        """Recent Trades List
+        Get recent trades (up to last 500).
+
+        GET /api/v5/market/trades
+
+        https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-trades
+
+        params:
+            symbol (str): the trading pair
+
+            limit (int, optional): limit the results. Default 100; max 500.
+        """
+        if 'symbol' in params:
+            params['instId'] = params['symbol']
+            params.pop('symbol')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
+
+    @_convert_kwargs_to_dict
+    def get_ticker_args(self, params: dict) -> dict:
+        """24hr Ticker Price Change Statistics
+
+        GET /api/v5/market/ticker or /api/v5/market/tickers
+
+        https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-ticker
+        or
+        https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-tickers
+
+        params:
+            symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
+        """
+        _url = URLS.TICKER_URL if 'symbol' in params else URLS.TICKERS_URL
+        if 'symbol' in params:
+            params['instId'] = params['symbol'] + '-SWAP'
+            params.pop('symbol')
+        else:
+            params['instType'] = 'SPOT'
+        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=params)
