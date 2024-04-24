@@ -21,7 +21,7 @@ class MarketCore(Core):
     @_convert_kwargs_to_dict
     def get_trades_args(self, params: dict) -> dict:
         """Recent Trades List
-        Get recent trades (up to last 500).
+        Get recent trades (up to last 100).
 
         GET /api/v1/market/histories
 
