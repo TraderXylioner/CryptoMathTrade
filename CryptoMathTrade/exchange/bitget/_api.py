@@ -1,26 +1,9 @@
-import asyncio
-import gzip
-import io
-import json
-import uuid
-
-from .._request import Request, AsyncRequest, WebSocketRequest
-from ..utils import get_timestamp, hmac_hashing, _prepare_params, check_api_keys
+from .._request import Request, AsyncRequest
 
 
 class API:
-    def __init__(self, api_key=None, api_secret=None, headers=None):
-        """
-        params:
-            api_key (str): API key for authentication.
-
-            api_secret (str): API secret for authentication.
-
-            headers (dict): Additional headers for API requests.
-        """
-        self.api_key = api_key
-        self.api_secret = api_secret
-        self.headers = {'ACCESS-KEY': self.api_key} if self.api_key else {}
+    def __init__(self, headers=None):
+        self.headers = {}
         if headers:
             self.headers.update(headers)
 
@@ -61,65 +44,3 @@ class API:
             headers (dict): Additional headers for the request.
         """
         return await AsyncRequest(headers=headers).send_request(method, url, params)
-
-    # @classmethod
-    # async def _ws_query(cls,
-    #                     url: str,
-    #                     params: str,
-    #                     method: str = 'sub',
-    #                     timeout_seconds=10,
-    #                     headers=None,
-    #                     ):
-    #     """
-    #     params:
-    #         url (str): WebSocket URL for the API.
-    #
-    #         params (str): Parameters for the WebSocket request.
-    #
-    #         method (str): Method for the WebSocket request (default is 'SUBSCRIBE').
-    #
-    #         timeout_seconds (int): Timeout duration for the WebSocket connection.
-    #
-    #         headers (dict): Additional headers for the request.
-    #     """
-    #     payload = {
-    #         "method": method,
-    #         "dataType": params,
-    #         'id': str(uuid.uuid4())
-    #     }
-    #     connect = WebSocketRequest(headers=headers).open_connect(url=url, payload=payload)
-    #     async for client in connect:
-    #         while True:
-    #             data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
-    #             if not data:
-    #                 raise ConnectionError  # custom error
-    #             await client.send('Pong')
-    #             decompressed_data = gzip.GzipFile(fileobj=io.BytesIO(data), mode='rb').read().decode('utf-8')
-    #             json_data = json.loads(decompressed_data)
-    #             yield json_data
-    #
-    # @check_api_keys
-    # def get_payload(self, payload=None):
-    #     """
-    #       params:
-    #           payload (dict): Additional payload parameters.
-    #
-    #       Returns:
-    #           dict: Payload with timestamp and signature.
-    #       """
-    #     if payload is None:
-    #         payload = {}
-    #     payload['timestamp'] = get_timestamp()
-    #     query_string = _prepare_params(payload)
-    #     payload['signature'] = self._get_sign(query_string)
-    #     return payload
-    #
-    # def _get_sign(self, payload):
-    #     """
-    #     params:
-    #         payload (dict): Payload data for generating signature.
-    #
-    #     Returns:
-    #         str: HMAC signature.
-    #     """
-    #     return hmac_hashing(self.api_secret, payload)
