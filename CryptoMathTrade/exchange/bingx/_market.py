@@ -193,7 +193,7 @@ class WebsSocketMarket(API):
         param:
             symbol (str): the trading pair
         """
-        return self._ws_query(**ws_get_depth_args(symbol=symbol))
+        return self._ws_query(**WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol))
 
     async def get_trades(self,
                          symbol: str,
@@ -209,4 +209,4 @@ class WebsSocketMarket(API):
 
          Update Speed: Real-time
          """
-        return self._ws_query(**ws_get_trades_args(symbol=symbol))
+        return self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol))

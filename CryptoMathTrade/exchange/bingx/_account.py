@@ -18,7 +18,9 @@ class Account(API):
         response = validate_response(self._query(**AccountCore(headers=self.headers).get_balance_args(self,
                                                                                                       recvWindow=recvWindow,
                                                                                                       )))
-        json_data = response.json()['data']
-        return Response(data=json_data,
+        json_data = response.json()
+        if 'data' not in json_data:
+            raise Exception(json_data)
+        return Response(data=json_data['data'],
                         response_object=response,
                         )
