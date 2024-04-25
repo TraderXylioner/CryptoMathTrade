@@ -76,11 +76,14 @@ def _convert_kwargs_to_dict(func):
         if res.get('symbols'):
             res['symbols'] = convert_list_to_json_array(res.get('symbols'))
         return func(*args, res)
+
     return wrapper
 
 
 def validate_response(response):
-    if response.status_code == 200:
+    if hasattr(response, 'status_code') and response.status_code == 200:
+        return response
+    elif hasattr(response, 'status') and response.status == 200:
         return response
     else:
         raise Exception(response.__dict__)  # custom exc
