@@ -3,7 +3,7 @@ from typing import Generator
 from ._api import API
 from .core import MarketCore, WSMarketCore
 from .._response import Response
-from ..utils import validate_response, validate_async_response
+from ..utils import validate_response
 from ...types import OrderBook, Trade, Ticker, Order
 
 
@@ -115,7 +115,7 @@ class AsyncMarket(API):
 
             recvWindow (int, optional).
         """
-        response = validate_async_response(await self._async_query(
+        response = validate_response(await self._async_query(
             **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
         json_data = response.json['data']
         json_data['asks'] = json_data['asks'][::-1]
@@ -140,7 +140,7 @@ class AsyncMarket(API):
 
             limit (int, optional): limit the results. Default 100; max 100
         """
-        response = validate_async_response(await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+        response = validate_response(await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
         json_data = response.json['data']
         return Response(data=[Trade(id=trade.get('id'),
                                     price=trade.get('price'),
@@ -162,7 +162,7 @@ class AsyncMarket(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        response = validate_async_response(await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+        response = validate_response(await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json['data']
         return Response(data=[Ticker(symbol=ticker.get('symbol'),
                                      priceChange=ticker.get('priceChange'),

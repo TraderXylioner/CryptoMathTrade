@@ -3,7 +3,7 @@ from typing import Generator
 from ._api import API
 from .core import MarketCore, WSMarketCore
 from ...types import OrderBook, Trade, Ticker, Order, Side
-from ..utils import validate_response, validate_async_response
+from ..utils import validate_response
 from .._response import Response
 
 
@@ -93,7 +93,7 @@ class AsyncMarket(API):
 
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
-        response = validate_async_response(
+        response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
         json_data = response.json
         return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
@@ -115,7 +115,7 @@ class AsyncMarket(API):
 
             limit (int, optional): limit the results. Default 500; max 1000.
         """
-        response = validate_async_response(
+        response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
         json_data = response.json
         return Response(data=[Trade(id=trade.get('id'),
@@ -139,7 +139,7 @@ class AsyncMarket(API):
 
             symbols (list, optional): list of trading pairs
         """
-        response = validate_async_response(
+        response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol, symbols=symbols)))
         json_data = response.json
 

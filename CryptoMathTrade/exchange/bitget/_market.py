@@ -1,7 +1,7 @@
 from ._api import API
 from .core import MarketCore
 from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
-from ..utils import validate_response, validate_async_response
+from ..utils import validate_response
 from .._response import Response
 
 
@@ -108,7 +108,7 @@ class AsyncMarket(API):
 
             type (str, optional) The value enums：step0，step1，step2，step3，step4，step5. Default: step0.
         """
-        response = validate_async_response(
+        response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
         json_data = response.json['data']
         return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
@@ -133,7 +133,7 @@ class AsyncMarket(API):
 
             limit (int, optional): limit the results. Default 100; max 500.
         """
-        response = validate_async_response(
+        response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
         json_data = response.json['data']
         return Response(data=[Trade(id=trade.get('tradeId'),
@@ -156,7 +156,7 @@ class AsyncMarket(API):
         params:
             symbol (str, optional): the trading pair
         """
-        response = validate_async_response(
+        response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json['data']
         return Response(data=[Ticker(symbol=ticker.get('symbol'),
