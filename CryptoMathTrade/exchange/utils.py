@@ -83,11 +83,4 @@ def validate_response(response):
     if response.status_code == 200:
         return response
     else:
-        raise Exception(f'{response.status_code} | {response.text}')  # custom exc
-
-
-def validate_async_response(response):
-    if response.status == 200:
-        return response
-    else:
-        raise Exception(f'{response.status} | {response.json}')  # custom exc
+        raise Exception(response.__dict__)  # custom exc
