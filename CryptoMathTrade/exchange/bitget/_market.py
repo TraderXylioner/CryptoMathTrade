@@ -1,5 +1,3 @@
-from typing import Generator
-
 from ._api import API
 from .core import MarketCore
 from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
