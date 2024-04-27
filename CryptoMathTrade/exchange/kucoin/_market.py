@@ -1,6 +1,6 @@
 from ._api import API
+from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker
 from .core import MarketCore
-from ...types import OrderBook, Trade, Ticker, Order, Side
 from ..utils import validate_response
 from .._response import Response
 
@@ -20,11 +20,7 @@ class Market(API):
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol)))
         json_data = response.json()['data']
-        return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
-                                       bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
-                                       ),
-                        response_object=response,
-                        )
+        return _serialize_depth(json_data, response)
 
     def get_trades(self, symbol: str) -> Response:
         """Recent Trades List
@@ -40,14 +36,7 @@ class Market(API):
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol)))
         json_data = response.json()['data']
-        return Response(data=[Trade(id=trade.get('sequence'),
-                                    price=trade.get('price'),
-                                    quantity=trade.get('size'),
-                                    side=Side.BUY if trade.get('side') == 'buy' else Side.SELL,
-                                    time=trade.get('time'),
-                                    ) for trade in json_data],
-                        response_object=response,
-                        )
+        return _serialize_trades(json_data, response)
 
     def get_ticker(self, symbol: str | None = None) -> Response:
         """24hr Ticker Price Change Statistics
