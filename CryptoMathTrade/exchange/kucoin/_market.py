@@ -70,7 +70,7 @@ class AsyncMarket(API):
         """
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol)))
-        json_data = response.json()['data']
+        json_data = response.json['data']
         return _serialize_depth(json_data, response)
 
     async def get_trades(self, symbol: str) -> Response:
@@ -87,7 +87,7 @@ class AsyncMarket(API):
         """
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol)))
-        json_data = response.json()['data']
+        json_data = response.json['data']
         return _serialize_trades(json_data, response)
 
     async def get_ticker(self, symbol: str | None = None) -> Response:
@@ -104,5 +104,5 @@ class AsyncMarket(API):
         """
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
-        json_data = response.json()['data']
+        json_data = response.json['data']
         return _serialize_ticker(json_data, symbol, response)
