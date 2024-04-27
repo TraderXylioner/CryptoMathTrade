@@ -1,5 +1,3 @@
-import time
-
 from ...types import OrderBook, Trade, Ticker, Order, Side
 from .._response import Response
 
@@ -19,6 +17,7 @@ def _serialize_trades(data, response):
     return Response(data=[Trade(id=trade.get('id'),
                                 price=trade.get('price'),
                                 quantity=trade.get('qty'),
+                                side=Side.SELL if trade.get('buyerMaker') else Side.BUY,
                                 time=trade.get('time'),
                                 ) for trade in data],
                     response_object=response,

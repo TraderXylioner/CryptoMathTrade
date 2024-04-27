@@ -1,5 +1,3 @@
-import time
-
 from ...types import OrderBook, Trade, Ticker, Order, Side
 from .._response import Response
 

@@ -5,7 +5,6 @@ from ._serialization import _serialize_depth, _serialize_trades, _serialize_tick
 from .core import MarketCore, WSMarketCore
 from .._response import Response
 from ..utils import validate_response
-from ...types import OrderBook, Trade, Ticker, Order
 
 
 class Market(API):
