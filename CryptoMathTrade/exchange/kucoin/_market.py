@@ -53,27 +53,33 @@ class Market(API):
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json()['data']
-        if symbol:
-            data = [Ticker(symbol=json_data.get('symbol'),
-                           openPrice=float(json_data.get('last')) - float(json_data.get('changePrice')),
-                           highPrice=json_data.get('high'),
-                           lowPrice=json_data.get('low'),
-                           lastPrice=json_data.get('last'),
-                           volume=json_data.get('vol'),
-                           quoteVolume=json_data.get('volValue'),
-                           closeTime=json_data.get('time'),
-                           )]
-        else:
-            full_json_data = json_data
-            json_data = json_data['ticker']
-            data = [Ticker(symbol=ticker.get('symbol'),
-                           openPrice=float(ticker.get('last')) - float(ticker.get('changePrice')),
-                           highPrice=ticker.get('high'),
-                           lowPrice=ticker.get('low'),
-                           lastPrice=ticker.get('last'),
-                           volume=ticker.get('vol'),
-                           quoteVolume=ticker.get('volValue'),
-                           closeTime=full_json_data.get('time'),
-                           ) for ticker in json_data]
+        return _serialize_ticker(json_data, symbol, response)
+
+
+class AsyncMarket(API):
+    async def get_depth(self, symbol: str) -> Response:
+        """Get orderbook.
+
+        GET /api/v1/market/orderbook/level2_100
+
+        https://www.kucoin.com/docs/rest/spot-trading/market-data/get-part-order-book-aggregated-
+
+        param:
+            symbol (str): the trading pair
+
+        """
+        response = validate_response(
+            await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol)))
+        json_data = response.json()['data']
+        return _serialize_depth(json_data, response)
+
+    async def get_trades(self, symbol: str) -> Response:
+        """Recent Trades List
+
+        Get recent trades (up to last 100).
+
+        GET /api/v1/market/histories
+
+        https://www.kucoin.com/docs/rest/spot-trading/market-data/get-trade-histories
 
         return Response(data=data, response_object=response)
