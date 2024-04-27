@@ -1,9 +1,6 @@
-import time
-
 from ._api import API
 from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker
 from .core import MarketCore
-from ...types import OrderBook, Trade, Ticker, Order, Side
 from ..utils import validate_response
 from .._response import Response
 
