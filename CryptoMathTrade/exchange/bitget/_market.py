@@ -1,6 +1,6 @@
 from ._api import API
+from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker
 from .core import MarketCore
-from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order
 from ..utils import validate_response
 from .._response import Response
 
@@ -26,11 +26,7 @@ class Market(API):
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
         json_data = response.json()['data']
-        return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
-                                       bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
-                                       ),
-                        response_object=response,
-                        )
+        return _serialize_depth(json_data, response)
 
     def get_trades(self,
                    symbol: str,
@@ -51,13 +47,7 @@ class Market(API):
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
         json_data = response.json()['data']
-        return Response(data=[Trade(id=trade.get('tradeId'),
-                                    price=trade.get('price'),
-                                    quantity=trade.get('size'),
-                                    time=trade.get('ts'),
-                                    ) for trade in json_data],
-                        response_object=response,
-                        )
+        return _serialize_trades(json_data, response)
 
     def get_ticker(self,
                    symbol: str | None = None,
@@ -74,20 +64,7 @@ class Market(API):
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json()['data']
-        return Response(data=[Ticker(symbol=ticker.get('symbol'),
-                                     priceChange=float(ticker['open']) - float(ticker['lastPr']),
-                                     priceChangePercent=((float(ticker['open']) - float(ticker['lastPr'])) / (float(ticker['open'] if float(ticker['open']) else 1))) * 100,
-                                     openPrice=ticker.get('open'),
-                                     highPrice=ticker.get('high24h'),
-                                     lowPrice=ticker.get('low24h'),
-                                     lastPrice=ticker.get('lastPr'),
-                                     volume=ticker.get('baseVolume'),
-                                     quoteVolume=ticker.get('quoteVolume'),
-                                     # openTime=ticker.get('openTime'),
-                                     closeTime=ticker.get('ts'),
-                                     ) for ticker in json_data],
-                        response_object=response,
-                        )
+        return _serialize_ticker(json_data, response)
 
 
 class AsyncMarket(API):
@@ -111,11 +88,7 @@ class AsyncMarket(API):
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
         json_data = response.json['data']
-        return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in json_data['asks']],
-                                       bids=[Order(price=bid[0], volume=bid[1]) for bid in json_data['bids']],
-                                       ),
-                        response_object=response,
-                        )
+        return _serialize_depth(json_data, response)
 
     async def get_trades(self,
                          symbol: str,
@@ -136,13 +109,7 @@ class AsyncMarket(API):
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
         json_data = response.json['data']
-        return Response(data=[Trade(id=trade.get('tradeId'),
-                                    price=trade.get('price'),
-                                    quantity=trade.get('size'),
-                                    time=trade.get('ts'),
-                                    ) for trade in json_data],
-                        response_object=response,
-                        )
+        return _serialize_trades(json_data, response)
 
     async def get_ticker(self,
                          symbol: str | None = None,
@@ -159,17 +126,4 @@ class AsyncMarket(API):
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json['data']
-        return Response(data=[Ticker(symbol=ticker.get('symbol'),
-                                     priceChange=float(ticker['open']) - float(ticker['lastPr']),
-                                     priceChangePercent=((float(ticker['open']) - float(ticker['lastPr'])) / (float(ticker['open'] if float(ticker['open']) else 1))) * 100,
-                                     openPrice=ticker.get('open'),
-                                     highPrice=ticker.get('high24h'),
-                                     lowPrice=ticker.get('low24h'),
-                                     lastPrice=ticker.get('lastPr'),
-                                     volume=ticker.get('baseVolume'),
-                                     quoteVolume=ticker.get('quoteVolume'),
-                                     # openTime=ticker.get('openTime'),
-                                     closeTime=ticker.get('ts'),
-                                     ) for ticker in json_data],
-                        response_object=response,
-                        )
+        return _serialize_ticker(json_data, response)
