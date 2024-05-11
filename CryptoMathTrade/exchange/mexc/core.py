@@ -47,3 +47,44 @@ class MarketCore(Core):
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TICKER_URL, params=params)
+
+
+class WSMarketCore(Core):
+    @_convert_kwargs_to_dict
+    def get_depth_args(self, params: dict) -> dict:
+        """Partial Book Depth Streams
+
+        Stream Names: spot@public.limit.depth.v3.api@<symbol>@<level>.
+
+        https://mexcdevelop.github.io/apidocs/spot_v3_en/#partial-book-depth-streams
+
+        param:
+            symbol (str): the trading pair
+
+            limit (int, optional): limit the results. Valid are 5, 10, or 20.
+
+        """
+
+        return self.return_args(method='SUBSCRIPTION',
+                                url=URLS.WS_BASE_URL,
+                                params=f'spot@public.limit.depth.v3.api@{params["symbol"].upper()}@{params["limit"]}',
+                                )
+
+    @_convert_kwargs_to_dict
+    def get_trades_args(self, params: dict) -> dict:
+        """Trade Streams
+
+         The Trade Streams push raw trade information; each trade has a unique buyer and seller.
+         Update Speed: Real-time
+
+         Stream Name: spot@public.deals.v3.api@<symbol>
+
+         https://mexcdevelop.github.io/apidocs/spot_v3_en/#trade-streams
+
+         param:
+            symbol (str): the trading pair
+         """
+        return self.return_args(method='SUBSCRIPTION',
+                                url=URLS.WS_BASE_URL,
+                                params=f'spot@public.deals.v3.api@{params["symbol"].upper()}',
+                                )
