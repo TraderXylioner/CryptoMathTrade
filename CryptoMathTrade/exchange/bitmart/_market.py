@@ -1,6 +1,9 @@
+import json
+from typing import Generator
+
 from ._api import API
-from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker
-from .core import MarketCore
+from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker, _serialize_trades_for_ws
+from .core import MarketCore, WSMarketCore
 from ..utils import validate_response
 from .._response import Response
 
@@ -109,3 +112,48 @@ class AsyncMarket(API):
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json
         return _serialize_ticker(json_data, response)
+
+
+class WebSocketMarket(API):
+    async def get_depth(self,
+                        symbol: str,
+                        limit: int | None = 50,
+                        ) -> Generator:
+        """Partial Book Depth Streams
+
+        Stream Names: spot/depth{limit}:{symbol}
+
+        https://developer-pro.bitmart.com/en/spot/#public-depth-all-channel
+
+        param:
+
+            symbol (str): the trading pair
+
+            limit (int, optional): limit the results. Valid are 5, 20 or 50.
+
+        """
+        async for response in self._ws_query(**WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)):
+            json_data = json.loads(response)
+            if 'data' in json_data:
+                yield _serialize_depth({'data': json_data['data'][0]}, response)
+
+    async def get_trades(self,
+                         symbol: str,
+                         ) -> Generator:
+        """Trade Streams
+
+         The Trade Streams push raw trade information; each trade has a unique buyer and seller.
+         Update Speed: Real-time
+
+         Stream Name: spot/trade:{symbol}
+
+        https://developer-pro.bitmart.com/en/spot/#public-trade-channel-2
+
+         param:
+            symbol (str): the trading pair
+         """
+        async for response in self._ws_query(
+            **WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol)):
+            json_data = json.loads(response)
+            if 'data' in json_data:
+                yield _serialize_trades_for_ws(json_data, response)
