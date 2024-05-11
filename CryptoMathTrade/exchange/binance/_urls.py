@@ -21,4 +21,4 @@ class URLS:
     GET_BALANCE = '/sapi/v3/asset/getUserAsset'
 
     # WS
-    WS_BASE_URL = 'wss://stream.test_binance.com:9443/ws'
+    WS_BASE_URL = 'wss://stream.binance.com:443/ws'
