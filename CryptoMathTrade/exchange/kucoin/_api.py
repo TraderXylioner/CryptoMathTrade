@@ -10,8 +10,8 @@ class API(BaseAPI):
     async def _ws_query(cls,
                         url: str,
                         params: str,
-                        method: str = 'SUBSCRIBE',
-                        timeout_seconds=10,
+                        method: str = 'subscribe',
+                        timeout_seconds=60,
                         headers=None,
                         ):
         """
