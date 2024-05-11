@@ -12,6 +12,6 @@ docs: https://trader-xylioner.notion.site/Docs-e7ecdbbc46064894ae05b9f71e686b54
 | bitmart  | ✅      | ✅           | ❌        | ❌    | ❌         | ❌      | ❌       | ❌            | ❌         |
 | gate     | ✅      | ✅           | ❌        | ❌    | ❌         | ❌      | ❌       | ❌            | ❌         |
 | htx      | ✅      | ✅           | ❌        | ❌    | ❌         | ❌      | ❌       | ❌            | ❌         |
-| kucoin   | ✅      | ✅           | ❌        | ❌    | ❌         | ❌      | ❌       | ❌            | ❌         |
+| kucoin   | ✅      | ✅           | ✅        | ❌    | ❌         | ❌      | ❌       | ❌            | ❌         |
 | mexc     | ✅      | ✅           | ✅        | ❌    | ❌         | ❌      | ❌       | ❌            | ❌         |
 | okx      | ✅      | ✅           | ❌        | ❌    | ❌         | ❌      | ❌       | ❌            | ❌         |
