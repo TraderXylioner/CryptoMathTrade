@@ -1,6 +1,4 @@
 import asyncio
-import json
-import time
 
 from .._api import BaseAPI
 from .._request import WebSocketRequest
