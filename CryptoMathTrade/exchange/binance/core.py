@@ -230,21 +230,27 @@ class AccountCore(Core):
                                 )
 
 
-#  TODO: Socket
 class WSMarketCore(Core):
     @_convert_kwargs_to_dict
     def get_depth_args(self, params: dict) -> dict:
         """Partial Book Depth Streams
 
-        Top bids and asks, Valid are 5, 10, or 20.
-
         Stream Names: <symbol>@depth<levels> OR <symbol>@depth<levels>@100ms.
-        Update Speed: 1000ms or 100ms
+
+        https://binance-docs.github.io/apidocs/spot/en/#partial-book-depth-streams
 
         param:
             symbol (str): the trading pair
+
+            limit (int, optional): limit the results. Valid are 5, 10, or 20.
+
+            update_time (int, optional): 1000ms or 100ms.
         """
-        return self.return_args(method='SUBSCRIBE', url=URLS.WS_BASE_URL, params=f'{params["symbol"].lower()}@depth')
+
+        return self.return_args(method='SUBSCRIBE',
+                                url=URLS.WS_BASE_URL,
+                                params=f'{params["symbol"].lower()}@depth{params["limit"]}@{params["update_time"]}ms',
+                                )
 
     @_convert_kwargs_to_dict
     def get_trades_args(self, params: dict) -> dict:
@@ -255,7 +261,9 @@ class WSMarketCore(Core):
 
          Stream Name: <symbol>@trade
 
+         https://binance-docs.github.io/apidocs/spot/en/#trade-streams
+
          param:
             symbol (str): the trading pair
          """
-        return self.return_args(method='SUBSCRIBE', url=URLS.WS_BASE_URL, params=f'{params["symbol"]}@trade')
+        return self.return_args(method='SUBSCRIBE', url=URLS.WS_BASE_URL, params=f'{params["symbol"].lower()}@trade')
