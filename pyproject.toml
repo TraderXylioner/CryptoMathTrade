@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cryptomathtrade"
-version = "0.5.0"
+version = "0.7.0"
 description = ""
 authors = ["T_X <treider.xylioner@gmail.com>"]
 readme = "README.md"
@@ -15,6 +15,7 @@ pydantic = "^2.5"
 pytest = "^8.1.1"
 pytest-asyncio = "^0.23.6"
 
+[tool.poetry.scripts]
 
 [build-system]
 requires = ["poetry-core"]
