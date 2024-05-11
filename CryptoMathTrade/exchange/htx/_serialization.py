@@ -21,6 +21,17 @@ def _serialize_trades(data, response):
                     )
 
 
+def _serialize_trades_for_ws(data, response):
+    return Response(data=[Trade(id=trade.get('tradeId'),
+                                price=trade.get('price'),
+                                quantity=trade.get('amount'),
+                                side=Side.BUY if trade.get('direction') == 'buy' else Side.SELL,
+                                time=trade.get('ts'),
+                                ) for trade in data],
+                    response_object=response,
+                    )
+
+
 def _serialize_ticker(data, symbol, response):
     json_data = data['tick'] if symbol else data['data']
     if isinstance(json_data, list):
