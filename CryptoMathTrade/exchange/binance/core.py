@@ -244,7 +244,7 @@ class WSMarketCore(Core):
 
             limit (int, optional): limit the results. Valid are 5, 10, or 20.
 
-            update_time (int, optional): 1000ms or 100ms.
+            interval (int, optional): 1000ms or 100ms.
         """
 
         return self.return_args(method='SUBSCRIBE',
