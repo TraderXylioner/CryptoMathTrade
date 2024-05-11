@@ -120,7 +120,7 @@ class WebSocketMarket(API):
     async def get_depth(self,
                         symbol: str,
                         limit: int | None = 20,
-                        update_time: int | None = 1000,
+                        interval: int | None = 1000,
                         ) -> Generator:
         """Partial Book Depth Streams
 
@@ -133,12 +133,12 @@ class WebSocketMarket(API):
 
             limit (int, optional): limit the results. Valid are 5, 10, or 20.
 
-            update_time (int, optional): 1000ms or 100ms.
+            interval (int, optional): 1000ms or 100ms.
         """
 
         async for response in self._ws_query(
             **WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit,
-                                                                update_time=update_time)):
+                                                                interval=interval)):
             json_data = json.loads(response)
             if 'result' not in json_data:
                 yield _serialize_depth(json_data, response)
