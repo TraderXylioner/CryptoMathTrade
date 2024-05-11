@@ -11,8 +11,8 @@ class API(BaseAPI):
     async def _ws_query(cls,
                         url: str,
                         params: str,
-                        method: str = 'SUBSCRIBE',
-                        timeout_seconds=10,
+                        method: str = 'sub',
+                        timeout_seconds=60,
                         headers=None,
                         ):
         """
