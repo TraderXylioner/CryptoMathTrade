@@ -28,6 +28,17 @@ def _serialize_trades(data, response):
                     )
 
 
+def _serialize_trades_for_ws(data, response):
+    data = data['data']
+    return Response(data=[Trade(price=trade.get('price'),
+                                quantity=trade.get('size'),
+                                side=Side.BUY if trade.get('side') == 'buy' else Side.SELL,
+                                time=trade.get('s_t'),
+                                ) for trade in data],
+                    response_object=response,
+                    )
+
+
 def _serialize_ticker(data, response):
     if 'data' not in data:
         raise Exception(data)
