@@ -10,12 +10,31 @@ def _serialize_depth(data, response):
                     )
 
 
+def _serialize_depth_for_ws(data, response):
+    return Response(data=OrderBook(asks=[Order(price=ask['p'], volume=ask['v']) for ask in data['asks']],
+                                   bids=[Order(price=bid['p'], volume=bid['v']) for bid in data['bids']],
+                                   ),
+                    response_object=response,
+                    )
+
+
 def _serialize_trades(data, response):
     return Response(data=[Trade(id=trade.get('id'),
                                 price=trade.get('price'),
                                 quantity=trade.get('qty'),
                                 side=Side.SELL if trade.get('isBuyerMaker') else Side.BUY,
                                 time=trade.get('time'),
+                                ) for trade in data],
+                    response_object=response,
+                    )
+
+
+def _serialize_trades_for_ws(data, response):
+    return Response(data=[Trade(id=trade.get('id', None),
+                                price=trade.get('p'),
+                                quantity=trade.get('v'),
+                                side=Side.BUY if trade.get('S') == 1 else Side.SELL,
+                                time=trade.get('t'),
                                 ) for trade in data],
                     response_object=response,
                     )
