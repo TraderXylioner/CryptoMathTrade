@@ -1,14 +1,12 @@
 import asyncio
-import gzip
-import io
-import json
 import uuid
 
-from .._request import Request, AsyncRequest, WebSocketRequest
+from .._request import WebSocketRequest
 from ..utils import get_timestamp, hmac_hashing, _prepare_params, check_api_keys
+from .._api import BaseAPI
 
 
-class API:
+class API(BaseAPI):
     def __init__(self, api_key=None, api_secret=None, headers=None):
         """
         params:
@@ -16,6 +14,7 @@ class API:
             api_secret (str): API secret for authentication.
             headers (dict): Additional headers for API requests.
         """
+        super().__init__()
         self.api_key = api_key
         self.api_secret = api_secret
         self.headers = {'X-BX-APIKEY': self.api_key} if self.api_key else {}
@@ -23,49 +22,11 @@ class API:
             self.headers.update(headers)
 
     @classmethod
-    def _query(cls,
-               url: str,
-               params: dict,
-               method: str = 'GET',
-               headers=None,
-               ):
-        """
-        params:
-            url (str): URL for the API endpoint.
-
-            params (dict): Query parameters for the API request.
-
-            method (str): HTTP method for the request (default is 'GET').
-
-            headers (dict): Additional headers for the request.
-        """
-        return Request(headers=headers).send_request(method, url, params)
-
-    @classmethod
-    async def _async_query(cls,
-                           url: str,
-                           params: dict,
-                           method: str = 'GET',
-                           headers=None,
-                           ):
-        """
-        params:
-            url (str): URL for the API endpoint.
-
-            params (dict): Query parameters for the API request.
-
-            method (str): HTTP method for the request (default is 'GET').
-
-            headers (dict): Additional headers for the request.
-        """
-        return await AsyncRequest(headers=headers).send_request(method, url, params)
-
-    @classmethod
     async def _ws_query(cls,
                         url: str,
                         params: str,
                         method: str = 'sub',
-                        timeout_seconds=10,
+                        timeout_seconds=60,
                         headers=None,
                         ):
         """
@@ -81,7 +42,7 @@ class API:
             headers (dict): Additional headers for the request.
         """
         payload = {
-            "method": method,
+            "reqType": method,
             "dataType": params,
             'id': str(uuid.uuid4())
         }
@@ -92,9 +53,7 @@ class API:
                 if not data:
                     raise ConnectionError  # custom error
                 await client.send('Pong')
-                decompressed_data = gzip.GzipFile(fileobj=io.BytesIO(data), mode='rb').read().decode('utf-8')
-                json_data = json.loads(decompressed_data)
-                yield json_data
+                yield data
 
     @check_api_keys
     def get_payload(self, payload=None):

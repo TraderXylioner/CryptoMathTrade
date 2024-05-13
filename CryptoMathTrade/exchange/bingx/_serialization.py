@@ -24,6 +24,18 @@ def _serialize_trades(data, response):
                     )
 
 
+def _serialize_trades_for_ws(data, response):
+    data = data['data']
+    return Response(data=[Trade(id=data.get('t'),
+                                price=data.get('p'),
+                                quantity=data.get('q'),
+                                side=Side.SELL if data.get('m') else Side.BUY,
+                                time=data.get('T'),
+                                )],
+                    response_object=response,
+                    )
+
+
 def _serialize_ticker(data, response):
     data = data['data']
     return Response(data=[Ticker(symbol=ticker.get('symbol'),

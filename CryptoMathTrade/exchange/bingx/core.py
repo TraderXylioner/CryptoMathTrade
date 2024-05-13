@@ -88,14 +88,20 @@ class WSMarketCore(Core):
     def get_depth_args(self, params: dict) -> dict:
         """Partial Book Depth Streams
 
-        Top bids and asks.
+        Stream Names: {symbol}@depth{limit}
 
-        Stream Names: <symbol>@depth<levels>.
+        https://bingx-api.github.io/docs/#/en-us/spot/socket/market.html#Subscribe%20Market%20Depth%20Data
 
         param:
             symbol (str): the trading pair
+
+            limit (int, optional): limit the results. Valid are 10, 20 or 50.
         """
-        return self.return_args(method='sub', url=URLS.WS_BASE_URL, params=f'{params["symbol"]}@depth')
+
+        return self.return_args(method='sub',
+                                url=URLS.WS_BASE_URL,
+                                params=f'{params["symbol"].upper()}@depth{params["limit"]}',
+                                )
 
     @_convert_kwargs_to_dict
     def get_trades_args(self, params: dict) -> dict:
@@ -104,12 +110,14 @@ class WSMarketCore(Core):
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
          Update Speed: Real-time
 
-         Stream Name: <symbol>@trade
+         Stream Name: {symbol}@trade
+
+         https://bingx-api.github.io/docs/#/en-us/spot/socket/market.html#Subscription%20transaction%20by%20transaction
 
          param:
             symbol (str): the trading pair
          """
-        return self.return_args(method='sub', url=URLS.WS_BASE_URL, params=f'{params["symbol"]}@trade')
+        return self.return_args(method='sub', url=URLS.WS_BASE_URL, params=f'{params["symbol"].upper()}@trade')
 
 
 class AccountCore(Core):
