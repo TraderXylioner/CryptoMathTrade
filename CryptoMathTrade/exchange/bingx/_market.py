@@ -1,7 +1,10 @@
+import gzip
+import io
+import json
 from typing import Generator
 
 from ._api import API
-from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker
+from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker, _serialize_trades_for_ws
 from .core import MarketCore, WSMarketCore
 from .._response import Response
 from ..utils import validate_response
@@ -134,20 +137,27 @@ class AsyncMarket(API):
         return _serialize_ticker(json_data, response)
 
 
-class WebsSocketMarket(API):
+class WebSocketMarket(API):
     async def get_depth(self,
                         symbol: str,
+                        limit: int | None = 10,
                         ) -> Generator:
         """Partial Book Depth Streams
 
-        Top bids and asks.
+        Stream Names: {symbol}@depth{limit}
 
-        Stream Names: <symbol>@depth<levels>.
+        https://bingx-api.github.io/docs/#/en-us/spot/socket/market.html#Subscribe%20Market%20Depth%20Data
 
         param:
             symbol (str): the trading pair
+
+            limit (int, optional): limit the results. Valid are 50.
         """
-        return self._ws_query(**WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol))
+        async for response in self._ws_query(
+            **WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)):
+            json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode('utf-8'))
+            if 'data' in json_data:
+                yield _serialize_depth(json_data, response)
 
     async def get_trades(self,
                          symbol: str,
@@ -155,12 +165,16 @@ class WebsSocketMarket(API):
         """Trade Streams
 
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
+         Update Speed: Real-time
 
-         Stream Name: <symbol>@trade
+         Stream Name: {symbol}@trade
+
+         https://bingx-api.github.io/docs/#/en-us/spot/socket/market.html#Subscription%20transaction%20by%20transaction
 
          param:
             symbol (str): the trading pair
-
-         Update Speed: Real-time
          """
-        return self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol))
+        async for response in self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol)):
+            json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode('utf-8'))
+            if 'data' in json_data:
+                yield _serialize_trades_for_ws(json_data, response)
