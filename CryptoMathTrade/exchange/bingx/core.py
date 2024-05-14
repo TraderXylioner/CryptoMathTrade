@@ -58,7 +58,10 @@ class MarketCore(Core):
 class SpotCore(Core):
     @_convert_kwargs_to_dict
     def get_orders_args(self, SpotObj, params):
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='GET',
+                                url=URLS.BASE_URL + URLS.GET_ORDERS_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def get_open_order_args(self, SpotObj, params):
@@ -68,19 +71,29 @@ class SpotCore(Core):
 
     @_convert_kwargs_to_dict
     def get_open_orders_args(self, SpotObj, params):
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='GET',
+                                url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def cancel_open_order_args(self, SpotObj, params: dict) -> dict:
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='POST',
+                                url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def cancel_open_orders_args(self, SpotObj, params: dict) -> dict:
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CANCEL_ORDERS_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='POST',
+                                url=URLS.BASE_URL + URLS.CANCEL_ORDERS_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def new_order_args(self, SpotObj, params: dict) -> dict:
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CREATE_ORDER_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CREATE_ORDER_URL,
+                                params=SpotObj.get_payload(params))
 
 
 class WSMarketCore(Core):
@@ -132,4 +145,7 @@ class AccountCore(Core):
         params:
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_BALANCE, params=AccountObj.get_payload(params))
+        return self.return_args(method='GET',
+                                url=URLS.BASE_URL + URLS.GET_BALANCE,
+                                params=AccountObj.get_payload(params),
+                                )
