@@ -42,7 +42,6 @@ class ParameterValueError(Error):
             text = "the enum value %s is invalid." % (", ".join(self.params))
         return text
 
-
 # class ParameterTypeError(Error):
 #     def __init__(self, params):
 #         self.params = params
