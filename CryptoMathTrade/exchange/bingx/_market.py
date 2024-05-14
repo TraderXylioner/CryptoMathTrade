@@ -32,7 +32,7 @@ class Market(API):
         response = validate_response(self._query(
             **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
         json_data = response.json()
-        return _serialize_depth(json_data, response)
+        return _serialize_depth(json_data['data'], response)
 
     def get_trades(self,
                    symbol: str,
@@ -57,7 +57,7 @@ class Market(API):
         response = validate_response(self._query(
             **MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
         json_data = response.json()
-        return _serialize_trades(json_data, response)
+        return _serialize_trades(json_data['data'], response)
 
     def get_ticker(self,
                    symbol: str | None = None
@@ -73,7 +73,7 @@ class Market(API):
         """
         response = validate_response(self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json()
-        return _serialize_ticker(json_data, response)
+        return _serialize_ticker(json_data['data'], response)
 
 
 class AsyncMarket(API):
@@ -98,7 +98,7 @@ class AsyncMarket(API):
         response = validate_response(await self._async_query(
             **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
         json_data = response.json
-        return _serialize_depth(json_data, response)
+        return _serialize_depth(json_data['data'], response)
 
     async def get_trades(self,
                          symbol: str,
@@ -116,9 +116,10 @@ class AsyncMarket(API):
 
             limit (int, optional): limit the results. Default 100; max 100
         """
-        response = validate_response(await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+        response = validate_response(
+            await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
         json_data = response.json
-        return _serialize_trades(json_data, response)
+        return _serialize_trades(json_data['data'], response)
 
     async def get_ticker(self,
                          symbol: str | None = None
@@ -132,9 +133,10 @@ class AsyncMarket(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        response = validate_response(await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+        response = validate_response(
+            await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json
-        return _serialize_ticker(json_data, response)
+        return _serialize_ticker(json_data['data'], response)
 
 
 class WebSocketMarket(API):
@@ -155,9 +157,9 @@ class WebSocketMarket(API):
         """
         async for response in self._ws_query(
             **WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)):
-            json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode('utf-8'))
+            json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
-                yield _serialize_depth(json_data, response)
+                yield _serialize_depth(json_data['data'], response)
 
     async def get_trades(self,
                          symbol: str,
@@ -175,6 +177,6 @@ class WebSocketMarket(API):
             symbol (str): the trading pair
          """
         async for response in self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol)):
-            json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode('utf-8'))
+            json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
-                yield _serialize_trades_for_ws(json_data, response)
+                yield _serialize_trades_for_ws(json_data['data'], response)
