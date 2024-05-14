@@ -156,7 +156,8 @@ class WebSocketMarket(API):
         books15: 15 depth levels will be pushed every time(snapshot).
 
         """
-        async for response in self._ws_query(**WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)):
+        async for response in self._ws_query(
+            **WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)):
             json_data = json.loads(response)
             if 'data' in json_data:
                 yield _serialize_depth(json_data['data'][0], response)

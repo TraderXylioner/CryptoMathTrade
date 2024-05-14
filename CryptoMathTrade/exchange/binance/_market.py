@@ -137,8 +137,10 @@ class WebSocketMarket(API):
         """
 
         async for response in self._ws_query(
-            **WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit,
-                                                                interval=interval)):
+            **WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol,
+                                                                limit=limit,
+                                                                interval=interval,
+                                                                )):
             json_data = json.loads(response)
             if 'result' not in json_data:
                 yield _serialize_depth(json_data, response)
