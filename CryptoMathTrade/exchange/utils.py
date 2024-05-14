@@ -58,6 +58,7 @@ def check_api_keys(func):
         if not self.api_key or not self.api_secret:
             raise ParameterRequiredError(['API key', 'API secret'])
         return func(self, *args, **kwargs)
+
     return wrapper
 
 
