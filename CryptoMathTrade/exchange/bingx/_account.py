@@ -1,26 +1,32 @@
 from ._api import API
+from ._serialization import _serialize_balance
 from .core import AccountCore
 from .._response import Response
 from ..utils import validate_response
 
 
 class Account(API):
-    def get_balance(self, recvWindow: int | None = None):
+    def get_balance(self) -> Response:
         """Query Assets
 
         GET /openApi/spot/v1/account/balance
 
         https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
-
-        params:
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = validate_response(self._query(**AccountCore(headers=self.headers).get_balance_args(self,
-                                                                                                      recvWindow=recvWindow,
-                                                                                                      )))
+        response = validate_response(self._query(**AccountCore(headers=self.headers).get_balance_args(self)))
         json_data = response.json()
-        if 'data' not in json_data:
-            raise Exception(json_data)
-        return Response(data=json_data['data'],
-                        response_object=response,
-                        )
+        return _serialize_balance(json_data, response)
+
+
+class AsyncAccount(API):
+    async def get_balance(self) -> Response:
+        """Query Assets
+
+        GET /openApi/spot/v1/account/balance
+
+        https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
+        """
+        response = validate_response(
+            await self._async_query(**AccountCore(headers=self.headers).get_balance_args(self)))
+        json_data = response.json
+        return _serialize_balance(json_data, response)
