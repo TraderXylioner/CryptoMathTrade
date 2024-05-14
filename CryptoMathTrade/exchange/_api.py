@@ -1,10 +1,13 @@
 import asyncio
 
 from ._request import Request, AsyncRequest, WebSocketRequest
+from .utils import check_api_keys, hmac_hashing, _prepare_params, get_timestamp
 
 
 class BaseAPI:
-    def __init__(self, headers=None):
+    def __init__(self, api_key=None, api_secret=None, headers=None):
+        self.api_key = api_key
+        self.api_secret = api_secret
         self.headers = {}
         if headers:
             self.headers.update(headers)
@@ -69,7 +72,7 @@ class BaseAPI:
         """
         payload = {
             "method": method,
-            "params": [params],
+            "params": params,
         }
         connect = WebSocketRequest(headers=headers).open_connect(url=url, payload=payload)
         async for client in connect:
@@ -78,3 +81,29 @@ class BaseAPI:
                 if not data:
                     raise ConnectionError  # custom error
                 yield data
+
+    @check_api_keys
+    def get_payload(self, payload=None):
+        """
+          params:
+              payload (dict): Additional payload parameters.
+
+          Returns:
+              dict: Payload with timestamp and signature.
+          """
+        if payload is None:
+            payload = {}
+        payload['timestamp'] = get_timestamp()
+        query_string = _prepare_params(payload)
+        payload['signature'] = self._get_sign(query_string)
+        return payload
+
+    def _get_sign(self, payload: dict):
+        """
+        params:
+            payload (dict): Payload data for generating signature.
+
+        Returns:
+            str: HMAC signature.
+        """
+        return hmac_hashing(self.api_secret, payload)
