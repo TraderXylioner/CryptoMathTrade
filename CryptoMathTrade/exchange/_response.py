@@ -12,3 +12,6 @@ class Response(BaseModel):
     """
     data: object
     response_object: object
+
+    def __str__(self):
+        return str(self.data)
