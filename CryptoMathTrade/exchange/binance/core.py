@@ -147,7 +147,10 @@ class SpotCore(Core):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='DELETE', url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='DELETE',
+                                url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
     @_convert_kwargs_to_dict
     def cancel_open_orders_args(self, SpotObj, params: dict) -> dict:
@@ -209,7 +212,10 @@ class SpotCore(Core):
 
             recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.CREATE_ORDER_URL, params=SpotObj.get_payload(params))
+        return self.return_args(method='POST',
+                                url=URLS.BASE_URL + URLS.CREATE_ORDER_URL,
+                                params=SpotObj.get_payload(params),
+                                )
 
 
 class AccountCore(Core):
@@ -249,7 +255,7 @@ class WSMarketCore(Core):
 
         return self.return_args(method='SUBSCRIBE',
                                 url=URLS.WS_BASE_URL,
-                                params=f'{params["symbol"].lower()}@depth{params["limit"]}@{params["update_time"]}ms',
+                                params=[f'{params["symbol"].lower()}@depth{params["limit"]}@{params["interval"]}ms'],
                                 )
 
     @_convert_kwargs_to_dict
@@ -266,4 +272,4 @@ class WSMarketCore(Core):
          param:
             symbol (str): the trading pair
          """
-        return self.return_args(method='SUBSCRIBE', url=URLS.WS_BASE_URL, params=f'{params["symbol"].lower()}@trade')
+        return self.return_args(method='SUBSCRIBE', url=URLS.WS_BASE_URL, params=[f'{params["symbol"].lower()}@trade'])
