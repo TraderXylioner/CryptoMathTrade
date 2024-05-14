@@ -11,7 +11,9 @@ class API(BaseAPI):
         """
         params:
             api_key (str): API key for authentication.
+
             api_secret (str): API secret for authentication.
+
             headers (dict): Additional headers for API requests.
         """
         super().__init__()
@@ -54,29 +56,3 @@ class API(BaseAPI):
                     raise ConnectionError  # custom error
                 await client.send('Pong')
                 yield data
-
-    @check_api_keys
-    def get_payload(self, payload=None):
-        """
-          params:
-              payload (dict): Additional payload parameters.
-
-          Returns:
-              dict: Payload with timestamp and signature.
-          """
-        if payload is None:
-            payload = {}
-        payload['timestamp'] = get_timestamp()
-        query_string = _prepare_params(payload)
-        payload['signature'] = self._get_sign(query_string)
-        return payload
-
-    def _get_sign(self, payload):
-        """
-        params:
-            payload (dict): Payload data for generating signature.
-
-        Returns:
-            str: HMAC signature.
-        """
-        return hmac_hashing(self.api_secret, payload)
