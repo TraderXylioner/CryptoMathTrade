@@ -1,5 +1,6 @@
 from ...types import OrderBook, Trade, Ticker, Order, Side
 from .._response import Response
+from ...types.balance import Balance
 
 
 def _serialize_depth(data, response):
@@ -49,3 +50,11 @@ def _serialize_ticker(data, response):
         raise Exception(data)
 
     return Response(data=data, response_object=response)
+
+
+def _serialize_balance(data, response):
+    if 'balances' not in data:
+        raise Exception(data)
+    return Response(data=[Balance(**i) for i in data['balances']],
+                    response_object=response,
+                    )
