@@ -8,5 +8,8 @@ class URLS:
     TICKER_URL = '/spot/quotation/v3/ticker'  # https://developer-pro.bitmart.com/en/spot/#get-ticker-of-a-trading-pair-v3
     TICKERS_URL = '/spot/quotation/v3/tickers'  # https://developer-pro.bitmart.com/en/spot/#get-ticker-of-all-pairs-v3
 
+    # Account
+    GET_BALANCE = '/account/v1/wallet'
+
     # WS
     WS_BASE_URL = 'wss://ws-manager-compress.bitmart.com/api?protocol=1.1'
