@@ -90,3 +90,24 @@ class WSMarketCore(Core):
                                 url=URLS.WS_BASE_URL,
                                 params=f'spot/trade:{params["symbol"]}',
                                 )
+
+
+class AccountCore(Core):
+    @_convert_kwargs_to_dict
+    def get_balance_args(self, AccountObj, params):
+        """Query Assets
+
+        GET /account/v1/wallet
+
+        https://developer-pro.bitmart.com/en/spot/#get-account-balance-keyed
+
+        params:
+            asset (int, optional): If asset is blank, then query all positive assets user have.
+        """
+        if 'asset' in params:
+            params['currency'] = params['asset']
+            params.pop('asset')
+        return self.return_args(method='GET',
+                                url=URLS.BASE_URL + URLS.GET_BALANCE,
+                                params=AccountObj.get_payload(params),
+                                )
