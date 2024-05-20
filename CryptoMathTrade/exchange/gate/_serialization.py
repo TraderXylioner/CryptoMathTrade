@@ -2,6 +2,7 @@ import time
 
 from ...types import OrderBook, Trade, Ticker, Order, Side
 from .._response import Response
+from ...types.balance import Balance
 
 
 def _serialize_depth(data, response):
@@ -34,3 +35,12 @@ def _serialize_ticker(data, response):
                                  quoteVolume=ticker.get('quote_volume'),
                                  closeTime=int(time.time()),
                                  ) for ticker in data], response_object=response)
+
+
+def _serialize_balance(data, response):
+    return Response(data=[Balance(asset=i['currency'],
+                                  free=i['available'],
+                                  locked=i['locked'],
+                                  ) for i in data],
+                    response_object=response,
+                    )
