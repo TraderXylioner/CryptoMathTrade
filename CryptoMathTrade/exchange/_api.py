@@ -15,7 +15,7 @@ class BaseAPI:
     @classmethod
     def _query(cls,
                url: str,
-               params: dict,
+               params: dict = None,
                method: str = 'GET',
                headers=None,
                ):
