@@ -7,5 +7,8 @@ class URLS:
     TRADES_URL = '/api/v4/spot/trades'  # https://www.gate.io/docs/developers/apiv4/en/#retrieve-market-trades
     TICKER_URL = '/api/v4/spot/tickers'  # https://www.gate.io/docs/developers/apiv4/en/#retrieve-ticker-information
 
+    # Account
+    GET_BALANCE = '/api/v4/margin/funding_accounts'
+
     # WS
     WS_BASE_URL = 'wss://api.gateio.ws/ws/v4/'
