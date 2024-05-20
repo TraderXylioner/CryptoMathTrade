@@ -109,8 +109,11 @@ class AccountCore(Core):
         https://www.bitget.com/api-doc/spot/account/Get-Account-Assets
 
         params:
-            coin (str, optional): default all coin
+            asset (str, optional): default all coin
         """
+        if 'asset' in params:
+            params['coin'] = params['asset']
+            params.pop('asset')
         self.headers = AccountObj.get_payload(path=URLS.GET_BALANCE, method='GET', payload=params)
         return self.return_args(method='GET',
                                 url=URLS.BASE_URL + URLS.GET_BALANCE,
