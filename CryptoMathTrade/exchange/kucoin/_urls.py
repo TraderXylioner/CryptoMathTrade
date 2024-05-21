@@ -8,5 +8,8 @@ class URLS:
     TICKER_URL = '/api/v1/market/stats'  # https://www.kucoin.com/docs/rest/spot-trading/market-data/get-24hr-stats
     TICKERS_URL = '/api/v1/market/allTickers'  # https://www.kucoin.com/docs/rest/spot-trading/market-data/get-all-tickers
 
+    # Account
+    GET_BALANCE = '/api/v1/accounts'
+
     # WS
     WS_BASE_URL = 'wss://ws-api-spot.kucoin.com/'
