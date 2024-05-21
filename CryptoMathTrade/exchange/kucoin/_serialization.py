@@ -1,5 +1,6 @@
 from ...types import OrderBook, Trade, Ticker, Order, Side
 from .._response import Response
+from ...types.balance import Balance
 
 
 def _serialize_depth(data, response):
@@ -46,3 +47,18 @@ def _serialize_ticker(data, symbol, response):
                        ) for ticker in json_data]
 
     return Response(data=data, response_object=response)
+
+
+def _serialize_balance(data, response):
+    new_data = {}
+    for i in data['data']:
+        if i['currency'] not in new_data:
+            new_data[i['currency']] = {'free': 0, 'locked': 0}
+        new_data[i['currency']]['free'] += float(i['available'])
+        new_data[i['currency']]['locked'] += float(i['holds'])
+
+    return Response(data=[Balance(asset=currency,
+                                  free=info['free'],
+                                  locked=info['locked'])
+                          for currency, info in new_data.items()],
+                    response_object=response)

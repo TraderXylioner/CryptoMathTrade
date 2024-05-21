@@ -97,3 +97,25 @@ class WSMarketCore(Core):
                                 url=f'{URLS.WS_BASE_URL}?token={self.token}',
                                 params=f'/market/match:{params["symbol"].upper()}',
                                 )
+
+
+class AccountCore(Core):
+    @_convert_kwargs_to_dict
+    def get_balance_args(self, AccountObj, params):
+        """Query Assets
+
+        GET /api/v1/accounts
+
+        https://www.kucoin.com/docs/rest/account/basic-info/get-account-list-spot-margin-trade_hf
+
+        params:
+            asset (int, optional): If asset is blank, then query all positive assets user have.
+        """
+        if 'asset' in params:
+            params['currency'] = params['asset']
+            params.pop('asset')
+        self.headers = AccountObj.get_payload(path=URLS.GET_BALANCE, method='GET', payload=params)
+        return self.return_args(method='GET',
+                                url=URLS.BASE_URL + URLS.GET_BALANCE,
+                                params=params,
+                                )
