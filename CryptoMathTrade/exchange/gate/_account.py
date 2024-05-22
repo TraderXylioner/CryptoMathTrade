@@ -9,9 +9,9 @@ class Account(API):
     def get_balance(self, asset: str | None = None) -> Response:
         """Query Assets
 
-        GET /unified/accounts
+        GET /api/v4/spot/accounts
 
-        https://www.gate.io/docs/developers/apiv4/#get-unified-account-information
+        https://www.gate.io/docs/developers/apiv4/#list-spot-accounts
 
         params:
             asset (int, optional): If asset is blank, then query all positive assets user have.
@@ -27,9 +27,9 @@ class AsyncAccount(API):
     async def get_balance(self, asset: str | None = None) -> Response:
         """Query Assets
 
-        GET /unified/accounts
+        GET /api/v4/spot/accounts
 
-        https://www.gate.io/docs/developers/apiv4/#get-unified-account-information
+        https://www.gate.io/docs/developers/apiv4/#list-spot-accounts
 
         params:
             asset (int, optional): If asset is blank, then query all positive assets user have.

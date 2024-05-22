@@ -110,9 +110,9 @@ class AccountCore(Core):
     def get_balance_args(self, AccountObj, params):
         """Query Assets
 
-        GET /unified/accounts
+        GET /api/v4/spot/accounts
 
-        https://www.gate.io/docs/developers/apiv4/#get-unified-account-information
+        https://www.gate.io/docs/developers/apiv4/#list-spot-accounts
 
         params:
             asset (int, optional): If asset is blank, then query all positive assets user have.
