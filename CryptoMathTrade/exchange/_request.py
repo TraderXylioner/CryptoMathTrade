@@ -3,7 +3,16 @@ import websockets
 import aiohttp
 import requests
 
-from .utils import clean_none_value, _prepare_params, _dispatch_request
+from .utils import clean_none_value, _prepare_params
+
+
+def _dispatch_request(session, http_method):
+    return {
+        'GET': session.get,
+        'DELETE': session.delete,
+        'PUT': session.put,
+        'POST': session.post,
+    }.get(http_method, 'GET')
 
 
 class Request:
