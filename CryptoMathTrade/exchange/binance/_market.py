@@ -19,7 +19,7 @@ class Market(API):
         params:
             symbol (str): the trading pair
 
-            limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
+            limit (int, optional): limit the results. Default 100; max 5000.
         """
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
@@ -28,7 +28,6 @@ class Market(API):
 
     def get_trades(self, symbol: str, limit: int = 500) -> Response:
         """Recent Trades List
-        Get recent trades (up to last 500).
 
         GET /api/v3/trades
 
@@ -54,6 +53,8 @@ class Market(API):
         params:
             symbol (str, optional): the trading pair
 
+            or / and
+
             symbols (list, optional): list of trading pairs
         """
         response = validate_response(
@@ -73,7 +74,7 @@ class AsyncMarket(API):
         param:
             symbol (str): the trading pair
 
-            limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
+            limit (int, optional): limit the results. Default 100; max 5000.
         """
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
@@ -82,7 +83,6 @@ class AsyncMarket(API):
 
     async def get_trades(self, symbol: str, limit: int = 500) -> Response:
         """Recent Trades List
-        Get recent trades (up to last 500).
 
         GET /api/v3/trades
 
@@ -107,6 +107,8 @@ class AsyncMarket(API):
 
         params:
             symbol (str, optional): the trading pair
+
+            or / and
 
             symbols (list, optional): list of trading pairs
         """

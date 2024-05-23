@@ -17,8 +17,7 @@ class URLS:
     CANCEL_ORDERS_URL = '/api/v3/order'  # https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
 
     # Account
-    GET_DEPOSIT_ADDRESS = '/sapi/v1/capital/deposit/address'
-    GET_BALANCE = '/sapi/v3/asset/getUserAsset'
+    GET_BALANCE = '/sapi/v3/asset/getUserAsset'  # https://binance-docs.github.io/apidocs/spot/en/#user-asset-user_data
 
     # WS
     WS_BASE_URL = 'wss://stream.binance.com:443/ws'
