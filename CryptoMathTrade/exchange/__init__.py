@@ -1,4 +1,5 @@
 from .binance import core as binanceCore
+from .bingx import core as bingxCore
 from .kucoin import core as kucoinCore
 from .okx import core as okxCore
 from .htx import core as htxCore
@@ -15,6 +16,7 @@ class ExchangeCores:
     """
     cores = {
         'binance': binanceCore,
+        'bingx': bingxCore,
         'kucoin': kucoinCore,
         'okx': okxCore,
         'htx': htxCore,
