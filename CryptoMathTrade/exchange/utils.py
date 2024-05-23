@@ -31,20 +31,6 @@ def hmac_hashing(api_secret, payload):
     return hmac.new(api_secret.encode('utf-8'), payload.encode('utf-8'), hashlib.sha256).hexdigest()
 
 
-# def rsa_signature(private_key, payload, private_key_pass=None):
-#     private_key = RSA.import_key(private_key, passphrase=private_key_pass)
-#     h = SHA256.new(payload.encode('utf-8'))
-#     signature = pkcs1_15.new(private_key).sign(h)
-#     return b64encode(signature)
-
-
-# def ed25519_signature(private_key, payload, private_key_pass=None):
-#     private_key = ECC.import_key(private_key, passphrase=private_key_pass)
-#     signer = eddsa.new(private_key, 'rfc8032')
-#     signature = signer.sign(payload.encode('utf-8'))
-#     return b64encode(signature)
-
-
 def encoded_string(query):
     return urlencode(query, True).replace('%40', '@')
 
@@ -62,21 +48,10 @@ def check_api_keys(func):
     return wrapper
 
 
-def _dispatch_request(session, http_method):
-    return {
-        'GET': session.get,
-        'DELETE': session.delete,
-        'PUT': session.put,
-        'POST': session.post,
-    }.get(http_method, 'GET')
-
-
 def _convert_kwargs_to_dict(func):
     def wrapper(*args, **kwargs):
         res = {key: value for key, value in kwargs.items() if value is not None}
-        if res.get('symbols'):
-            res['symbols'] = convert_list_to_json_array(res.get('symbols'))
-        return func(*args, res)
+        return func(*args, **res)
 
     return wrapper
 
@@ -88,3 +63,9 @@ def validate_response(response):
         return response
     else:
         raise Exception(response.__dict__)  # custom exc
+
+
+def check_require_params(params: dict, required_params: tuple):
+    return_params = [i for i in required_params if i not in params]
+    if return_params:
+        raise ParameterRequiredError(return_params)
