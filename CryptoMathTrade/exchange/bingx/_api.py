@@ -2,7 +2,6 @@ import asyncio
 import uuid
 
 from .._request import WebSocketRequest
-from ..utils import get_timestamp, hmac_hashing, _prepare_params, check_api_keys
 from .._api import BaseAPI
 
 
