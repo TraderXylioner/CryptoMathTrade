@@ -1,11 +1,10 @@
-from ._urls import URLS
-from .._core import Core
-from ..utils import _convert_kwargs_to_dict
+from .._urls import URLS
+from ..._core import Core
+from ...utils import check_require_params
 
 
 class MarketCore(Core):
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Get orderbook.
 
         GET /api/v3/depth
@@ -17,10 +16,10 @@ class MarketCore(Core):
 
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
+        check_require_params(kwargs, ('symbol',))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Recent Trades List
         Get recent trades (up to last 500).
 
@@ -33,10 +32,10 @@ class MarketCore(Core):
 
             limit (int, optional): limit the results. Default 500; max 1000.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
+        check_require_params(kwargs, ('symbol',))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_ticker_args(self, params: dict) -> dict:
+    def get_ticker_args(self, **kwargs) -> dict:
         """24hr Ticker Price Change Statistics
 
         GET /api/v3/ticker/24hr
@@ -46,12 +45,11 @@ class MarketCore(Core):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TICKER_URL, params=params)
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TICKER_URL, params=kwargs)
 
 
 class WSMarketCore(Core):
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Partial Book Depth Streams
 
         Stream Names: spot@public.limit.depth.v3.api@<symbol>@<level>.
@@ -64,14 +62,13 @@ class WSMarketCore(Core):
             limit (int, optional): limit the results. Valid are 5, 10, or 20.
 
         """
-
+        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='SUBSCRIPTION',
                                 url=URLS.WS_BASE_URL,
-                                params=f'spot@public.limit.depth.v3.api@{params["symbol"].upper()}@{params["limit"]}',
+                                params=f'spot@public.limit.depth.v3.api@{kwargs["symbol"].upper()}@{kwargs["limit"]}',
                                 )
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Trade Streams
 
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
@@ -84,22 +81,8 @@ class WSMarketCore(Core):
          param:
             symbol (str): the trading pair
          """
+        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='SUBSCRIPTION',
                                 url=URLS.WS_BASE_URL,
-                                params=f'spot@public.deals.v3.api@{params["symbol"].upper()}',
-                                )
-
-
-class AccountCore(Core):
-    @_convert_kwargs_to_dict
-    def get_balance_args(self, AccountObj, params):
-        """Query Assets
-
-        GET /api/v3/account
-
-        https://mexcdevelop.github.io/apidocs/spot_v3_en/#account-information
-        """
-        return self.return_args(method='GET',
-                                url=URLS.BASE_URL + URLS.GET_BALANCE,
-                                params=AccountObj.get_payload(params),
+                                params=f'spot@public.deals.v3.api@{kwargs["symbol"].upper()}',
                                 )

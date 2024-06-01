@@ -1,11 +1,10 @@
-from ._urls import URLS
-from .._core import Core
-from ..utils import _convert_kwargs_to_dict
+from .._urls import URLS
+from ..._core import Core
+from ...utils import check_require_params
 
 
 class MarketCore(Core):
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Get orderbook.
 
         GET /api/v1/market/orderbook/level2_100
@@ -16,10 +15,10 @@ class MarketCore(Core):
             symbol (str): the trading pair
 
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
+        check_require_params(kwargs, ('symbol',))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Recent Trades List
         Get recent trades (up to last 100).
 
@@ -30,10 +29,10 @@ class MarketCore(Core):
         params:
             symbol (str): the trading pair
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
+        check_require_params(kwargs, ('symbol',))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_ticker_args(self, params: dict) -> dict:
+    def get_ticker_args(self, **kwargs) -> dict:
         """24hr Ticker Price Change Statistics
 
         GET /api/v1/market/stats or /api/v1/market/allTickers
@@ -45,8 +44,8 @@ class MarketCore(Core):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
-        _url = URLS.TICKER_URL if 'symbol' in params else URLS.TICKERS_URL
-        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=params)
+        _url = URLS.TICKER_URL if 'symbol' in kwargs else URLS.TICKERS_URL
+        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=kwargs)
 
 
 class WSMarketCore(Core):
@@ -60,8 +59,7 @@ class WSMarketCore(Core):
         super().__init__(proxies=proxies, headers=headers, cookies=cookies, auth=auth)
         self.token = token
 
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Partial Book Depth Streams
 
         Stream Names: /spotMarket/level2Depth{limit}:{symbol}
@@ -74,13 +72,13 @@ class WSMarketCore(Core):
             limit (int, optional): limit the results. Valid are 5 or 50.
 
         """
+        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='subscribe',
                                 url=f'{URLS.WS_BASE_URL}?token={self.token}',
-                                params=f'/spotMarket/level2Depth{params["limit"]}:{params["symbol"].upper()}',
+                                params=f'/spotMarket/level2Depth{kwargs["limit"]}:{kwargs["symbol"].upper()}',
                                 )
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Trade Streams
 
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
@@ -93,29 +91,8 @@ class WSMarketCore(Core):
          param:
             symbol (str): the trading pair
          """
+        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='subscribe',
                                 url=f'{URLS.WS_BASE_URL}?token={self.token}',
-                                params=f'/market/match:{params["symbol"].upper()}',
-                                )
-
-
-class AccountCore(Core):
-    @_convert_kwargs_to_dict
-    def get_balance_args(self, AccountObj, params):
-        """Query Assets
-
-        GET /api/v1/accounts
-
-        https://www.kucoin.com/docs/rest/account/basic-info/get-account-list-spot-margin-trade_hf
-
-        params:
-            asset (int, optional): If asset is blank, then query all positive assets user have.
-        """
-        if 'asset' in params:
-            params['currency'] = params['asset']
-            params.pop('asset')
-        self.headers = AccountObj.get_payload(path=URLS.GET_BALANCE, method='GET', payload=params)
-        return self.return_args(method='GET',
-                                url=URLS.BASE_URL + URLS.GET_BALANCE,
-                                params=params,
+                                params=f'/market/match:{kwargs["symbol"].upper()}',
                                 )
