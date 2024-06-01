@@ -1,21 +1,21 @@
 from .._urls import URLS
 from ..._core import Core
-from ...utils import _convert_kwargs_to_dict
+from ...utils import replace_param
 
 
 class AccountCore(Core):
-    @_convert_kwargs_to_dict
-    def get_balance_args(self, AccountObj, **kwargs) -> dict:
+    def get_balance_args(self, AccountObj, **kwargs):
         """Query Assets
 
-        POST /sapi/v3/asset/getUserAsset
+        GET /account/v1/wallet
 
-        https://binance-docs.github.io/apidocs/spot/en/#user-asset-user_data
+        https://developer-pro.bitmart.com/en/spot/#get-account-balance-keyed
 
         params:
             asset (int, optional): If asset is blank, then query all positive assets user have.
         """
-        return self.return_args(method='POST',
+        replace_param(kwargs, 'asset', 'currency')
+        return self.return_args(method='GET',
                                 url=URLS.BASE_URL + URLS.GET_BALANCE,
                                 params=AccountObj.get_payload(kwargs),
                                 )
