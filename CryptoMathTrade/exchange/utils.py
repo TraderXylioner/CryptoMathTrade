@@ -69,3 +69,8 @@ def check_require_params(params: dict, require_params: tuple):
     return_params = [i for i in require_params if i not in params]
     if return_params:
         raise ParameterRequiredError(return_params)
+
+
+def replace_param(params: dict, param: str, new_param: str):
+    params[new_param] = params[param]
+    params.pop(param)
