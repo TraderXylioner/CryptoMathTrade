@@ -65,7 +65,7 @@ def validate_response(response):
         raise Exception(response.__dict__)  # custom exc
 
 
-def check_require_params(params: dict, required_params: tuple):
-    return_params = [i for i in required_params if i not in params]
+def check_require_params(params: dict, require_params: tuple):
+    return_params = [i for i in require_params if i not in params]
     if return_params:
         raise ParameterRequiredError(return_params)
