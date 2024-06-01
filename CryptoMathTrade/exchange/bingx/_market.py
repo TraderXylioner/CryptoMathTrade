@@ -14,7 +14,6 @@ class Market(API):
     def get_depth(self,
                   symbol: str,
                   limit: int = 100,
-                  recvWindow: int | None = None,
                   ) -> Response:
         """Get orderbook.
 
@@ -23,39 +22,32 @@ class Market(API):
         https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Query%20depth%20information
 
         param:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 1000. If limit > 1000, then the response will truncate to 1000
-
-            recvWindow (int, optional).
+            limit (int, optional): limit the results. Default 100; max 1000.
         """
         response = validate_response(self._query(
-            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
+            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
         json_data = response.json()
         return _serialize_depth(json_data['data'], response)
 
     def get_trades(self,
                    symbol: str,
                    limit: int = 100,
-                   recvWindow: int | None = None,
                    ) -> Response:
         """Recent Trades List
-
-        Get recent trades (up to last 100).
 
         GET /openApi/spot/v1/market/trades
 
         https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Query%20transaction%20records
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 100
-
-            recvWindow (int, optional).
+            limit (int, optional): limit the results. Default 100; max 100.
         """
         response = validate_response(self._query(
-            **MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
+            **MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
         json_data = response.json()
         return _serialize_trades(json_data['data'], response)
 
@@ -80,7 +72,6 @@ class AsyncMarket(API):
     async def get_depth(self,
                         symbol: str,
                         limit: int = 100,
-                        recvWindow: int | None = None
                         ):
         """Get orderbook.
 
@@ -89,14 +80,12 @@ class AsyncMarket(API):
         https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Query%20depth%20information
 
         param:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 1000. If limit > 1000, then the response will truncate to 1000
-
-            recvWindow (int, optional).
+            limit (int, optional): limit the results. Default 100; max 1000.
         """
         response = validate_response(await self._async_query(
-            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, recvWindow=recvWindow)))
+            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
         json_data = response.json
         return _serialize_depth(json_data['data'], response)
 
@@ -105,16 +94,14 @@ class AsyncMarket(API):
                          limit: int = 100):
         """Recent Trades List
 
-        Get recent trades (up to last 100).
-
         GET /openApi/spot/v1/market/trades
 
         https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Query%20transaction%20records
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 100
+            limit (int, optional): limit the results. Default 100; max 100.
         """
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))

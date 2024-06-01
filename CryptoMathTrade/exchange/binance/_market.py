@@ -71,7 +71,7 @@ class AsyncMarket(API):
 
         https://binance-docs.github.io/apidocs/spot/en/#order-book
 
-        param:
+        params:
             symbol (str): the trading pair
 
             limit (int, optional): limit the results. Default 100; max 5000.
@@ -130,7 +130,7 @@ class WebSocketMarket(API):
 
         https://binance-docs.github.io/apidocs/spot/en/#partial-book-depth-streams
 
-        param:
+        params:
             symbol (str): the trading pair
 
             limit (int, optional): limit the results. Valid are 5, 10, or 20.
@@ -159,8 +159,8 @@ class WebSocketMarket(API):
 
          https://binance-docs.github.io/apidocs/spot/en/#trade-streams
 
-         param:
-            symbol (str): the trading pair
+         params:
+            symbol (str): the trading pair.
          """
         async for response in self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol)):
             json_data = json.loads(response)

@@ -19,7 +19,7 @@ class Market(API):
 
         https://www.bitget.com/api-doc/spot/market/Get-Orderbook
 
-        param:
+        params:
             symbol (str): the trading pair
 
             limit (int, optional): limit the results. Default 150; max 150.
@@ -36,14 +36,13 @@ class Market(API):
                    limit: int = 100,
                    ) -> Response:
         """Recent Trades List
-        Get recent trades (up to last 100).
 
         GET /api/v2/spot/market/fills
 
         https://www.bitget.com/api-doc/spot/market/Get-Recent-Trades
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
             limit (int, optional): limit the results. Default 100; max 500.
         """
@@ -62,7 +61,7 @@ class Market(API):
         https://www.bitget.com/api-doc/spot/market/Get-Tickers
 
         params:
-            symbol (str, optional): the trading pair
+            symbol (str, optional): the trading pair.
         """
         response = validate_response(
             self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
@@ -81,7 +80,7 @@ class AsyncMarket(API):
 
         https://www.bitget.com/api-doc/spot/market/Get-Orderbook
 
-        param:
+        params:
             symbol (str): the trading pair
 
             limit (int, optional): limit the results. Default 150; max 150.
@@ -98,14 +97,13 @@ class AsyncMarket(API):
                          limit: int = 100,
                          ) -> Response:
         """Recent Trades List
-        Get recent trades (up to last 100).
 
         GET /api/v2/spot/market/fills
 
         https://www.bitget.com/api-doc/spot/market/Get-Recent-Trades
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
             limit (int, optional): limit the results. Default 100; max 500.
         """
@@ -124,7 +122,7 @@ class AsyncMarket(API):
         https://www.bitget.com/api-doc/spot/market/Get-Tickers
 
         params:
-            symbol (str, optional): the trading pair
+            symbol (str, optional): the trading pair.
         """
         response = validate_response(
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))

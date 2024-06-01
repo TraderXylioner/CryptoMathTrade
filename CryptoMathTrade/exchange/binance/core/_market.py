@@ -12,7 +12,7 @@ class MarketCore(Core):
 
         https://binance-docs.github.io/apidocs/spot/en/#order-book
 
-        param:
+        params:
             symbol (str): the trading pair
 
             limit (int, optional): limit the results. Default 100; max 5000.
@@ -69,7 +69,7 @@ class WSMarketCore(Core):
 
         https://binance-docs.github.io/apidocs/spot/en/#partial-book-depth-streams
 
-        param:
+        params:
             symbol (str): the trading pair
 
             limit (int, optional): limit the results. Valid are 5, 10, or 20.
@@ -91,7 +91,7 @@ class WSMarketCore(Core):
 
          https://binance-docs.github.io/apidocs/spot/en/#trade-streams
 
-         param:
+         params:
             symbol (str): the trading pair
          """
         check_require_params(kwargs, ('symbol',))

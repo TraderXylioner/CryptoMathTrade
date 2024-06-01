@@ -16,8 +16,9 @@ class Market(API):
 
         https://developer-pro.bitmart.com/en/spot/#get-depth-v3
 
-        param:
-            symbol (str): the trading pair
+        params:
+            symbol (str): the trading pair.
+
             limit (int, optional): limit the results. Default 35; max 50.
         """
         response = validate_response(
@@ -27,14 +28,13 @@ class Market(API):
 
     def get_trades(self, symbol: str, limit: int = 50) -> Response:
         """Recent Trades List
-        Get recent trades (up to last 50).
 
         GET /spot/quotation/v3/trades
 
         https://developer-pro.bitmart.com/en/spot/#get-recent-trades-v3
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
             limit (int, optional): limit the results. Default 50; max 50.
         """
@@ -69,8 +69,9 @@ class AsyncMarket(API):
 
         https://developer-pro.bitmart.com/en/spot/#get-depth-v3
 
-        param:
-            symbol (str): the trading pair
+        params:
+            symbol (str): the trading pair.
+
             limit (int, optional): limit the results. Default 35; max 50.
         """
         response = validate_response(
@@ -80,14 +81,13 @@ class AsyncMarket(API):
 
     async def get_trades(self, symbol: str, limit: int = 50) -> Response:
         """Recent Trades List
-        Get recent trades (up to last 50).
 
         GET /spot/quotation/v3/trades
 
         https://developer-pro.bitmart.com/en/spot/#get-recent-trades-v3
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
             limit (int, optional): limit the results. Default 50; max 50.
         """
