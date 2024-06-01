@@ -1,21 +1,19 @@
 from .._urls import URLS
 from ..._core import Core
-from ...utils import _convert_kwargs_to_dict
 
 
 class AccountCore(Core):
-    @_convert_kwargs_to_dict
     def get_balance_args(self, AccountObj, **kwargs) -> dict:
         """Query Assets
 
-        POST /sapi/v3/asset/getUserAsset
+        GET /openApi/spot/v1/account/balance
 
-        https://binance-docs.github.io/apidocs/spot/en/#user-asset-user_data
+        https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
 
         params:
-            asset (int, optional): If asset is blank, then query all positive assets user have.
+            recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='POST',
+        return self.return_args(method='GET',
                                 url=URLS.BASE_URL + URLS.GET_BALANCE,
                                 params=AccountObj.get_payload(kwargs),
                                 )

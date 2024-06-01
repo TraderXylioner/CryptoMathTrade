@@ -1,11 +1,10 @@
-from ._urls import URLS
-from .._core import Core
-from ..utils import _convert_kwargs_to_dict
+from .._urls import URLS
+from ..._core import Core
+from ...utils import check_require_params, replace_param
 
 
 class MarketCore(Core):
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Get orderbook.
 
         GET /api/v5/market/books
@@ -17,16 +16,12 @@ class MarketCore(Core):
 
             limit (int, optional): limit the results. Default 1; max 400.
         """
-        if 'symbol' in params:
-            params['instId'] = params['symbol']
-            params.pop('symbol')
-        if 'limit' in params:
-            params['sz'] = params['limit']
-            params.pop('limit')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
+        check_require_params(kwargs, ('symbol',))
+        replace_param(kwargs, 'symbol', 'instId')
+        replace_param(kwargs, 'limit', 'sz')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Recent Trades List
         Get recent trades (up to last 500).
 
@@ -39,13 +34,10 @@ class MarketCore(Core):
 
             limit (int, optional): limit the results. Default 100; max 500.
         """
-        if 'symbol' in params:
-            params['instId'] = params['symbol']
-            params.pop('symbol')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
+        replace_param(kwargs, 'symbol', 'instId')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_ticker_args(self, params: dict) -> dict:
+    def get_ticker_args(self, **kwargs) -> dict:
         """24hr Ticker Price Change Statistics
 
         GET /api/v5/market/ticker or /api/v5/market/tickers
@@ -57,18 +49,17 @@ class MarketCore(Core):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
-        _url = URLS.TICKER_URL if 'symbol' in params else URLS.TICKERS_URL
-        if 'symbol' in params:
-            params['instId'] = params['symbol'] + '-SWAP'
-            params.pop('symbol')
+        _url = URLS.TICKER_URL if 'symbol' in kwargs else URLS.TICKERS_URL
+        if 'symbol' in kwargs:
+            kwargs['symbol'] += '-SWAP'
+            replace_param(kwargs, 'symbol', 'instId')
         else:
-            params['instType'] = 'SPOT'
-        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=params)
+            kwargs['instType'] = 'SPOT'
+        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=kwargs)
 
 
 class WSMarketCore(Core):
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Partial Book Depth Streams
 
         Stream Names: books
@@ -81,11 +72,10 @@ class WSMarketCore(Core):
         """
         return self.return_args(method='subscribe',
                                 url=URLS.WS_BASE_URL,
-                                params=[{"channel": "books", "instId": params['symbol']}],
+                                params=[{"channel": "books", "instId": kwargs['symbol']}],
                                 )
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Trade Streams
 
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
@@ -100,5 +90,5 @@ class WSMarketCore(Core):
          """
         return self.return_args(method='subscribe',
                                 url=URLS.WS_BASE_URL,
-                                params=[{"channel": "trades", "instId": params['symbol']}],
+                                params=[{"channel": "trades", "instId": kwargs['symbol']}],
                                 )

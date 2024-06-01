@@ -1,41 +1,40 @@
-from ._urls import URLS
-from .._core import Core
-from ..utils import _convert_kwargs_to_dict
+from .._urls import URLS
+from ..._core import Core
+from ...utils import check_require_params
 
 
 class MarketCore(Core):
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Get orderbook.
 
         GET /spot/quotation/v3/books
 
         https://developer-pro.bitmart.com/en/spot/#get-depth-v3
 
-        param:
-            symbol (str): the trading pair
+        params:
+            symbol (str): the trading pair.
+
             limit (int, optional): limit the results. Default 35; max 50.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
+        check_require_params(kwargs, ('symbol',))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Recent Trades List
-        Get recent trades (up to last 50).
 
         GET /spot/quotation/v3/trades
 
         https://developer-pro.bitmart.com/en/spot/#get-recent-trades-v3
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
             limit (int, optional): limit the results. Default 50; max 50.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
+        check_require_params(kwargs, ('symbol',))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
 
-    @_convert_kwargs_to_dict
-    def get_ticker_args(self, params: dict) -> dict:
+    def get_ticker_args(self, **kwargs) -> dict:
         """24hr Ticker Price Change Statistics
 
         GET /spot/quotation/v3/ticker or /spot/quotation/v3/tickers
@@ -47,13 +46,12 @@ class MarketCore(Core):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
-        _url = URLS.TICKER_URL if 'symbol' in params else URLS.TICKERS_URL
-        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=params)
+        _url = URLS.TICKER_URL if 'symbol' in kwargs else URLS.TICKERS_URL
+        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=kwargs)
 
 
 class WSMarketCore(Core):
-    @_convert_kwargs_to_dict
-    def get_depth_args(self, params: dict) -> dict:
+    def get_depth_args(self, **kwargs) -> dict:
         """Partial Book Depth Streams
 
         Stream Names: spot/depth{limit}:{symbol}
@@ -69,11 +67,10 @@ class WSMarketCore(Core):
         """
         return self.return_args(method='subscribe',
                                 url=URLS.WS_BASE_URL,
-                                params=f'spot/depth{params["limit"]}:{params["symbol"]}',
+                                params=f'spot/depth{kwargs["limit"]}:{kwargs["symbol"]}',
                                 )
 
-    @_convert_kwargs_to_dict
-    def get_trades_args(self, params: dict) -> dict:
+    def get_trades_args(self, **kwargs) -> dict:
         """Trade Streams
 
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
@@ -88,26 +85,5 @@ class WSMarketCore(Core):
          """
         return self.return_args(method='subscribe',
                                 url=URLS.WS_BASE_URL,
-                                params=f'spot/trade:{params["symbol"]}',
-                                )
-
-
-class AccountCore(Core):
-    @_convert_kwargs_to_dict
-    def get_balance_args(self, AccountObj, params):
-        """Query Assets
-
-        GET /account/v1/wallet
-
-        https://developer-pro.bitmart.com/en/spot/#get-account-balance-keyed
-
-        params:
-            asset (int, optional): If asset is blank, then query all positive assets user have.
-        """
-        if 'asset' in params:
-            params['currency'] = params['asset']
-            params.pop('asset')
-        return self.return_args(method='GET',
-                                url=URLS.BASE_URL + URLS.GET_BALANCE,
-                                params=AccountObj.get_payload(params),
+                                params=f'spot/trade:{kwargs["symbol"]}',
                                 )
