@@ -48,6 +48,18 @@ class MarketCore(Core):
         kwargs['timestamp'] = get_timestamp()
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TICKER_URL, params=kwargs)
 
+    def get_symbols_args(self, **kwargs) -> dict:
+        """Query Symbols
+
+        GET /openApi/spot/v1/common/symbols
+
+        https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Query%20Symbols
+
+        params:
+            symbol (str, optional): the trading pair.
+        """
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=kwargs)
+
 
 class WSMarketCore(Core):
     def get_depth_args(self, **kwargs) -> dict:
