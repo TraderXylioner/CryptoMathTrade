@@ -57,3 +57,9 @@ def _serialize_balance(data, response):
     return Response(data=[Balance(**i) for i in data['data']['balances']],
                     response_object=response,
                     )
+
+
+def _serialize_symbols(data, response):
+    return Response(data=data,
+                    response_object=response,
+                    )
