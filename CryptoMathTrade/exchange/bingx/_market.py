@@ -4,7 +4,7 @@ import json
 from typing import Generator
 
 from ._api import API
-from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker, _serialize_trades_for_ws
+from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker, _serialize_trades_for_ws, _serialize_symbols
 from .core import MarketCore, WSMarketCore
 from .._response import Response
 from ..utils import validate_response
@@ -67,6 +67,22 @@ class Market(API):
         json_data = response.json()
         return _serialize_ticker(json_data['data'], response)
 
+    def get_symbols(self,
+                    symbol: str | None = None
+                    ):
+        """Query Symbols
+
+        GET /openApi/spot/v1/common/symbols
+
+        https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Query%20Symbols
+
+        params:
+            symbol (str, optional): the trading pair.
+        """
+        response = validate_response(self._query(**MarketCore(headers=self.headers).get_symbols_args(symbol=symbol)))
+        json_data = response.json()
+        return _serialize_symbols(json_data['data'], response)
+
 
 class AsyncMarket(API):
     async def get_depth(self,
@@ -124,6 +140,23 @@ class AsyncMarket(API):
             await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
         json_data = response.json
         return _serialize_ticker(json_data['data'], response)
+
+    async def get_symbols(self,
+                          symbol: str | None = None
+                          ):
+        """Query Symbols
+
+        GET /openApi/spot/v1/common/symbols
+
+        https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Query%20Symbols
+
+        params:
+            symbol (str, optional): the trading pair.
+        """
+        response = validate_response(
+            await self._async_query(**MarketCore(headers=self.headers).get_symbols_args(symbol=symbol)))
+        json_data = response.json
+        return _serialize_symbols(json_data['data'], response)
 
 
 class WebSocketMarket(API):
