@@ -1,6 +1,5 @@
-from ...types import OrderBook, Trade, Ticker, Order, Side
+from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline
 from .._response import Response
-from ...types.balance import Balance
 
 
 def _serialize_depth(data, response):
@@ -63,3 +62,16 @@ def _serialize_symbols(data, response):
     return Response(data=data,
                     response_object=response,
                     )
+
+
+def _serialize_kline(data, response):
+    return Response(data=[Kline(openTime=i[0],
+                                openPrice=i[1],
+                                highPrice=i[2],
+                                lowerPrice=i[3],
+                                closePrice=i[4],
+                                transactionPrice=i[5],
+                                closeTime=i[6],
+                                amount=i[7]
+                                ) for i in data],
+                    response_object=response)

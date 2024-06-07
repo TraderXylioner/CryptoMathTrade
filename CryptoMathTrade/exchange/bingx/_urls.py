@@ -5,6 +5,7 @@ class URLS:
     TRADES_URL = '/openApi/spot/v1/market/trades'
     TICKER_URL = '/openApi/spot/v1/ticker/24hr'
     SYMBOLS_URL = '/openApi/spot/v1/common/symbols'
+    KLINE_URL = '/openApi/market/his/v1/kline'
 
     ORDER_URL = '/openApi/spot/v1/trade/query'
     CREATE_ORDER_URL = '/openApi/spot/v1/trade/order'
