@@ -60,6 +60,26 @@ class MarketCore(Core):
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=kwargs)
 
+    def get_kline_args(self, **kwargs) -> dict:
+        """Historical K-line data
+
+        GET /openApi/market/his/v1/kline
+
+        https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Historical%20K-line%20data
+
+        params:
+            symbol (str): the trading pair
+
+            interval (str): Time interval, reference field description
+
+            startTime (int, optional): Start time
+
+            endTime (int, optional): End time
+
+            limit (int, optional): Default value: 500 Maximum value: 500
+        """
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=kwargs)
+
 
 class WSMarketCore(Core):
     def get_depth_args(self, **kwargs) -> dict:
