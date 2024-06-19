@@ -75,3 +75,17 @@ def _serialize_kline(data, response):
                                 amount=i[7]
                                 ) for i in data],
                     response_object=response)
+
+
+def _serialize_order(data, response):
+    data = data['data']
+    return Response(data=FullOrder(**data),
+                    response_object=response,
+                    )
+
+
+def _serialize_orders(data, response):
+    data = data['data']
+    return Response(data=[FullOrder(**i) for i in data['orders']] if data['orders'] else [],
+                    response_object=response,
+                    )
