@@ -1,8 +1,11 @@
-from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline
+from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline, FullOrder
 from .._response import Response
 
 
 def _serialize_depth(data, response):
+    data = data['data']
+    if not data:
+        raise Exception('error')
     data['asks'] = data['asks'][::-1]
     return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in data['asks']],
                                    bids=[Order(price=bid[0], volume=bid[1]) for bid in data['bids']],
@@ -12,6 +15,7 @@ def _serialize_depth(data, response):
 
 
 def _serialize_trades(data, response):
+    data = data['data']
     return Response(data=[Trade(id=trade.get('id'),
                                 price=trade.get('price'),
                                 quantity=trade.get('qty'),
@@ -34,6 +38,7 @@ def _serialize_trades_for_ws(data, response):
 
 
 def _serialize_ticker(data, response):
+    data = data['data']
     return Response(data=[Ticker(symbol=ticker.get('symbol'),
                                  priceChange=ticker.get('priceChange'),
                                  priceChangePercent=ticker.get('priceChangePercent')[:-1],
@@ -59,12 +64,14 @@ def _serialize_balance(data, response):
 
 
 def _serialize_symbols(data, response):
+    data = data['data']
     return Response(data=data,
                     response_object=response,
                     )
 
 
 def _serialize_kline(data, response):
+    data = data['data']
     return Response(data=[Kline(openTime=i[0],
                                 openPrice=i[1],
                                 highPrice=i[2],
