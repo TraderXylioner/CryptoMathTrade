@@ -3,19 +3,19 @@ from .core import SpotCore
 from CryptoMathTrade.types import Side, TimeInForce
 from .._response import Response
 from ..utils import validate_response
+from ._serialization import _serialize_order, _serialize_orders
 
 
 class Spot(API):
     def get_orders(self,
                    symbol: str,
-                   orderId: int | None = None,
-                   startTime: int | None = None,
-                   endTime: int | None = None,
-                   pageIndex: int | None = None,
-                   pageSize: int | None = None,
-                   status: str | None = None,
-                   type: str | None = None,
-                   recvWindow: int | None = None,
+                   orderId: int = None,
+                   startTime: int = None,
+                   endTime: int = None,
+                   pageIndex: int = None,
+                   pageSize: int = None,
+                   status: str = None,
+                   type: str = None,
                    ) -> Response:
         """All Orders (USER_DATA)
 
@@ -26,47 +26,36 @@ class Spot(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Query%20Order%20History
 
         params:
-            symbol (str)
+            symbol (str).
 
-            orderId (int, optional)
+            orderId (int, optional).
 
-            startTime (int, optional)
+            startTime (int, optional): Unit: ms.
 
-            endTime (int, optional)
+            endTime (int, optional): Unit: ms.
 
-            pageIndex: (int, optional)
+            pageIndex: (int, optional), Default: 1.
 
-            pageSize: (int, optional)
+            pageSize: (int, optional), Default: 100, Max 100.
 
-            status: (str, optional)
+            status: (str, optional) FILLED / CANCELED / FAILED.
 
-            type: (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            type: (str, optional) MARKET / LIMIT / TAKE_STOP_LIMIT / TAKE_STOP_MARKET / TRIGGER_LIMIT / TRIGGER_MARKET.
         """
-        response = validate_response(self._query(
-            **SpotCore(headers=self.headers).get_orders_args(self,
-                                                             symbol=symbol,
-                                                             orderId=orderId,
-                                                             startTime=startTime,
-                                                             endTime=endTime,
-                                                             pageIndex=pageIndex,
-                                                             pageSize=pageSize,
-                                                             status=status,
-                                                             type=type,
-                                                             recvWindow=recvWindow,
-                                                             )))
+        response = validate_response(self._query(**SpotCore.get_orders(self,
+                                                                       symbol=symbol,
+                                                                       orderId=orderId,
+                                                                       startTime=startTime,
+                                                                       endTime=endTime,
+                                                                       pageIndex=pageIndex,
+                                                                       pageSize=pageSize,
+                                                                       status=status,
+                                                                       type=type,
+                                                                       )))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _serialize_orders(json_data, response)
 
-    def get_open_order(self,
-                       symbol: str,
-                       orderId: int | None = None,
-                       clientOrderID: str | None = None,
-                       recvWindow: int | None = None,
-                       ):
+    def get_open_order(self, symbol: str, orderId: int = None, clientOrderID: str = None) -> Response:
         """Query Order (USER_DATA)
 
         Check an order's status.
@@ -76,29 +65,18 @@ class Spot(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Query%20Orders
 
         params:
-            symbol (str)
+            symbol (str).
 
-            orderId (int, optional)
+            orderId (int, optional).
 
-            clientOrderID (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            clientOrderID (str, optional).
         """
-        response = validate_response(self._query(**SpotCore(headers=self.headers).get_open_order_args(self,
-                                                                                                      symbol=symbol,
-                                                                                                      orderId=orderId,
-                                                                                                      clientOrderID=clientOrderID,
-                                                                                                      recvWindow=recvWindow,
-                                                                                                      )))
+        response = validate_response(
+            self._query(**SpotCore.get_open_order(self, symbol=symbol, orderId=orderId, clientOrderID=clientOrderID)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _serialize_order(json_data, response)
 
-    def get_open_orders(self,
-                        symbol: str | None = None,
-                        recvWindow: int | None = None,
-                        ):
+    def get_open_orders(self, symbol: str = None) -> Response:
         """Current Open Orders (USER_DATA)
 
         Get all open orders on a symbol.
@@ -108,26 +86,13 @@ class Spot(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Query%20Open%20Orders
 
         params:
-            symbol (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            symbol (str, optional).
         """
-        response = validate_response(self._query(
-            **SpotCore(headers=self.headers).get_open_orders_args(self,
-                                                                  symbol=symbol,
-                                                                  recvWindow=recvWindow,
-                                                                  )))
-        json_data = response.json()['data']
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        response = validate_response(self._query(**SpotCore.get_open_orders(self, symbol=symbol)))
+        json_data = response.json()
+        return _serialize_orders(json_data, response)
 
-    def cancel_open_order(self,
-                          symbol: str,
-                          orderId: int | None = None,
-                          clientOrderID: str | None = None,
-                          recvWindow: int | None = None,
-                          ):
+    def cancel_open_order(self, symbol: str, orderId: int = None, clientOrderID: str = None) -> Response:
         """Cancel Order (TRADE)
 
         Cancel an active order.
@@ -137,29 +102,18 @@ class Spot(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Cancel%20an%20Order
 
         params:
-            symbol (str)
+            symbol (str).
 
-            orderId (int, optional)
+            orderId (int, optional).
 
-            clientOrderID (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            clientOrderID (str, optional).
         """
-        response = validate_response(self._query(**SpotCore(headers=self.headers).cancel_open_order_args(self,
-                                                                                                         symbol=symbol,
-                                                                                                         orderId=orderId,
-                                                                                                         clientOrderID=clientOrderID,
-                                                                                                         recvWindow=recvWindow,
-                                                                                                         )))
+        response = validate_response(self._query(
+            **SpotCore.cancel_open_order(self, symbol=symbol, orderId=orderId, clientOrderID=clientOrderID)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _serialize_order(json_data, response)
 
-    def cancel_open_orders(self,
-                           symbol: str | None = None,
-                           recvWindow: int | None = None,
-                           ):
+    def cancel_open_orders(self, symbol: str = None) -> Response:
         """Cancel Orders (TRADE)
 
         Cancel an active orders.
@@ -169,23 +123,18 @@ class Spot(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Cancel%20orders%20by%20symbol
 
         params:
-            symbol (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            symbol (str, optional).
         """
-        response = validate_response(self._query(
-            **SpotCore(headers=self.headers).cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow)))
+        response = validate_response(self._query(**SpotCore.cancel_open_orders(self, symbol=symbol)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _serialize_orders(json_data, response)
 
     def new_market_order(self,
                          symbol: str,
                          side: Side,
-                         quantity: float | None = None,
-                         quoteOrderQty: float | None = None,
-                         ):
+                         quantity: float = None,
+                         quoteOrderQty: float = None,
+                         ) -> Response:
         """New Market Order (TRADE)
 
         Post a new order
@@ -195,35 +144,32 @@ class Spot(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Create%20an%20Order
 
         params:
-            symbol (str)
+            symbol (str).
 
-            side (str)
+            side (Side).
 
-            quantity (float, optional)
+            quantity (float, optional).
 
-            quoteOrderQty (float, optional)
+            quoteOrderQty (float, optional).
         """
-        response = validate_response(self._query(
-            **SpotCore(headers=self.headers).new_order_args(self,
-                                                            symbol=symbol,
-                                                            side=side.value,
-                                                            type='MARKET',
-                                                            quantity=quantity,
-                                                            quoteOrderQty=quoteOrderQty,
-                                                            )))
+        response = validate_response(self._query(**SpotCore.new_order(self,
+                                                                      symbol=symbol,
+                                                                      side=side.value,
+                                                                      type='MARKET',
+                                                                      quantity=quantity,
+                                                                      quoteOrderQty=quoteOrderQty,
+                                                                      )))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _serialize_order(json_data, response)
 
     def new_limit_order(self,
                         symbol: str,
                         side: Side,
                         price: float,
-                        quantity: float | None = None,
-                        quoteOrderQty: float | None = None,
+                        quantity: float = None,
+                        quoteOrderQty: float = None,
                         timeInForce: TimeInForce = TimeInForce.GTC,
-                        ):
+                        ) -> Response:
         """New Limit Order (TRADE)
 
         Post a new order
@@ -233,26 +179,26 @@ class Spot(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Create%20an%20Order
 
         params:
-            symbol (str)
+            symbol (str).
 
-            side (str)
+            side (Side).
 
-            quantity (float)
+            price (float).
 
-            price (float)
+            quantity (float, optional).
 
-            timeInForce (str, optional)
+            quoteOrderQty (float, optional).
+
+            timeInForce (str, optional). Default: GTC.
         """
-        response = validate_response(self._query(**SpotCore(headers=self.headers).new_order_args(self,
-                                                                                                 symbol=symbol,
-                                                                                                 side=side.value,
-                                                                                                 type='LIMIT',
-                                                                                                 quantity=quantity,
-                                                                                                 quoteOrderQty=quoteOrderQty,
-                                                                                                 price=price,
-                                                                                                 timeInForce=timeInForce.value,
-                                                                                                 )))
+        response = validate_response(self._query(**SpotCore.new_order(self,
+                                                                      symbol=symbol,
+                                                                      side=side.value,
+                                                                      type='LIMIT',
+                                                                      quantity=quantity,
+                                                                      quoteOrderQty=quoteOrderQty,
+                                                                      price=price,
+                                                                      timeInForce=timeInForce.value,
+                                                                      )))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _serialize_order(json_data, response)
