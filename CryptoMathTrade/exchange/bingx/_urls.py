@@ -15,7 +15,10 @@ class URLS:
     OPEN_ORDERS_URL = '/openApi/spot/v1/trade/openOrders'
     CANCEL_ORDERS_URL = '/openApi/spot/v1/trade/cancelOpenOrders'
 
-    GET_BALANCE = '/openApi/spot/v1/account/balance'
+    GET_BALANCE_URL = '/openApi/spot/v1/account/balance'
+    GET_DEPOSIT_ADDRESS_URL = '/openApi/wallets/v1/capital/deposit/address'
+    WITHDRAW_URL = '/openApi/wallets/v1/capital/withdraw/apply'
+    GET_COINS_URL = '/openApi/wallets/v1/capital/config/getall'
 
     # WS
     WS_BASE_URL = 'wss://open-api-ws.bingx.com/market'
