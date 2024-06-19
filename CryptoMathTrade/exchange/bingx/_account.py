@@ -13,7 +13,7 @@ class Account(API):
 
         https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
         """
-        response = validate_response(self._query(**AccountCore(headers=self.headers).get_balance_args(self)))
+        response = validate_response(self._query(**AccountCore.get_balance(self)))
         json_data = response.json()
         return _serialize_balance(json_data, response)
 
@@ -26,7 +26,6 @@ class AsyncAccount(API):
 
         https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
         """
-        response = validate_response(
-            await self._async_query(**AccountCore(headers=self.headers).get_balance_args(self)))
+        response = validate_response(await self._async_query(**AccountCore.get_balance(self)))
         json_data = response.json
         return _serialize_balance(json_data, response)
