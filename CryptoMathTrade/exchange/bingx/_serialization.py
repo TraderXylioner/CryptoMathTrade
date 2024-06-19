@@ -63,6 +63,18 @@ def _serialize_balance(data, response):
                     )
 
 
+def _serialize_coins(data, response):
+    return Response(data=data, response_object=response)
+
+
+def _serialize_deposit_address(data, response):
+    return Response(data=data, response_object=response)
+
+
+def _serialize_withdraw(data, response):
+    return Response(data=data, response_object=response)
+
+
 def _serialize_symbols(data, response):
     data = data['data']
     return Response(data=data,
