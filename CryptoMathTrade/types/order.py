@@ -8,25 +8,31 @@ class Order(BaseModel):
     """
     Model representing an individual order.
 
-    Attributes:
+    params:
         price (Decimal): The price of the order.
+
         volume (Decimal): The volume of the order.
     """
     price: Decimal
-    volume: Decimal  #
+    volume: Decimal
 
-    symbol: str = None
-    orderId: None = None
-    origQty: None = None  #
-    executedQty: None = None
-    cummulativeQuoteQty: None = None
-    status: None = None
-    type: None = None
-    side: None = None
-    time: None = None
-    updateTime: None = None
-    origQuoteOrderQty: None = None
-    clientOrderID: None = None
+
+class FullOrder(BaseModel):
+    symbol: str
+    orderId: int
+    price: Decimal
+    # StopPrice: Decimal
+    origQty: Decimal
+    executedQty: Decimal
+    cummulativeQuoteQty: Decimal
+    status: str
+    type: str
+    side: Side
+    # time: int
+    # updateTime: int
+    # origQuoteOrderQty: Decimal
+    # clientOrderID: str
+    # fee: Decimal
 
 
 class OrderBook(BaseModel):
