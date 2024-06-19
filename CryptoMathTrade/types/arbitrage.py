@@ -7,15 +7,19 @@ class ArbitrageDeal(BaseModel):
     """
     Model representing an arbitrage deal.
 
-    Attributes:
+    params:
         price_buy (Decimal): The price at which the asset is bought.
+
         price_sell (Decimal): The price at which the asset is sold.
+
         volume (Decimal): The volume of the asset involved in the deal.
+
         fee_buy (Decimal): The fee percentage applied when buying the asset.
+
         fee_sell (Decimal): The fee percentage applied when selling the asset.
-        spread (Decimal): The calculated spread between the buy and sell prices,
-            taking into account the buy and sell fees. Initialized to None,
-            it is automatically calculated upon object creation.
+
+        spread (Decimal): The calculated spread between the buy and sell prices,taking into account the buy and sell fees.
+         Initialized to None,it is automatically calculated upon object creation.
     """
     price_buy: Decimal
     price_sell: Decimal

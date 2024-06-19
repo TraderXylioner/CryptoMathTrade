@@ -7,8 +7,9 @@ class Deal(Order):
     """
     Model representing a deal, which inherits from the Order model.
 
-    Attributes:
+    params:
         price (Decimal): The price of the deal.
+
         volume (Decimal): The volume of the deal.
     """
 
@@ -17,7 +18,7 @@ class Deals(BaseModel):
     """
     Model representing a collection of deals.
 
-    Attributes:
+    params:
         deals (list[Deal]): A list of Deal objects, each representing an individual deal.
     """
     deals: list[Deal] = []
