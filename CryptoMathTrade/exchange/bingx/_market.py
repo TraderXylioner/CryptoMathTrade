@@ -12,10 +12,7 @@ from ..utils import validate_response
 
 
 class Market(API):
-    def get_depth(self,
-                  symbol: str,
-                  limit: int = 100,
-                  ) -> Response:
+    def get_depth(self, symbol: str, limit: int = 100) -> Response:
         """Get orderbook.
 
         GET /openApi/spot/v1/market/depth
@@ -25,17 +22,13 @@ class Market(API):
         param:
             symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 1000.
+            limit (int, optional): Default 100; max 1000.
         """
-        response = validate_response(self._query(
-            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
+        response = validate_response(self._query(**MarketCore.get_depth(self, symbol=symbol, limit=limit)))
         json_data = response.json()
-        return _serialize_depth(json_data['data'], response)
+        return _serialize_depth(json_data, response)
 
-    def get_trades(self,
-                   symbol: str,
-                   limit: int = 100,
-                   ) -> Response:
+    def get_trades(self, symbol: str, limit: int = 100) -> Response:
         """Recent Trades List
 
         GET /openApi/spot/v1/market/trades
@@ -45,16 +38,13 @@ class Market(API):
         params:
             symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 100.
+            limit (int, optional): Default 100; max 100.
         """
-        response = validate_response(self._query(
-            **MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+        response = validate_response(self._query(**MarketCore.get_trades(self, symbol=symbol, limit=limit)))
         json_data = response.json()
-        return _serialize_trades(json_data['data'], response)
+        return _serialize_trades(json_data, response)
 
-    def get_ticker(self,
-                   symbol: str | None = None
-                   ):
+    def get_ticker(self, symbol: str = None) -> Response:
         """24hr Ticker Price Change Statistics
 
         GET /openApi/spot/v1/ticker/24hr
@@ -64,13 +54,11 @@ class Market(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        response = validate_response(self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+        response = validate_response(self._query(**MarketCore.get_ticker(self, symbol=symbol)))
         json_data = response.json()
-        return _serialize_ticker(json_data['data'], response)
+        return _serialize_ticker(json_data, response)
 
-    def get_symbols(self,
-                    symbol: str | None = None
-                    ):
+    def get_symbols(self, symbol: str = None) -> Response:
         """Query Symbols
 
         GET /openApi/spot/v1/common/symbols
@@ -80,17 +68,17 @@ class Market(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        response = validate_response(self._query(**MarketCore(headers=self.headers).get_symbols_args(symbol=symbol)))
+        response = validate_response(self._query(**MarketCore.get_symbols(self, symbol=symbol)))
         json_data = response.json()
-        return _serialize_symbols(json_data['data'], response)
+        return _serialize_symbols(json_data, response)
 
     def get_kline(self,
                   symbol: str,
                   interval: str,
-                  startTime: int | None = None,
-                  endTime: int | None = None,
-                  limit: int | None = None,
-                  ):
+                  startTime: int = None,
+                  endTime: int = None,
+                  limit: int = None,
+                  ) -> Response:
         """Historical K-line data
 
         GET /openApi/market/his/v1/kline
@@ -98,31 +86,29 @@ class Market(API):
         https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Historical%20K-line%20data
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
-            interval (str): Time interval, reference field description
+            interval (str): Time interval (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M).
 
-            startTime (int, optional): Start time
+            startTime (int, optional): Unit: ms.
 
-            endTime (int, optional): End time
+            endTime (int, optional): Unit: ms.
 
-            limit (int, optional): Default value: 500 Maximum value: 500
+            limit (int, optional): Default 500; max 1000.
         """
-        response = validate_response(self._query(**MarketCore(headers=self.headers).get_kline_args(symbol=symbol,
-                                                                                                   interval=interval,
-                                                                                                   startTime=startTime,
-                                                                                                   endTime=endTime,
-                                                                                                   limit=limit,
-                                                                                                   )))
+        response = validate_response(self._query(**MarketCore.get_kline(self,
+                                                                        symbol=symbol,
+                                                                        interval=interval,
+                                                                        startTime=startTime,
+                                                                        endTime=endTime,
+                                                                        limit=limit,
+                                                                        )))
         json_data = response.json()
-        return _serialize_kline(json_data['data'], response)
+        return _serialize_kline(json_data, response)
 
 
 class AsyncMarket(API):
-    async def get_depth(self,
-                        symbol: str,
-                        limit: int = 100,
-                        ):
+    async def get_depth(self, symbol: str, limit: int = 100) -> Response:
         """Get orderbook.
 
         GET /openApi/spot/v1/market/depth
@@ -132,16 +118,14 @@ class AsyncMarket(API):
         param:
             symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 1000.
+            limit (int, optional): Default 100; max 1000.
         """
-        response = validate_response(await self._async_query(
-            **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)))
+        response = validate_response(
+            await self._async_query(**MarketCore.get_depth(self, symbol=symbol, limit=limit)))
         json_data = response.json
-        return _serialize_depth(json_data['data'], response)
+        return _serialize_depth(json_data, response)
 
-    async def get_trades(self,
-                         symbol: str,
-                         limit: int = 100):
+    async def get_trades(self, symbol: str, limit: int = 100) -> Response:
         """Recent Trades List
 
         GET /openApi/spot/v1/market/trades
@@ -151,16 +135,14 @@ class AsyncMarket(API):
         params:
             symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Default 100; max 100.
+            limit (int, optional): Default 100; max 100.
         """
         response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+            await self._async_query(**MarketCore.get_trades(self, symbol=symbol, limit=limit)))
         json_data = response.json
-        return _serialize_trades(json_data['data'], response)
+        return _serialize_trades(json_data, response)
 
-    async def get_ticker(self,
-                         symbol: str | None = None
-                         ):
+    async def get_ticker(self, symbol: str = None) -> Response:
         """24hr Ticker Price Change Statistics
 
         GET /openApi/spot/v1/ticker/24hr
@@ -170,14 +152,11 @@ class AsyncMarket(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+        response = validate_response(await self._async_query(**MarketCore.get_ticker(self, symbol=symbol)))
         json_data = response.json
-        return _serialize_ticker(json_data['data'], response)
+        return _serialize_ticker(json_data, response)
 
-    async def get_symbols(self,
-                          symbol: str | None = None
-                          ):
+    async def get_symbols(self, symbol: str = None) -> Response:
         """Query Symbols
 
         GET /openApi/spot/v1/common/symbols
@@ -188,9 +167,9 @@ class AsyncMarket(API):
             symbol (str, optional): the trading pair.
         """
         response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_symbols_args(symbol=symbol)))
+            await self._async_query(**MarketCore.get_symbols(self, symbol=symbol)))
         json_data = response.json
-        return _serialize_symbols(json_data['data'], response)
+        return _serialize_symbols(json_data, response)
 
     async def get_kline(self,
                         symbol: str,
@@ -198,7 +177,7 @@ class AsyncMarket(API):
                         startTime: int | None = None,
                         endTime: int | None = None,
                         limit: int | None = None,
-                        ):
+                        ) -> Response:
         """Historical K-line data
 
         GET /openApi/market/his/v1/kline
@@ -206,32 +185,29 @@ class AsyncMarket(API):
         https://bingx-api.github.io/docs/#/en-us/spot/market-api.html#Historical%20K-line%20data
 
         params:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
-            interval (str): Time interval, reference field description
+            interval (str): Time interval (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M).
 
-            startTime (int, optional): Start time
+            startTime (int, optional): Unit: ms.
 
-            endTime (int, optional): End time
+            endTime (int, optional): Unit: ms.
 
-            limit (int, optional): Default value: 500 Maximum value: 500
+            limit (int, optional): Default 500; max 1000.
         """
-        response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_kline_args(symbol=symbol,
-                                                                                      interval=interval,
-                                                                                      startTime=startTime,
-                                                                                      endTime=endTime,
-                                                                                      limit=limit,
-                                                                                      )))
+        response = validate_response(await self._async_query(**MarketCore.get_kline(self,
+                                                                                    symbol=symbol,
+                                                                                    interval=interval,
+                                                                                    startTime=startTime,
+                                                                                    endTime=endTime,
+                                                                                    limit=limit,
+                                                                                    )))
         json_data = response.json
-        return _serialize_kline(json_data['data'], response)
+        return _serialize_kline(json_data, response)
 
 
 class WebSocketMarket(API):
-    async def get_depth(self,
-                        symbol: str,
-                        limit: int | None = 10,
-                        ) -> Generator:
+    async def get_depth(self, symbol: str, limit: int = 10) -> Generator:
         """Partial Book Depth Streams
 
         Stream Names: {symbol}@depth{limit}
@@ -239,19 +215,16 @@ class WebSocketMarket(API):
         https://bingx-api.github.io/docs/#/en-us/spot/socket/market.html#Subscribe%20Market%20Depth%20Data
 
         param:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
 
-            limit (int, optional): limit the results. Valid are 50.
+            limit (int, optional): Valid are 50.
         """
-        async for response in self._ws_query(
-                **WSMarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit)):
+        async for response in self._ws_query(**WSMarketCore.get_depth(self, symbol=symbol, limit=limit)):
             json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
-                yield _serialize_depth(json_data['data'], response)
+                yield _serialize_depth(json_data, response)
 
-    async def get_trades(self,
-                         symbol: str,
-                         ) -> Generator:
+    async def get_trades(self, symbol: str) -> Generator:
         """Trade Streams
 
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
@@ -262,9 +235,9 @@ class WebSocketMarket(API):
          https://bingx-api.github.io/docs/#/en-us/spot/socket/market.html#Subscription%20transaction%20by%20transaction
 
          param:
-            symbol (str): the trading pair
+            symbol (str): the trading pair.
          """
-        async for response in self._ws_query(**WSMarketCore(headers=self.headers).get_trades_args(symbol=symbol)):
+        async for response in self._ws_query(**WSMarketCore.get_trades(self, symbol=symbol)):
             json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
-                yield _serialize_trades_for_ws(json_data['data'], response)
+                yield _serialize_trades_for_ws(json_data, response)
