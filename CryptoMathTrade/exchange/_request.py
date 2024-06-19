@@ -16,10 +16,9 @@ def _dispatch_request(session, http_method):
 
 
 class Request:
-    def __init__(self, timeout=None, proxies=None, headers=None):
+    def __init__(self, timeout=None, headers=None):
         self.session = requests.Session()
         self.timeout = timeout
-        self.proxies = proxies
         if headers:
             self.session.headers.update(headers)
 
@@ -29,16 +28,14 @@ class Request:
         params = clean_none_value({'url': url,
                                    'params': _prepare_params(payload),
                                    'timeout': self.timeout,
-                                   'proxies': self.proxies,
                                    })
         response = _dispatch_request(self.session, method)(**params)
         return response
 
 
 class AsyncRequest:
-    def __init__(self, timeout=None, proxies=None, headers=None):
+    def __init__(self, timeout=None, headers=None):
         self.timeout = timeout
-        self.proxies = proxies
         self.headers = headers
 
     async def send_request(self, method: str, url: str, payload: dict | None = None):
@@ -47,7 +44,6 @@ class AsyncRequest:
         params = clean_none_value({'url': url,
                                    'params': clean_none_value(payload),
                                    'timeout': self.timeout,
-                                   'proxies': self.proxies,
                                    })
         async with aiohttp.ClientSession() as session:
             async with _dispatch_request(session, method)(**params) as response:
@@ -56,9 +52,8 @@ class AsyncRequest:
 
 
 class WebSocketRequest:
-    def __init__(self, timeout=None, proxies=None, headers=None):
+    def __init__(self, timeout=None, headers=None):
         self.timeout = timeout
-        self.proxies = proxies
         self.headers = headers
 
     async def open_connect(self, url: str, payload: dict):
