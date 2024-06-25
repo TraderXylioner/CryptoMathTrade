@@ -1,7 +1,6 @@
 import gzip
 import io
 import json
-from typing import Generator
 
 from ._api import API
 from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker, _serialize_trades_for_ws, \
@@ -9,10 +8,11 @@ from ._serialization import _serialize_depth, _serialize_trades, _serialize_tick
 from .core import MarketCore, WSMarketCore
 from .._response import Response
 from ..utils import validate_response
+from ...types import OrderBook, Trade, Ticker, Kline
 
 
 class Market(API):
-    def get_depth(self, symbol: str, limit: int = 100) -> Response:
+    def get_depth(self, symbol: str, limit: int = 100) -> Response[OrderBook, object]:
         """Get orderbook.
 
         GET /openApi/spot/v1/market/depth
@@ -28,7 +28,7 @@ class Market(API):
         json_data = response.json()
         return _serialize_depth(json_data, response)
 
-    def get_trades(self, symbol: str, limit: int = 100) -> Response:
+    def get_trades(self, symbol: str, limit: int = 100) -> Response[list[Trade], object]:
         """Recent Trades List
 
         GET /openApi/spot/v1/market/trades
@@ -44,7 +44,7 @@ class Market(API):
         json_data = response.json()
         return _serialize_trades(json_data, response)
 
-    def get_ticker(self, symbol: str = None) -> Response:
+    def get_ticker(self, symbol: str = None) -> Response[list[Ticker], object]:
         """24hr Ticker Price Change Statistics
 
         GET /openApi/spot/v1/ticker/24hr
@@ -58,7 +58,7 @@ class Market(API):
         json_data = response.json()
         return _serialize_ticker(json_data, response)
 
-    def get_symbols(self, symbol: str = None) -> Response:
+    def get_symbols(self, symbol: str = None) -> Response[object, object]:
         """Query Symbols
 
         GET /openApi/spot/v1/common/symbols
@@ -77,8 +77,8 @@ class Market(API):
                   interval: str,
                   startTime: int = None,
                   endTime: int = None,
-                  limit: int = None,
-                  ) -> Response:
+                  limit: int = 500,
+                  ) -> Response[list[Kline], object]:
         """Historical K-line data
 
         GET /openApi/market/his/v1/kline
@@ -108,7 +108,7 @@ class Market(API):
 
 
 class AsyncMarket(API):
-    async def get_depth(self, symbol: str, limit: int = 100) -> Response:
+    async def get_depth(self, symbol: str, limit: int = 100) -> Response[OrderBook, object]:
         """Get orderbook.
 
         GET /openApi/spot/v1/market/depth
@@ -125,7 +125,7 @@ class AsyncMarket(API):
         json_data = response.json
         return _serialize_depth(json_data, response)
 
-    async def get_trades(self, symbol: str, limit: int = 100) -> Response:
+    async def get_trades(self, symbol: str, limit: int = 100) -> Response[list[Trade], object]:
         """Recent Trades List
 
         GET /openApi/spot/v1/market/trades
@@ -142,7 +142,7 @@ class AsyncMarket(API):
         json_data = response.json
         return _serialize_trades(json_data, response)
 
-    async def get_ticker(self, symbol: str = None) -> Response:
+    async def get_ticker(self, symbol: str = None) -> Response[list[Ticker], object]:
         """24hr Ticker Price Change Statistics
 
         GET /openApi/spot/v1/ticker/24hr
@@ -156,7 +156,7 @@ class AsyncMarket(API):
         json_data = response.json
         return _serialize_ticker(json_data, response)
 
-    async def get_symbols(self, symbol: str = None) -> Response:
+    async def get_symbols(self, symbol: str = None) -> Response[object, object]:
         """Query Symbols
 
         GET /openApi/spot/v1/common/symbols
@@ -174,10 +174,10 @@ class AsyncMarket(API):
     async def get_kline(self,
                         symbol: str,
                         interval: str,
-                        startTime: int | None = None,
-                        endTime: int | None = None,
-                        limit: int | None = None,
-                        ) -> Response:
+                        startTime: int = None,
+                        endTime: int = None,
+                        limit: int = None,
+                        ) -> Response[list[Kline], object]:
         """Historical K-line data
 
         GET /openApi/market/his/v1/kline
@@ -207,7 +207,7 @@ class AsyncMarket(API):
 
 
 class WebSocketMarket(API):
-    async def get_depth(self, symbol: str, limit: int = 10) -> Generator:
+    async def get_depth(self, symbol: str, limit: int = 10) -> Response[OrderBook, object]:
         """Partial Book Depth Streams
 
         Stream Names: {symbol}@depth{limit}
@@ -224,7 +224,7 @@ class WebSocketMarket(API):
             if 'data' in json_data:
                 yield _serialize_depth(json_data, response)
 
-    async def get_trades(self, symbol: str) -> Generator:
+    async def get_trades(self, symbol: str) -> Response[list[Trade], object]:
         """Trade Streams
 
          The Trade Streams push raw trade information; each trade has a unique buyer and seller.
