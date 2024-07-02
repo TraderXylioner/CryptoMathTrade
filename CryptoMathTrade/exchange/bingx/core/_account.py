@@ -32,9 +32,9 @@ class AccountCore(API):
         params:
             asset (str).
 
-            offset (int): Starting record number, default is 0.
-
             limit (int, optional): Default 100; max 1000.
+
+            offset (int): Starting record number, default is 0.
         """
         replace_param(kwargs, 'asset', 'coin')
         kwargs['timestamp'] = get_timestamp()
@@ -46,7 +46,7 @@ class AccountCore(API):
     def withdraw(self, **kwargs) -> dict:
         """Withdraw
 
-        GET /openApi/wallets/v1/capital/withdraw/apply
+        POST /openApi/wallets/v1/capital/withdraw/apply
 
         https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Withdraw
 
@@ -57,14 +57,17 @@ class AccountCore(API):
 
             amount (float).
 
-            walletType (int): Account type: 1 fund account, 2 standard account, 3 perpetual account
+            !  transactionFeeFlag (bool, optional): When making internal transfer, true for returning the fee to the destination account; false for returning the fee back to the departure account. Default false.
 
-            network (str, optional): Use default network if not transmitted.
+            !  name (str): Description of the address. The upper limit of the address book is 200. Exceeding the limit will cause withdrawal failure. Space in name should be encoded into %20.
 
-            addressTag (str, optional): Tag or memo, some currencies support tag or memo.
+            walletType (int): The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
 
-            withdrawOrderId (str, optional): Customer-defined withdrawal ID, a combination of numbers and letters,
-            with a length of less than 100 characters
+            network (str, optional).
+
+            addressTag (str, optional): Secondary address identifier for coins like XRP,XMR etc.
+
+            withdrawOrderId (str, optional): client id for withdraw
         """
         replace_param(kwargs, 'asset', 'coin')
         kwargs['timestamp'] = get_timestamp()
@@ -94,6 +97,8 @@ class AccountCore(API):
         params:
             asset (str, optional).
 
+            limit (int, optional): Default 1000; max 1000.
+
             status (int, optional): 0-In progress 6-Chain uploaded 1-Completed.
 
             startTime (int, optional).
@@ -101,8 +106,6 @@ class AccountCore(API):
             endTime (int, optional).
 
             offset (int, optional): Default: 0.
-
-            limit (int, optional): Default 1000; max 1000.
         """
         replace_param(kwargs, 'asset', 'coin')
         kwargs['timestamp'] = get_timestamp()
@@ -121,6 +124,8 @@ class AccountCore(API):
 
             asset (str, optional).
 
+            limit (int, optional): Default 1000; max 1000.
+
             withdrawOrderId (str, optional): Custom ID, if there is none, this field will not be returned,When both the platform ID and withdraw order ID are passed as parameters, the query will be based on the platform ID
 
             status (int, optional):	4-Under Review 5-Failed 6-Completed.
@@ -130,8 +135,6 @@ class AccountCore(API):
             endTime (int, optional).
 
             offset (int, optional): Default: 0.
-
-            limit (int, optional): Default 1000; max 1000.
         """
         replace_param(kwargs, 'asset', 'coin')
         kwargs['timestamp'] = get_timestamp()
