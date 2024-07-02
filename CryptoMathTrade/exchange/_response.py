@@ -1,7 +1,13 @@
+from typing import Generic, TypeVar
+
 from pydantic import BaseModel
 
 
-class Response(BaseModel):
+data = TypeVar('data')
+response_object = TypeVar('response_object')
+
+
+class Response(BaseModel, Generic[data, response_object]):
     """
     Data model for representing an API response.
 
@@ -10,8 +16,8 @@ class Response(BaseModel):
         response_object: The response object from the server, typically similar
                          to the object obtained from the requests or aiohttp libraries.
     """
-    data: object
-    response_object: object
+    data: data
+    response_object: response_object
 
     def __str__(self):
         return str(self.data)
