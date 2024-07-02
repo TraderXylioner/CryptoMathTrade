@@ -35,7 +35,7 @@ class Account(API):
         json_data = response.json()
         return _serialize_balance(json_data, response)
 
-    def get_deposit_address(self, asset: str, offset: int = None, limit: int = None) -> Response[object, object]:
+    def get_deposit_address(self, asset: str, limit: int = None, offset: int = None) -> Response[object, object]:
         """Query Deposit Address
 
         GET /openApi/wallets/v1/capital/deposit/address
@@ -45,12 +45,12 @@ class Account(API):
         params:
             asset (str).
 
-            offset (int, optional): Starting record number, default is 0.
-
             limit (int, optional): Default 100; max 1000.
+
+            offset (int, optional): Starting record number, default is 0.
         """
         response = validate_response(
-            self._query(**AccountCore.get_deposit_address(self, asset=asset, offset=offset, limit=limit)))
+            self._query(**AccountCore.get_deposit_address(self, asset=asset, limit=limit, offset=offset)))
         json_data = response.json()
         return _serialize_deposit_address(json_data, response)
 
@@ -113,11 +113,11 @@ class Account(API):
 
     def get_deposit_history(self,
                             asset: str = None,
+                            limit: int = None,
                             status: int = None,
                             startTime: int = None,
                             endTime: int = None,
                             offset: int = None,
-                            limit: int = None,
                             ) -> Response[object, object]:
         """Deposit History
 
@@ -128,6 +128,8 @@ class Account(API):
         params:
             asset (str, optional).
 
+            limit (int, optional): Default 1000; max 1000.
+
             status (int, optional): 0-In progress 6-Chain uploaded 1-Completed.
 
             startTime (int, optional).
@@ -136,23 +138,22 @@ class Account(API):
 
             offset (int, optional): Default: 0.
 
-            limit (int, optional): Default 1000; max 1000.
         """
         response = validate_response(self._query(
-            **AccountCore.get_deposit_history(self, asset=asset, status=status, startTime=startTime, endTime=endTime,
-                                              offset=offset, limit=limit)))
+            **AccountCore.get_deposit_history(self, asset=asset, limit=limit, status=status, startTime=startTime,
+                                              endTime=endTime, offset=offset)))
         json_data = response.json()
         return _serialize_deposit_history(json_data, response)
 
     def get_withdraw_history(self,
                              id: str = None,
                              asset: str = None,
+                             limit: int = None,
                              withdrawOrderId: str = None,
                              status: int = None,
                              startTime: int = None,
                              endTime: int = None,
                              offset: int = None,
-                             limit: int = None,
                              ) -> Response[object, object]:
         """Withdraw History
 
@@ -165,6 +166,8 @@ class Account(API):
 
             asset (str, optional).
 
+            limit (int, optional): Default 1000; max 1000.
+
             withdrawOrderId (str, optional): Custom ID, if there is none, this field will not be returned,When both the platform ID and withdraw order ID are passed as parameters, the query will be based on the platform ID
 
             status (int, optional):	4-Under Review 5-Failed 6-Completed.
@@ -175,11 +178,10 @@ class Account(API):
 
             offset (int, optional): Default: 0.
 
-            limit (int, optional): Default 1000; max 1000.
         """
         response = validate_response(self._query(
-            **AccountCore.get_deposit_history(self, id=id, asset=asset, withdrawOrderId=withdrawOrderId, status=status,
-                                              startTime=startTime, endTime=endTime, offset=offset, limit=limit)))
+            **AccountCore.get_deposit_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
+                                              status=status, startTime=startTime, endTime=endTime, offset=offset)))
         json_data = response.json()
         return _serialize_withdraw(json_data, response)
 
@@ -196,7 +198,7 @@ class AsyncAccount(API):
         json_data = response.json
         return _serialize_balance(json_data, response)
 
-    async def get_deposit_address(self, asset: str, offset: int = None, limit: int = None) -> Response[object, object]:
+    async def get_deposit_address(self, asset: str, limit: int = None, offset: int = None) -> Response[object, object]:
         """Query Deposit Address
 
         GET /openApi/wallets/v1/capital/deposit/address
@@ -206,13 +208,14 @@ class AsyncAccount(API):
         params:
             asset (str).
 
+            limit (int, optional): Default 100; max 1000.
+
             offset (int, optional): Starting record number, default is 0.
 
-            limit (int, optional): Default 100; max 1000.
         """
 
         response = validate_response(
-            await self._async_query(**AccountCore.get_deposit_address(self, asset=asset, offset=offset, limit=limit)))
+            await self._async_query(**AccountCore.get_deposit_address(self, asset=asset, limit=limit, offset=offset)))
         json_data = response.json
         return _serialize_deposit_address(json_data, response)
 
@@ -227,7 +230,7 @@ class AsyncAccount(API):
                        ) -> Response[object, object]:
         """Withdraw
 
-        GET /openApi/wallets/v1/capital/withdraw/apply
+        POST /openApi/wallets/v1/capital/withdraw/apply
 
         https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Withdraw
 
@@ -275,11 +278,11 @@ class AsyncAccount(API):
 
     async def get_deposit_history(self,
                                   asset: str = None,
+                                  limit: int = None,
                                   status: int = None,
                                   startTime: int = None,
                                   endTime: int = None,
                                   offset: int = None,
-                                  limit: int = None,
                                   ) -> Response[object, object]:
         """Deposit History
 
@@ -290,6 +293,8 @@ class AsyncAccount(API):
         params:
             asset (str, optional).
 
+            limit (int, optional): Default 1000; max 1000.
+
             status (int, optional): 0-In progress 6-Chain uploaded 1-Completed.
 
             startTime (int, optional).
@@ -298,23 +303,22 @@ class AsyncAccount(API):
 
             offset (int, optional): Default: 0.
 
-            limit (int, optional): Default 1000; max 1000.
         """
         response = validate_response(await self._async_query(
-            **AccountCore.get_deposit_history(self, asset=asset, status=status, startTime=startTime, endTime=endTime,
-                                              offset=offset, limit=limit)))
+            **AccountCore.get_deposit_history(self, asset=asset, limit=limit, status=status, startTime=startTime,
+                                              endTime=endTime, offset=offset)))
         json_data = response.json
         return _serialize_deposit_history(json_data, response)
 
     async def get_withdraw_history(self,
                                    id: str = None,
                                    asset: str = None,
+                                   limit: int = None,
                                    withdrawOrderId: str = None,
                                    status: int = None,
                                    startTime: int = None,
                                    endTime: int = None,
                                    offset: int = None,
-                                   limit: int = None,
                                    ) -> Response[object, object]:
         """Withdraw History
 
@@ -327,6 +331,8 @@ class AsyncAccount(API):
 
             asset (str, optional).
 
+            limit (int, optional): Default 1000; max 1000.
+
             withdrawOrderId (str, optional): Custom ID, if there is none, this field will not be returned,When both the platform ID and withdraw order ID are passed as parameters, the query will be based on the platform ID
 
             status (int, optional):	4-Under Review 5-Failed 6-Completed.
@@ -336,12 +342,10 @@ class AsyncAccount(API):
             endTime (int, optional).
 
             offset (int, optional): Default: 0.
-
-            limit (int, optional): Default 1000; max 1000.
         """
         response = validate_response(await self._async_query(
-            **AccountCore.get_deposit_history(self, id=id, asset=asset, withdrawOrderId=withdrawOrderId, status=status,
-                                              startTime=startTime, endTime=endTime, offset=offset, limit=limit)))
+            **AccountCore.get_deposit_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
+                                              status=status, startTime=startTime, endTime=endTime, offset=offset)))
         json_data = response.json
         return _serialize_withdraw(json_data, response)
 
