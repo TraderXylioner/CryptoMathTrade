@@ -75,9 +75,9 @@ class Market(API):
     def get_kline(self,
                   symbol: str,
                   interval: str,
+                  limit: int = 500,
                   startTime: int = None,
                   endTime: int = None,
-                  limit: int = 500,
                   ) -> Response[list[Kline], object]:
         """Historical K-line data
 
@@ -90,18 +90,18 @@ class Market(API):
 
             interval (str): Time interval (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M).
 
+            limit (int, optional): Default 500; max 1000.
+
             startTime (int, optional): Unit: ms.
 
             endTime (int, optional): Unit: ms.
-
-            limit (int, optional): Default 500; max 1000.
         """
         response = validate_response(self._query(**MarketCore.get_kline(self,
                                                                         symbol=symbol,
                                                                         interval=interval,
+                                                                        limit=limit,
                                                                         startTime=startTime,
                                                                         endTime=endTime,
-                                                                        limit=limit,
                                                                         )))
         json_data = response.json()
         return _serialize_kline(json_data, response)
@@ -174,9 +174,9 @@ class AsyncMarket(API):
     async def get_kline(self,
                         symbol: str,
                         interval: str,
+                        limit: int = 500,
                         startTime: int = None,
                         endTime: int = None,
-                        limit: int = None,
                         ) -> Response[list[Kline], object]:
         """Historical K-line data
 
@@ -189,18 +189,18 @@ class AsyncMarket(API):
 
             interval (str): Time interval (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M).
 
+            limit (int, optional): Default 500; max 1000.
+
             startTime (int, optional): Unit: ms.
 
             endTime (int, optional): Unit: ms.
-
-            limit (int, optional): Default 500; max 1000.
         """
         response = validate_response(await self._async_query(**MarketCore.get_kline(self,
                                                                                     symbol=symbol,
                                                                                     interval=interval,
+                                                                                    limit=limit,
                                                                                     startTime=startTime,
                                                                                     endTime=endTime,
-                                                                                    limit=limit,
                                                                                     )))
         json_data = response.json
         return _serialize_kline(json_data, response)
