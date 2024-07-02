@@ -1,3 +1,4 @@
+from ..errors import ResponseError
 from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline, FullOrder
 from .._response import Response
 
@@ -8,7 +9,7 @@ def _serialize_listen_key(data, response):
 
 def _serialize_depth(data, response):
     if 'msg' in data:
-        raise Exception(data)
+        raise ResponseError(data)
 
     data = data['data']
     data['asks'] = data['asks'][::-1]
@@ -19,7 +20,7 @@ def _serialize_depth(data, response):
 
 def _serialize_trades(data, response):
     if 'msg' in data:
-        raise Exception(data)
+        raise ResponseError(data)
 
     data = data['data']
     return Response(data=[Trade(id=trade.get('id'),
@@ -33,7 +34,7 @@ def _serialize_trades(data, response):
 
 def _serialize_ticker(data, response):
     if 'msg' in data:
-        raise Exception(data)
+        raise ResponseError(data)
 
     data = data['data']
     return Response(data=[Ticker(symbol=ticker.get('symbol'),
@@ -54,7 +55,7 @@ def _serialize_ticker(data, response):
 
 def _serialize_kline(data, response):
     if 'msg' in data:
-        raise Exception(data)
+        raise ResponseError(data)
 
     data = data['data']
     return Response(data=[Kline(openTime=i[0],
@@ -71,7 +72,7 @@ def _serialize_kline(data, response):
 
 def _serialize_balance(data, response):
     if 'data' not in data:
-        raise Exception(data)
+        raise ResponseError(data)
 
     return Response(data=[Balance(**i) for i in data['data']['balances']],
                     response_object=response,
@@ -79,6 +80,8 @@ def _serialize_balance(data, response):
 
 
 def _serialize_trades_for_ws(data, response):
+    if 'data' not in data:
+        raise ResponseError(data)
     data = data['data']
     return Response(data=[Trade(id=data.get('t'),
                                 price=data.get('p'),
