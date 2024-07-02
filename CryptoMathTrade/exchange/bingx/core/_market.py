@@ -73,11 +73,11 @@ class MarketCore(API):
 
             interval (str): Time interval (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M).
 
+            limit (int, optional): Default 500; max 1000.
+
             startTime (int, optional): Unit: ms.
 
             endTime (int, optional): Unit: ms.
-
-            limit (int, optional): Default 500; max 1000.
         """
         kwargs['limit'] = min(int(kwargs.get('limit', 500)), 1000)  # Default value and limit
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=kwargs)
