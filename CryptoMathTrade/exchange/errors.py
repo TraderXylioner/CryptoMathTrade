@@ -22,6 +22,14 @@ class Error(Exception):
 #         self.message = message
 
 
+class ResponseError(Error):
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return str(self.msg)
+
+
 class ParameterRequiredError(Error):
     def __init__(self, params):
         self.params = params
