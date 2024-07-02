@@ -13,21 +13,21 @@ class SpotCore(API):
         https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Query%20Order%20History
 
         params:
-            symbol (str)
+            symbol (str).
 
-            orderId (int, optional)
+            orderId (int, optional).
 
-            startTime (int, optional): Unit: ms
+            status: (str, optional) FILLED / CANCELED / FAILED.
 
-            endTime (int, optional): Unit: ms
+            type: (str, optional) MARKET / LIMIT / TAKE_STOP_LIMIT / TAKE_STOP_MARKET / TRIGGER_LIMIT / TRIGGER_MARKET.
+
+            startTime (int, optional): Unit: ms.
+
+            endTime (int, optional): Unit: ms.
 
             pageIndex: (int, optional), Default: 1.
 
             pageSize: (int, optional), Default: 100, Max 100.
-
-            status: (str, optional) FILLED / CANCELED / FAILED
-
-            type: (str, optional) MARKET / LIMIT / TAKE_STOP_LIMIT / TAKE_STOP_MARKET / TRIGGER_LIMIT / TRIGGER_MARKET
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=self.get_payload(kwargs))
 
