@@ -11,12 +11,12 @@ class Spot(API):
             self,
             symbol: str,
             orderId: int = None,
+            status: str = None,
+            type: str = None,
             startTime: int = None,
             endTime: int = None,
             pageIndex: int = None,
             pageSize: int = None,
-            status: str = None,
-            type: str = None,
     ) -> Response[list[FullOrder], object]:
         """All Orders (USER_DATA)
 
@@ -31,6 +31,10 @@ class Spot(API):
 
             orderId (int, optional).
 
+            status: (str, optional) FILLED / CANCELED / FAILED.
+
+            type: (str, optional) MARKET / LIMIT / TAKE_STOP_LIMIT / TAKE_STOP_MARKET / TRIGGER_LIMIT / TRIGGER_MARKET.
+
             startTime (int, optional): Unit: ms.
 
             endTime (int, optional): Unit: ms.
@@ -38,10 +42,6 @@ class Spot(API):
             pageIndex: (int, optional), Default: 1.
 
             pageSize: (int, optional), Default: 100, Max 100.
-
-            status: (str, optional) FILLED / CANCELED / FAILED.
-
-            type: (str, optional) MARKET / LIMIT / TAKE_STOP_LIMIT / TAKE_STOP_MARKET / TRIGGER_LIMIT / TRIGGER_MARKET.
         """
         response = validate_response(
             self._query(
@@ -49,12 +49,12 @@ class Spot(API):
                     self,
                     symbol=symbol,
                     orderId=orderId,
+                    status=status,
+                    type=type,
                     startTime=startTime,
                     endTime=endTime,
                     pageIndex=pageIndex,
                     pageSize=pageSize,
-                    status=status,
-                    type=type,
                 )
             )
         )
@@ -247,12 +247,12 @@ class AsyncSpot(API):
             self,
             symbol: str,
             orderId: int = None,
+            status: str = None,
+            type: str = None,
             startTime: int = None,
             endTime: int = None,
             pageIndex: int = None,
             pageSize: int = None,
-            status: str = None,
-            type: str = None,
     ) -> Response[list[FullOrder], object]:
         """All Orders (USER_DATA)
 
@@ -267,6 +267,10 @@ class AsyncSpot(API):
 
             orderId (int, optional).
 
+            status: (str, optional) FILLED / CANCELED / FAILED.
+
+            type: (str, optional) MARKET / LIMIT / TAKE_STOP_LIMIT / TAKE_STOP_MARKET / TRIGGER_LIMIT / TRIGGER_MARKET.
+
             startTime (int, optional): Unit: ms.
 
             endTime (int, optional): Unit: ms.
@@ -274,10 +278,6 @@ class AsyncSpot(API):
             pageIndex: (int, optional), Default: 1.
 
             pageSize: (int, optional), Default: 100, Max 100.
-
-            status: (str, optional) FILLED / CANCELED / FAILED.
-
-            type: (str, optional) MARKET / LIMIT / TAKE_STOP_LIMIT / TAKE_STOP_MARKET / TRIGGER_LIMIT / TRIGGER_MARKET.
         """
         response = validate_response(
             await self._async_query(
@@ -285,12 +285,12 @@ class AsyncSpot(API):
                     self,
                     symbol=symbol,
                     orderId=orderId,
+                    status=status,
+                    type=type,
                     startTime=startTime,
                     endTime=endTime,
                     pageIndex=pageIndex,
                     pageSize=pageSize,
-                    status=status,
-                    type=type,
                 )
             )
         )
