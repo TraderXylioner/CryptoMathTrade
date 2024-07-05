@@ -145,3 +145,6 @@ class SpotCore(API):
                                 url=URLS.BASE_URL + URLS.CREATE_ORDER_URL,
                                 params=self.get_payload(kwargs),
                                 )
+
+
+# TODO: add newClientOrderId to create order
