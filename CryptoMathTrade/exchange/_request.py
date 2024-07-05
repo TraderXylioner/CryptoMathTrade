@@ -45,9 +45,12 @@ class AsyncRequest:
                                    'params': clean_none_value(payload),
                                    'timeout': self.timeout,
                                    })
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(headers=self.headers) as session:
             async with _dispatch_request(session, method)(**params) as response:
-                response.json = await response.json()
+                if response.content_type == 'application/json':
+                    response.json = await response.json()
+                else:
+                    response.json = json.loads(await response.text())
                 return response
 
 
