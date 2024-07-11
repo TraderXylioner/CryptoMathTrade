@@ -16,7 +16,7 @@ class WithdrawHistory(BaseModel):
     status: int
     address: str
     sourceAddress: str
-    txIdtxId: str
+    txId: str
     insertTime: int
     unlockConfirm: str
     confirmTimes: str
@@ -29,7 +29,7 @@ class DepositHistory(BaseModel):
     status: int
     address: str
     sourceAddress: str
-    txIdtxId: str
+    txId: str
     insertTime: int
     unlockConfirm: str
     confirmTimes: str
