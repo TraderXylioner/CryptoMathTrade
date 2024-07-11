@@ -1,7 +1,7 @@
 from ..errors import ResponseError
-from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline, FullOrder
+from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline, FullOrder, Symbol, Withdraw, Coin, \
+    DepositAddress, WithdrawHistory, DepositHistory
 from .._response import Response
-from ...types.symbol import Symbol
 
 
 def _deserialize_listen_key(data, response):
@@ -104,26 +104,29 @@ def _deserialize_coins(data, response):
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
-    return Response(data=data, response_object=response)
+    return Response(data=[Coin(**i) for i in data], response_object=response)
 
 
 def _deserialize_deposit_address(data, response):
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
-    return Response(data=data, response_object=response)
+    return Response(data=[DepositAddress(**i) for i in data['data']], response_object=response)
 
 
 def _deserialize_withdraw(data, response):
-    return Response(data=data, response_object=response)
+    if 'data' not in data:
+        raise ResponseError(data)
+    data = data['data']
+    return Response(data=Withdraw(**data), response_object=response)
 
 
 def _deserialize_deposit_history(data, response):
-    return Response(data=data, response_object=response)
+    return Response(data=[DepositHistory(**i) for i in data], response_object=response)
 
 
 def _deserialize_withdraw_history(data, response):
-    return Response(data=data, response_object=response)
+    return Response(data=[WithdrawHistory(**i) for i in data], response_object=response)
 
 
 def _deserialize_symbols(data, response):
