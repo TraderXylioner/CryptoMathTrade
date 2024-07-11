@@ -3,7 +3,7 @@ from .core import SpotCore
 from CryptoMathTrade.types import Side, TimeInForce, FullOrder
 from .._response import Response
 from ..utils import validate_response
-from ._serialization import _serialize_order, _serialize_orders
+from ._deserialization import _deserialize_order, _deserialize_orders
 
 
 class Spot(API):
@@ -59,7 +59,7 @@ class Spot(API):
             )
         )
         json_data = response.json()
-        return _serialize_orders(json_data, response)
+        return _deserialize_orders(json_data, response)
 
     def get_open_order(
             self, symbol: str, orderId: int = None, clientOrderID: str = None
@@ -87,7 +87,7 @@ class Spot(API):
             )
         )
         json_data = response.json()
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)
 
     def get_open_orders(self, symbol: str = None) -> Response[list[FullOrder], object]:
         """Current Open Orders (USER_DATA)
@@ -105,7 +105,7 @@ class Spot(API):
             self._query(**SpotCore.get_open_orders(self, symbol=symbol))
         )
         json_data = response.json()
-        return _serialize_orders(json_data, response)
+        return _deserialize_orders(json_data, response)
 
     def cancel_open_order(
             self, symbol: str, orderId: int = None, clientOrderID: str = None
@@ -133,7 +133,7 @@ class Spot(API):
             )
         )
         json_data = response.json()
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)
 
     def cancel_open_orders(
             self, symbol: str = None
@@ -153,7 +153,7 @@ class Spot(API):
             self._query(**SpotCore.cancel_open_orders(self, symbol=symbol))
         )
         json_data = response.json()
-        return _serialize_orders(json_data, response)
+        return _deserialize_orders(json_data, response)
 
     def new_market_order(
             self,
@@ -196,7 +196,7 @@ class Spot(API):
             )
         )
         json_data = response.json()
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)
 
     def new_limit_order(
             self,
@@ -247,7 +247,7 @@ class Spot(API):
             )
         )
         json_data = response.json()
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)
 
 
 class AsyncSpot(API):
@@ -303,7 +303,7 @@ class AsyncSpot(API):
             )
         )
         json_data = response.json
-        return _serialize_orders(json_data, response)
+        return _deserialize_orders(json_data, response)
 
     async def get_open_order(
             self, symbol: str, orderId: int = None, clientOrderID: str = None
@@ -331,7 +331,7 @@ class AsyncSpot(API):
             )
         )
         json_data = response.json
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)
 
     async def get_open_orders(
             self, symbol: str = None
@@ -351,7 +351,7 @@ class AsyncSpot(API):
             await self._async_query(**SpotCore.get_open_orders(self, symbol=symbol))
         )
         json_data = response.json
-        return _serialize_orders(json_data, response)
+        return _deserialize_orders(json_data, response)
 
     async def cancel_open_order(
             self, symbol: str, orderId: int = None, clientOrderID: str = None
@@ -379,7 +379,7 @@ class AsyncSpot(API):
             )
         )
         json_data = response.json
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)
 
     async def cancel_open_orders(
             self, symbol: str = None
@@ -399,7 +399,7 @@ class AsyncSpot(API):
             await self._async_query(**SpotCore.cancel_open_orders(self, symbol=symbol))
         )
         json_data = response.json
-        return _serialize_orders(json_data, response)
+        return _deserialize_orders(json_data, response)
 
     async def new_market_order(
             self,
@@ -442,7 +442,7 @@ class AsyncSpot(API):
             )
         )
         json_data = response.json
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)
 
     async def new_limit_order(
             self,
@@ -493,4 +493,4 @@ class AsyncSpot(API):
             )
         )
         json_data = response.json
-        return _serialize_order(json_data, response)
+        return _deserialize_order(json_data, response)

@@ -1,13 +1,16 @@
 from ..errors import ResponseError
 from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline, FullOrder
 from .._response import Response
+from ...types.symbol import Symbol
 
 
-def _serialize_listen_key(data, response):
-    return Response(data=data, response_object=response)
+def _deserialize_listen_key(data, response):
+    if 'listenKey' not in data:
+        raise ResponseError(data)
+    return Response(data=data['listenKey'], response_object=response)
 
 
-def _serialize_depth(data, response):
+def _deserialize_depth(data, response):
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -18,7 +21,7 @@ def _serialize_depth(data, response):
                     response_object=response, )
 
 
-def _serialize_trades(data, response):
+def _deserialize_trades(data, response):
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -32,7 +35,7 @@ def _serialize_trades(data, response):
                     response_object=response, )
 
 
-def _serialize_ticker(data, response):
+def _deserialize_ticker(data, response):
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -53,7 +56,7 @@ def _serialize_ticker(data, response):
                     )
 
 
-def _serialize_kline(data, response):
+def _deserialize_kline(data, response):
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -70,7 +73,7 @@ def _serialize_kline(data, response):
                     response_object=response)
 
 
-def _serialize_balance(data, response):
+def _deserialize_balance(data, response):
     if 'data' not in data:
         raise ResponseError(data)
 
@@ -79,7 +82,7 @@ def _serialize_balance(data, response):
                     )
 
 
-def _serialize_trades_for_ws(data, response):
+def _deserialize_trades_for_ws(data, response):
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
@@ -93,46 +96,57 @@ def _serialize_trades_for_ws(data, response):
                     )
 
 
-def _serialize_account_update_for_ws(data, response):
+def _deserialize_account_update_for_ws(data, response):
     return Response(data=data, response_object=response)
 
 
-def _serialize_coins(data, response):
+def _deserialize_coins(data, response):
+    if 'data' not in data:
+        raise ResponseError(data)
     data = data['data']
     return Response(data=data, response_object=response)
 
 
-def _serialize_deposit_address(data, response):
-    return Response(data=data, response_object=response)
-
-
-def _serialize_withdraw(data, response):
-    return Response(data=data, response_object=response)
-
-
-def _serialize_deposit_history(data, response):
-    return Response(data=data, response_object=response)
-
-
-def _serialize_withdraw_history(data, response):
-    return Response(data=data, response_object=response)
-
-
-def _serialize_symbols(data, response):
+def _deserialize_deposit_address(data, response):
+    if 'data' not in data:
+        raise ResponseError(data)
     data = data['data']
-    return Response(data=data,
+    return Response(data=data, response_object=response)
+
+
+def _deserialize_withdraw(data, response):
+    return Response(data=data, response_object=response)
+
+
+def _deserialize_deposit_history(data, response):
+    return Response(data=data, response_object=response)
+
+
+def _deserialize_withdraw_history(data, response):
+    return Response(data=data, response_object=response)
+
+
+def _deserialize_symbols(data, response):
+    if 'data' not in data:
+        raise ResponseError(data)
+    data = data['data']
+    return Response(data=[Symbol(**i) for i in data['symbols']],
                     response_object=response,
                     )
 
 
-def _serialize_order(data, response):
+def _deserialize_order(data, response):
+    if 'data' not in data:
+        raise ResponseError(data)
     data = data['data']
     return Response(data=FullOrder(**data),
                     response_object=response,
                     )
 
 
-def _serialize_orders(data, response):
+def _deserialize_orders(data, response):
+    if 'data' not in data:
+        raise ResponseError(data)
     data = data['data']
     return Response(data=[FullOrder(**i) for i in data['orders']] if data['orders'] else [],
                     response_object=response,

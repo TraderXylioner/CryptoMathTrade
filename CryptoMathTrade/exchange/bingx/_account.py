@@ -4,8 +4,8 @@ import json
 import time
 
 from ._api import API
-from ._serialization import _serialize_balance, _serialize_deposit_address, _serialize_withdraw, _serialize_coins, \
-    _serialize_deposit_history, _serialize_account_update_for_ws, _serialize_listen_key
+from ._deserialization import _deserialize_balance, _deserialize_deposit_address, _deserialize_withdraw, _deserialize_coins, \
+    _deserialize_deposit_history, _deserialize_account_update_for_ws, _deserialize_listen_key, _deserialize_withdraw_history
 from .core import AccountCore, WSAccountCore
 from .._response import Response
 from ..utils import validate_response
@@ -13,7 +13,7 @@ from ...types import Balance
 
 
 class Account(API):
-    def generate_listen_key(self) -> Response[object, object]:
+    def generate_listen_key(self) -> Response[str, object]:
         """Generate Listen Key
 
         GET openApi/user/auth/userDataStream
@@ -22,7 +22,7 @@ class Account(API):
         """
         response = validate_response(self._query(**AccountCore.generate_listen_key(self)))
         json_data = response.json()
-        return _serialize_listen_key(json_data, response)
+        return _deserialize_listen_key(json_data, response)
 
     def get_balance(self) -> Response[list[Balance], object]:
         """Query Assets
@@ -33,7 +33,7 @@ class Account(API):
         """
         response = validate_response(self._query(**AccountCore.get_balance(self)))
         json_data = response.json()
-        return _serialize_balance(json_data, response)
+        return _deserialize_balance(json_data, response)
 
     def get_deposit_address(self, asset: str, limit: int = None, offset: int = None) -> Response[object, object]:
         """Query Deposit Address
@@ -52,7 +52,7 @@ class Account(API):
         response = validate_response(
             self._query(**AccountCore.get_deposit_address(self, asset=asset, limit=limit, offset=offset)))
         json_data = response.json()
-        return _serialize_deposit_address(json_data, response)
+        return _deserialize_deposit_address(json_data, response)
 
     def withdraw(self,
                  asset: str,
@@ -95,7 +95,7 @@ class Account(API):
                                                                         withdrawOrderId=withdrawOrderId,
                                                                         )))
         json_data = response.json()
-        return _serialize_withdraw(json_data, response)
+        return _deserialize_withdraw(json_data, response)
 
     def get_coins(self, asset: str = None) -> Response[object, object]:
         """All Coins' Information
@@ -109,7 +109,7 @@ class Account(API):
         """
         response = validate_response(self._query(**AccountCore.get_coins(self, asset=asset)))
         json_data = response.json()
-        return _serialize_coins(json_data, response)
+        return _deserialize_coins(json_data, response)
 
     def get_deposit_history(self,
                             asset: str = None,
@@ -143,7 +143,7 @@ class Account(API):
             **AccountCore.get_deposit_history(self, asset=asset, limit=limit, status=status, startTime=startTime,
                                               endTime=endTime, offset=offset)))
         json_data = response.json()
-        return _serialize_deposit_history(json_data, response)
+        return _deserialize_deposit_history(json_data, response)
 
     def get_withdraw_history(self,
                              id: str = None,
@@ -183,10 +183,21 @@ class Account(API):
             **AccountCore.get_deposit_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
                                               status=status, startTime=startTime, endTime=endTime, offset=offset)))
         json_data = response.json()
-        return _serialize_withdraw(json_data, response)
+        return _deserialize_withdraw_history(json_data, response)
 
 
 class AsyncAccount(API):
+    async def generate_listen_key(self) -> Response[str, object]:
+        """Generate Listen Key
+
+        GET openApi/user/auth/userDataStream
+
+        https://bingx-api.github.io/docs/#/en-us/spot/socket/listenKey.html#generate%20Listen%20Key
+        """
+        response = validate_response(await self._async_query(**AccountCore.generate_listen_key(self)))
+        json_data = response.json
+        return _deserialize_listen_key(json_data, response)
+
     async def get_balance(self) -> Response[list[Balance], object]:
         """Query Assets
 
@@ -196,7 +207,7 @@ class AsyncAccount(API):
         """
         response = validate_response(await self._async_query(**AccountCore.get_balance(self)))
         json_data = response.json
-        return _serialize_balance(json_data, response)
+        return _deserialize_balance(json_data, response)
 
     async def get_deposit_address(self, asset: str, limit: int = None, offset: int = None) -> Response[object, object]:
         """Query Deposit Address
@@ -217,7 +228,7 @@ class AsyncAccount(API):
         response = validate_response(
             await self._async_query(**AccountCore.get_deposit_address(self, asset=asset, limit=limit, offset=offset)))
         json_data = response.json
-        return _serialize_deposit_address(json_data, response)
+        return _deserialize_deposit_address(json_data, response)
 
     async def withdraw(self,
                        asset: str,
@@ -260,7 +271,7 @@ class AsyncAccount(API):
                                                                                     withdrawOrderId=withdrawOrderId,
                                                                                     )))
         json_data = response.json
-        return _serialize_withdraw(json_data, response)
+        return _deserialize_withdraw(json_data, response)
 
     async def get_coins(self, asset: str = None) -> Response[object, object]:
         """All Coins' Information
@@ -274,7 +285,7 @@ class AsyncAccount(API):
         """
         response = validate_response(await self._async_query(**AccountCore.get_coins(self, asset=asset)))
         json_data = response.json
-        return _serialize_coins(json_data, response)
+        return _deserialize_coins(json_data, response)
 
     async def get_deposit_history(self,
                                   asset: str = None,
@@ -308,7 +319,7 @@ class AsyncAccount(API):
             **AccountCore.get_deposit_history(self, asset=asset, limit=limit, status=status, startTime=startTime,
                                               endTime=endTime, offset=offset)))
         json_data = response.json
-        return _serialize_deposit_history(json_data, response)
+        return _deserialize_deposit_history(json_data, response)
 
     async def get_withdraw_history(self,
                                    id: str = None,
@@ -347,7 +358,7 @@ class AsyncAccount(API):
             **AccountCore.get_deposit_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
                                               status=status, startTime=startTime, endTime=endTime, offset=offset)))
         json_data = response.json
-        return _serialize_withdraw(json_data, response)
+        return _deserialize_withdraw_history(json_data, response)
 
 
 class WebSocketAccount(API):
@@ -367,4 +378,4 @@ class WebSocketAccount(API):
                 break
             json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'a' in json_data:
-                yield _serialize_account_update_for_ws(json_data, response)
+                yield _deserialize_account_update_for_ws(json_data, response)
