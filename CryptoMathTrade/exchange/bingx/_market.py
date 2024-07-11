@@ -3,8 +3,8 @@ import io
 import json
 
 from ._api import API
-from ._serialization import _serialize_depth, _serialize_trades, _serialize_ticker, _serialize_trades_for_ws, \
-    _serialize_symbols, _serialize_kline
+from ._deserialization import _deserialize_depth, _deserialize_trades, _deserialize_ticker, _deserialize_trades_for_ws, \
+    _deserialize_symbols, _deserialize_kline
 from .core import MarketCore, WSMarketCore
 from .._response import Response
 from ..utils import validate_response
@@ -26,7 +26,7 @@ class Market(API):
         """
         response = validate_response(self._query(**MarketCore.get_depth(self, symbol=symbol, limit=limit)))
         json_data = response.json()
-        return _serialize_depth(json_data, response)
+        return _deserialize_depth(json_data, response)
 
     def get_trades(self, symbol: str, limit: int = 100) -> Response[list[Trade], object]:
         """Recent Trades List
@@ -42,7 +42,7 @@ class Market(API):
         """
         response = validate_response(self._query(**MarketCore.get_trades(self, symbol=symbol, limit=limit)))
         json_data = response.json()
-        return _serialize_trades(json_data, response)
+        return _deserialize_trades(json_data, response)
 
     def get_ticker(self, symbol: str = None) -> Response[list[Ticker], object]:
         """24hr Ticker Price Change Statistics
@@ -56,7 +56,7 @@ class Market(API):
         """
         response = validate_response(self._query(**MarketCore.get_ticker(self, symbol=symbol)))
         json_data = response.json()
-        return _serialize_ticker(json_data, response)
+        return _deserialize_ticker(json_data, response)
 
     def get_symbols(self, symbol: str = None) -> Response[object, object]:
         """Query Symbols
@@ -70,7 +70,7 @@ class Market(API):
         """
         response = validate_response(self._query(**MarketCore.get_symbols(self, symbol=symbol)))
         json_data = response.json()
-        return _serialize_symbols(json_data, response)
+        return _deserialize_symbols(json_data, response)
 
     def get_kline(self,
                   symbol: str,
@@ -104,7 +104,7 @@ class Market(API):
                                                                         endTime=endTime,
                                                                         )))
         json_data = response.json()
-        return _serialize_kline(json_data, response)
+        return _deserialize_kline(json_data, response)
 
 
 class AsyncMarket(API):
@@ -123,7 +123,7 @@ class AsyncMarket(API):
         response = validate_response(
             await self._async_query(**MarketCore.get_depth(self, symbol=symbol, limit=limit)))
         json_data = response.json
-        return _serialize_depth(json_data, response)
+        return _deserialize_depth(json_data, response)
 
     async def get_trades(self, symbol: str, limit: int = 100) -> Response[list[Trade], object]:
         """Recent Trades List
@@ -140,7 +140,7 @@ class AsyncMarket(API):
         response = validate_response(
             await self._async_query(**MarketCore.get_trades(self, symbol=symbol, limit=limit)))
         json_data = response.json
-        return _serialize_trades(json_data, response)
+        return _deserialize_trades(json_data, response)
 
     async def get_ticker(self, symbol: str = None) -> Response[list[Ticker], object]:
         """24hr Ticker Price Change Statistics
@@ -154,7 +154,7 @@ class AsyncMarket(API):
         """
         response = validate_response(await self._async_query(**MarketCore.get_ticker(self, symbol=symbol)))
         json_data = response.json
-        return _serialize_ticker(json_data, response)
+        return _deserialize_ticker(json_data, response)
 
     async def get_symbols(self, symbol: str = None) -> Response[object, object]:
         """Query Symbols
@@ -169,7 +169,7 @@ class AsyncMarket(API):
         response = validate_response(
             await self._async_query(**MarketCore.get_symbols(self, symbol=symbol)))
         json_data = response.json
-        return _serialize_symbols(json_data, response)
+        return _deserialize_symbols(json_data, response)
 
     async def get_kline(self,
                         symbol: str,
@@ -203,7 +203,7 @@ class AsyncMarket(API):
                                                                                     endTime=endTime,
                                                                                     )))
         json_data = response.json
-        return _serialize_kline(json_data, response)
+        return _deserialize_kline(json_data, response)
 
 
 class WebSocketMarket(API):
@@ -222,7 +222,7 @@ class WebSocketMarket(API):
         async for response in self._ws_query(**WSMarketCore.get_depth(self, symbol=symbol, limit=limit)):
             json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
-                yield _serialize_depth(json_data, response)
+                yield _deserialize_depth(json_data, response)
 
     async def get_trades(self, symbol: str) -> Response[list[Trade], object]:
         """Trade Streams
@@ -240,4 +240,4 @@ class WebSocketMarket(API):
         async for response in self._ws_query(**WSMarketCore.get_trades(self, symbol=symbol)):
             json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
-                yield _serialize_trades_for_ws(json_data, response)
+                yield _deserialize_trades_for_ws(json_data, response)
