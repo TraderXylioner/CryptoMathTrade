@@ -3,5 +3,6 @@ from .order import Order, FullOrder, OrderBook, TimeInForce, Side
 from .arbitrage import ArbitrageDeal
 from .trade import Trade
 from .ticker import Ticker
-from .balance import Balance
+from .account import Balance, WithdrawHistory, DepositHistory, DepositAddress, Coin, Withdraw
 from .kline import Kline
+from .symbol import Symbol
