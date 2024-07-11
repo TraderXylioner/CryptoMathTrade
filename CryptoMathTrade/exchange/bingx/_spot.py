@@ -161,6 +161,7 @@ class Spot(API):
             side: Side,
             quantity: float = None,
             quoteOrderQty: float = None,
+            newClientOrderId: str = None,
     ) -> Response[FullOrder, object]:
         """New Market Order (TRADE)
 
@@ -178,6 +179,8 @@ class Spot(API):
             quantity (float, optional).
 
             quoteOrderQty (float, optional).
+
+            newClientOrderId (str, optional). Only letters, numbers and _,Customized order ID for users, with a limit of characters from 1 to 40. Different orders cannot use the same newClientOrderId,Only supports a query range of 2 hours
         """
         response = validate_response(
             self._query(
@@ -188,6 +191,7 @@ class Spot(API):
                     type="MARKET",
                     quantity=quantity,
                     quoteOrderQty=quoteOrderQty,
+                    newClientOrderId=newClientOrderId,
                 )
             )
         )
@@ -202,6 +206,7 @@ class Spot(API):
             quantity: float = None,
             quoteOrderQty: float = None,
             timeInForce: TimeInForce = TimeInForce.GTC,
+            newClientOrderId: str = None,
     ) -> Response[FullOrder, object]:
         """New Limit Order (TRADE)
 
@@ -223,6 +228,8 @@ class Spot(API):
             quoteOrderQty (float, optional).
 
             timeInForce (str, optional). Default: GTC.
+
+            newClientOrderId (str, optional). Only letters, numbers and _,Customized order ID for users, with a limit of characters from 1 to 40. Different orders cannot use the same newClientOrderId,Only supports a query range of 2 hours
         """
         response = validate_response(
             self._query(
@@ -235,6 +242,7 @@ class Spot(API):
                     quoteOrderQty=quoteOrderQty,
                     price=price,
                     timeInForce=timeInForce.value,
+                    newClientOrderId=newClientOrderId,
                 )
             )
         )
@@ -399,6 +407,7 @@ class AsyncSpot(API):
             side: Side,
             quantity: float = None,
             quoteOrderQty: float = None,
+            newClientOrderId: str = None,
     ) -> Response[FullOrder, object]:
         """New Market Order (TRADE)
 
@@ -416,6 +425,8 @@ class AsyncSpot(API):
             quantity (float, optional).
 
             quoteOrderQty (float, optional).
+
+            newClientOrderId (str, optional). Only letters, numbers and _,Customized order ID for users, with a limit of characters from 1 to 40. Different orders cannot use the same newClientOrderId,Only supports a query range of 2 hours
         """
         response = validate_response(
             await self._async_query(
@@ -426,6 +437,7 @@ class AsyncSpot(API):
                     type="MARKET",
                     quantity=quantity,
                     quoteOrderQty=quoteOrderQty,
+                    newClientOrderId=newClientOrderId,
                 )
             )
         )
@@ -440,6 +452,7 @@ class AsyncSpot(API):
             quantity: float = None,
             quoteOrderQty: float = None,
             timeInForce: TimeInForce = TimeInForce.GTC,
+            newClientOrderId: str = None,
     ) -> Response[FullOrder, object]:
         """New Limit Order (TRADE)
 
@@ -461,6 +474,8 @@ class AsyncSpot(API):
             quoteOrderQty (float, optional).
 
             timeInForce (str, optional). Default: GTC.
+
+           newClientOrderId (str, optional). Only letters, numbers and _,Customized order ID for users, with a limit of characters from 1 to 40. Different orders cannot use the same newClientOrderId,Only supports a query range of 2 hours
         """
         response = validate_response(
             await self._async_query(
@@ -473,6 +488,7 @@ class AsyncSpot(API):
                     quoteOrderQty=quoteOrderQty,
                     price=price,
                     timeInForce=timeInForce.value,
+                    newClientOrderId=newClientOrderId,
                 )
             )
         )

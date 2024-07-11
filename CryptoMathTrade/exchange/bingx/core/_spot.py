@@ -125,6 +125,8 @@ class SpotCore(API):
 
             quoteOrderQty (float, optional)
 
+            newClientOrderId (str, optional). Only letters, numbers and _,Customized order ID for users, with a limit of characters from 1 to 40. Different orders cannot use the same newClientOrderId,Only supports a query range of 2 hours
+
         for limit order:
 
             symbol (str)
@@ -138,6 +140,8 @@ class SpotCore(API):
             quoteOrderQty (float, optional)
 
             timeInForce (str, optional). Default: GTC.
+
+            newClientOrderId (str, optional). Only letters, numbers and _,Customized order ID for users, with a limit of characters from 1 to 40. Different orders cannot use the same newClientOrderId,Only supports a query range of 2 hours
         """
         if not kwargs.get('quantity') and not kwargs.get('quoteOrderQty'):
             raise ValueError('Param "quoteOrderQty" or "quantity" must be sent, but both were empty/null!')
@@ -145,6 +149,3 @@ class SpotCore(API):
                                 url=URLS.BASE_URL + URLS.CREATE_ORDER_URL,
                                 params=self.get_payload(kwargs),
                                 )
-
-
-# TODO: add newClientOrderId to create order
