@@ -4,14 +4,6 @@ from pydantic import BaseModel
 
 
 class Symbol(BaseModel):
-    """
-    Model representing an individual order.
-
-    params:
-        price (Decimal): The price of the order.
-
-        volume (Decimal): The volume of the order.
-    """
     symbol: str
     minQty: Decimal
     maxQty: Decimal
