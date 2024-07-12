@@ -1,20 +1,19 @@
 from ._api import API
+from ._deserialization import _deserialize_orders, _deserialize_order
 from .core import SpotCore
 from .._response import Response
-from ...types import Side, TimeInForce
+from ...types import Side, TimeInForce, FullOrder
 from ..utils import validate_response
 
 
-#  TODO: add Order type
 class Spot(API):
     def get_orders(self,
                    symbol: str,
                    limit: int = 500,
-                   orderId: int | None = None,
-                   startTime: int | None = None,
-                   endTime: int | None = None,
-                   recvWindow: int | None = None,
-                   ) -> Response:
+                   orderId: int = None,
+                   startTime: int = None,
+                   endTime: int = None,
+                   ) -> Response[list[FullOrder], object]:
         """All Orders (USER_DATA)
 
         Get all account orders; active, canceled, or filled.
@@ -33,29 +32,18 @@ class Spot(API):
             startTime (int, optional)
 
             endTime (int, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
         response = validate_response(self._query(
-            **SpotCore(headers=self.headers).get_orders_args(self,
-                                                             symbol=symbol,
-                                                             limit=limit,
-                                                             orderId=orderId,
-                                                             startTime=startTime,
-                                                             endTime=endTime,
-                                                             recvWindow=recvWindow,
-                                                             )))
+            **SpotCore.get_orders(self, symbol=symbol, limit=limit, orderId=orderId, startTime=startTime,
+                                  endTime=endTime)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _deserialize_orders(json_data, response)
 
     def get_open_order(self,
                        symbol: str,
-                       orderId: int | None = None,
-                       origClientOrderId: str | None = None,
-                       recvWindow: int | None = None,
-                       ):
+                       orderId: int = None,
+                       clientOrderID: str = None,
+                       ) -> Response[FullOrder, object]:
         """Query Order (USER_DATA)
 
         Check an order's status.
@@ -69,25 +57,14 @@ class Spot(API):
 
             orderId (int, optional)
 
-            origClientOrderId (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            clientOrderID (str, optional)
         """
-        response = validate_response(self._query(**SpotCore(headers=self.headers).get_open_order_args(self,
-                                                                                                      symbol=symbol,
-                                                                                                      orderId=orderId,
-                                                                                                      origClientOrderId=origClientOrderId,
-                                                                                                      recvWindow=recvWindow,
-                                                                                                      )))
+        response = validate_response(
+            self._query(**SpotCore.get_open_order(self, symbol=symbol, orderId=orderId, clientOrderID=clientOrderID)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _deserialize_order(json_data, response)
 
-    def get_open_orders(self,
-                        symbol: str | None = None,
-                        recvWindow: int | None = None,
-                        ):
+    def get_open_orders(self, symbol: str = None) -> Response[list[FullOrder], object]:
         """Current Open Orders (USER_DATA)
 
         Get all open orders on a symbol.
@@ -98,26 +75,17 @@ class Spot(API):
 
         params:
             symbol (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = validate_response(self._query(
-            **SpotCore(headers=self.headers).get_open_orders_args(self,
-                                                                  symbol=symbol,
-                                                                  recvWindow=recvWindow,
-                                                                  )))
+        response = validate_response(self._query(**SpotCore.get_open_orders(self, symbol=symbol)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _deserialize_orders(json_data, response)
 
     def cancel_open_order(self,
                           symbol: str,
-                          orderId: int | None = None,
-                          origClientOrderId: str | None = None,
-                          newClientOrderId: str | None = None,
-                          recvWindow: int | None = None,
-                          ):
+                          orderId: int = None,
+                          clientOrderID: str = None,
+                          newClientOrderId: str = None,
+                          ) -> Response[FullOrder, object]:
         """Cancel Order (TRADE)
 
         Cancel an active order.
@@ -131,54 +99,38 @@ class Spot(API):
 
             orderId (int, optional)
 
-            origClientOrderId (str, optional)
+            clientOrderID (str, optional)
 
             newClientOrderId (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = validate_response(self._query(**SpotCore(headers=self.headers).cancel_open_order_args(self,
-                                                                                                         symbol=symbol,
-                                                                                                         orderId=orderId,
-                                                                                                         origClientOrderId=origClientOrderId,
-                                                                                                         newClientOrderId=newClientOrderId,
-                                                                                                         recvWindow=recvWindow,
-                                                                                                         )))
+        response = validate_response(self._query(
+            **SpotCore.cancel_open_order(self, symbol=symbol, orderId=orderId, clientOrderID=clientOrderID,
+                                         newClientOrderId=newClientOrderId)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _deserialize_order(json_data, response)
 
-    def cancel_open_orders(self,
-                           symbol: str,
-                           recvWindow: int | None = None,
-                           ):
+    def cancel_open_orders(self, symbol: str) -> Response[list[FullOrder], object]:
         """Cancel Order (TRADE)
 
         Cancel an active order.
 
-        DELETE /api/v3/order
+        DELETE /api/v3/openOrders
 
-        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#cancel-all-open-orders-on-a-symbol-trade
 
         params:
             symbol (str)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
-        response = validate_response(self._query(
-            **SpotCore(headers=self.headers).cancel_open_orders_args(self, symbol=symbol, recvWindow=recvWindow)))
+        response = validate_response(self._query(**SpotCore.cancel_open_orders(self, symbol=symbol)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _deserialize_orders(json_data, response)
 
     def new_market_order(self,
                          symbol: str,
                          side: Side,
-                         quantity: float | None = None,
-                         quoteOrderQty: float | None = None,
-                         ):
+                         quantity: float = None,
+                         quoteOrderQty: float = None,
+                         ) -> Response[FullOrder, object]:
         """New Market Order (TRADE)
 
         Post a new order
@@ -197,26 +149,170 @@ class Spot(API):
             quoteOrderQty (float, optional)
         """
         response = validate_response(self._query(
-            **SpotCore(headers=self.headers).new_order_args(self,
-                                                            symbol=symbol,
-                                                            side=side.value,
-                                                            type='MARKET',
-                                                            quantity=quantity,
-                                                            quoteOrderQty=quoteOrderQty,
-                                                            )))
+            **SpotCore.new_order(self, symbol=symbol, side=side.value, type="MARKET", quantity=quantity,
+                                 quoteOrderQty=quoteOrderQty)))
         json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
+        return _deserialize_order(json_data, response)
 
     def new_limit_order(self,
                         symbol: str,
                         side: Side,
-                        quantity: float,
                         price: float,
+                        quantity: float,
                         timeInForce: TimeInForce = TimeInForce.GTC,
-                        ):
+                        ) -> Response[FullOrder, object]:
         """New Limit Order (TRADE)
+
+        Post a new order
+
+        POST /api/v3/order
+
+        https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
+
+        params:
+            symbol (str)
+
+            side (str)
+
+            price (float)
+
+            quantity (float)
+
+            timeInForce (str, optional)
+        """
+        response = validate_response(self._query(
+            **SpotCore.new_order(self, symbol=symbol, side=side.value, type="LIMIT", price=price, quantity=quantity,
+                                 timeInForce=timeInForce.value)))
+        json_data = response.json()
+        return _deserialize_order(json_data, response)
+
+
+class AsyncSpot(API):
+    async def get_orders(self,
+                         symbol: str,
+                         limit: int = 500,
+                         orderId: int = None,
+                         startTime: int = None,
+                         endTime: int = None,
+                         ) -> Response[list[FullOrder], object]:
+        """All Orders (USER_DATA)
+
+        Get all account orders; active, canceled, or filled.
+
+        GET /api/v3/allOrders
+
+        https://binance-docs.github.io/apidocs/spot/en/#all-orders-user_data
+
+        params:
+            symbol (str)
+
+            limit (int, optional): Default 500; max 1000.
+
+            orderId (int, optional)
+
+            startTime (int, optional)
+
+            endTime (int, optional)
+        """
+        response = validate_response(await self._async_query(
+            **SpotCore.get_orders(self, symbol=symbol, limit=limit, orderId=orderId, startTime=startTime,
+                                  endTime=endTime)))
+        json_data = response.json
+        return _deserialize_orders(json_data, response)
+
+    async def get_open_order(self,
+                             symbol: str,
+                             orderId: int = None,
+                             clientOrderID: str = None,
+                             ) -> Response[FullOrder, object]:
+        """Query Order (USER_DATA)
+
+        Check an order's status.
+
+        GET /api/v3/order
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-order-user_data
+
+        params:
+            symbol (str)
+
+            orderId (int, optional)
+
+            clientOrderID (str, optional)
+        """
+        response = validate_response(await self._async_query(
+            **SpotCore.get_open_order(self, symbol=symbol, orderId=orderId, clientOrderID=clientOrderID)))
+        json_data = response.json
+        return _deserialize_order(json_data, response)
+
+    async def get_open_orders(self, symbol: str = None) -> Response[list[FullOrder], object]:
+        """Current Open Orders (USER_DATA)
+
+        Get all open orders on a symbol.
+
+        GET /api/v3/openOrders
+
+        https://binance-docs.github.io/apidocs/spot/en/#current-open-orders-user_data
+
+        params:
+            symbol (str, optional)
+        """
+        response = validate_response(await self._async_query(**SpotCore.get_open_orders(self, symbol=symbol)))
+        json_data = response.json
+        return _deserialize_orders(json_data, response)
+
+    async def cancel_open_order(self,
+                                symbol: str,
+                                orderId: int = None,
+                                clientOrderID: str = None,
+                                newClientOrderId: str = None,
+                                ) -> Response[FullOrder, object]:
+        """Cancel Order (TRADE)
+
+        Cancel an active order.
+
+        DELETE /api/v3/order
+
+        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+
+        params:
+            symbol (str)
+
+            orderId (int, optional)
+
+            clientOrderID (str, optional)
+
+            newClientOrderId (str, optional)
+        """
+        response = validate_response(await self._async_query(
+            **SpotCore.cancel_open_order(self, symbol=symbol, orderId=orderId, clientOrderID=clientOrderID,
+                                         newClientOrderId=newClientOrderId)))
+        json_data = response.json
+        return _deserialize_order(json_data, response)
+
+    async def cancel_open_orders(self, symbol: str) -> Response[list[FullOrder], object]:
+        """Cancel Order (TRADE)
+
+        Cancel an active order.
+
+        DELETE /api/v3/order
+
+        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+
+        params:
+            symbol (str)
+        """
+        response = validate_response(await self._async_query(**SpotCore.cancel_open_orders(self, symbol=symbol)))
+        json_data = response.json
+        return _deserialize_orders(json_data, response)
+
+    async def new_market_order(self,
+                               symbol: str,
+                               side: Side,
+                               quantity: float = None,
+                               quoteOrderQty: float = None,
+                               ) -> Response[FullOrder, object]:
+        """New Market Order (TRADE)
 
         Post a new order
 
@@ -231,23 +327,42 @@ class Spot(API):
 
             quantity (float, optional)
 
-            price (float, optional)
+            quoteOrderQty (float, optional)
+        """
+        response = validate_response(await self._async_query(
+            **SpotCore.new_order(self, symbol=symbol, side=side.value, type="MARKET", quantity=quantity,
+                                 quoteOrderQty=quoteOrderQty)))
+        json_data = response.json
+        return _deserialize_order(json_data, response)
+
+    async def new_limit_order(self,
+                              symbol: str,
+                              side: Side,
+                              price: float,
+                              quantity: float,
+                              timeInForce: TimeInForce = TimeInForce.GTC,
+                              ) -> Response[FullOrder, object]:
+        """New Limit Order (TRADE)
+
+        Post a new order
+
+        POST /api/v3/order
+
+        https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
+
+        params:
+            symbol (str)
+
+            side (str)
+
+            price (float)
+
+            quantity (float)
 
             timeInForce (str, optional)
         """
-        response = validate_response(self._query(**SpotCore(headers=self.headers).new_order_args(self,
-                                                                                                 symbol=symbol,
-                                                                                                 side=side.value,
-                                                                                                 type='LIMIT',
-                                                                                                 quantity=quantity,
-                                                                                                 price=price,
-                                                                                                 timeInForce=timeInForce.value,
-                                                                                                 )))
-        json_data = response.json()
-        return Response(data=json_data,
-                        response_object=response,
-                        )
-
-
-#  TODO: async
-#  TODO: Socket
+        response = validate_response(await self._async_query(
+            **SpotCore.new_order(self, symbol=symbol, side=side.value, type="LIMIT", price=price, quantity=quantity,
+                                 timeInForce=timeInForce.value)))
+        json_data = response.json
+        return _deserialize_order(json_data, response)

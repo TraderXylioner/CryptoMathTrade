@@ -1,12 +1,11 @@
+from .._api import API
 from .._urls import URLS
-from ..._core import Core
 from ...errors import ParameterValueError
-from ...utils import _convert_kwargs_to_dict
+from ...utils import replace_param
 
 
-class SpotCore(Core):
-    @_convert_kwargs_to_dict
-    def get_orders_args(self, SpotObj, params: dict) -> dict:
+class SpotCore(API):
+    def get_orders(self, **kwargs) -> dict:
         """All Orders (USER_DATA)
 
         Get all account orders; active, canceled, or filled.
@@ -18,23 +17,17 @@ class SpotCore(Core):
         params:
             symbol (str)
 
+            limit (int, optional): Default 500; max 1000.
+
             orderId (int, optional)
 
             startTime (int, optional)
 
             endTime (int, optional)
-
-            limit (int, optional): Default 500; max 1000.
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='GET',
-                                url=URLS.BASE_URL + URLS.GET_ORDERS_URL,
-                                params=SpotObj.get_payload(params),
-                                )
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=self.get_payload(kwargs))
 
-    @_convert_kwargs_to_dict
-    def get_open_order_args(self, SpotObj, params: dict) -> dict:
+    def get_open_order(self, **kwargs) -> dict:
         """Query Order (USER_DATA)
 
         Check an order's status.
@@ -48,16 +41,14 @@ class SpotCore(Core):
 
             orderId (int, optional)
 
-            origClientOrderId (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            clientOrderID (str, optional)
         """
-        if not params.get('orderId') and not params.get('origClientOrderId'):
-            raise ParameterValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.ORDER_URL, params=SpotObj.get_payload(params))
+        replace_param(kwargs, 'clientOrderID', 'origClientOrderId')
+        if not kwargs.get('orderId') and not kwargs.get('origClientOrderId'):
+            raise ParameterValueError('Param "clientOrderID" or "orderId" must be sent, but both were empty/null!')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.ORDER_URL, params=self.get_payload(kwargs))
 
-    @_convert_kwargs_to_dict
-    def get_open_orders_args(self, SpotObj, params: dict) -> dict:
+    def get_open_orders(self, **kwargs) -> dict:
         """Current Open Orders (USER_DATA)
 
         Get all open orders on a symbol.
@@ -68,16 +59,10 @@ class SpotCore(Core):
 
         params:
             symbol (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
-        return self.return_args(method='GET',
-                                url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL,
-                                params=SpotObj.get_payload(params),
-                                )
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=self.get_payload(kwargs))
 
-    @_convert_kwargs_to_dict
-    def cancel_open_order_args(self, SpotObj, params: dict) -> dict:
+    def cancel_open_order(self, **kwargs) -> dict:
         """Cancel Order (TRADE)
 
         Cancel an active order.
@@ -91,39 +76,34 @@ class SpotCore(Core):
 
             orderId (int, optional)
 
-            origClientOrderId (str, optional)
+            clientOrderID (str, optional)
 
             newClientOrderId (str, optional)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
+        replace_param(kwargs, 'clientOrderID', 'origClientOrderId')
         return self.return_args(method='DELETE',
                                 url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL,
-                                params=SpotObj.get_payload(params),
+                                params=self.get_payload(kwargs),
                                 )
 
-    @_convert_kwargs_to_dict
-    def cancel_open_orders_args(self, SpotObj, params: dict) -> dict:
+    def cancel_open_orders(self, **kwargs) -> dict:
         """Cancel Order (TRADE)
 
         Cancel an active order.
 
-        DELETE /api/v3/order
+        DELETE /api/v3/openOrders
 
-        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#cancel-all-open-orders-on-a-symbol-trade
 
         params:
             symbol (str)
-
-            recvWindow (int, optional): The value cannot be greater than 60000
         """
         return self.return_args(method='DELETE',
                                 url=URLS.BASE_URL + URLS.CANCEL_ORDERS_URL,
-                                params=SpotObj.get_payload(params),
+                                params=self.get_payload(kwargs),
                                 )
 
-    @_convert_kwargs_to_dict
-    def new_order_args(self, SpotObj, params: dict) -> dict:
+    def new_order(self, **kwargs) -> dict:
         """New Order (TRADE)
 
         Post a new order
@@ -133,36 +113,27 @@ class SpotCore(Core):
         https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
 
         params:
+        for market order:
             symbol (str)
 
             side (str)
-
-            old_type (str)
-
-            timeInForce (str, optional)
 
             quantity (float, optional)
 
             quoteOrderQty (float, optional)
 
-            price (float, optional)
+        for limit order:
+            symbol (str)
 
-            newClientOrderId (str, optional): A unique id among open orders. Automatically generated if not sent.
+            side (str)
 
-            strategyId (int, optional)
+            price (float)
 
-            strategyType (int, optional): The value cannot be less than 1000000.
+            quantity (float)
 
-            stopPrice (float, optional): Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
-
-            icebergQty (float, optional): Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
-
-            newOrderRespType (str, optional): Set the response JSON. ACK, RESULT, or FULL;
-                    MARKET and LIMIT order types default to FULL, all other orders default to ACK.
-
-            recvWindow (int, optional): The value cannot be greater than 60000
+            timeInForce (str, optional)
         """
         return self.return_args(method='POST',
                                 url=URLS.BASE_URL + URLS.CREATE_ORDER_URL,
-                                params=SpotObj.get_payload(params),
+                                params=self.get_payload(kwargs),
                                 )
