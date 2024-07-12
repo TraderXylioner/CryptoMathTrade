@@ -96,7 +96,7 @@ class WSMarketCore(API):
 
             limit (int, optional): Valid are 10, 20 or 50.
         """
-
+        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='sub',
                                 url=URLS.WS_BASE_URL,
                                 params=f'{kwargs["symbol"].upper()}@depth{kwargs["limit"]}',
@@ -115,4 +115,5 @@ class WSMarketCore(API):
          param:
             symbol (str): the trading pair.
          """
+        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='sub', url=URLS.WS_BASE_URL, params=f'{kwargs["symbol"].upper()}@trade')
