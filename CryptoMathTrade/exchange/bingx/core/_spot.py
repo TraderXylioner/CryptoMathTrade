@@ -47,7 +47,7 @@ class SpotCore(API):
 
             clientOrderID (str, optional)
         """
-        if not kwargs.get('orderId') and not kwargs.get('origClientOrderId'):
+        if not kwargs.get('orderId') and not kwargs.get('clientOrderID'):
             raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.ORDER_URL, params=self.get_payload(kwargs))
 
@@ -81,8 +81,8 @@ class SpotCore(API):
 
             clientOrderID (str, optional)
         """
-        if not kwargs.get('orderId') and not kwargs.get('origClientOrderId'):
-            raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
+        if not kwargs.get('orderId') and not kwargs.get('clientOrderID'):
+            raise ValueError('Param "clientOrderID" or "orderId" must be sent, but both were empty/null!')
         return self.return_args(method='POST',
                                 url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL,
                                 params=self.get_payload(kwargs),

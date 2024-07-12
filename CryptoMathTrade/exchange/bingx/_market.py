@@ -8,7 +8,7 @@ from ._deserialization import _deserialize_depth, _deserialize_trades, _deserial
 from .core import MarketCore, WSMarketCore
 from .._response import Response
 from ..utils import validate_response
-from ...types import OrderBook, Trade, Ticker, Kline
+from ...types import OrderBook, Trade, Ticker, Kline, Symbol
 
 
 class Market(API):
@@ -58,7 +58,7 @@ class Market(API):
         json_data = response.json()
         return _deserialize_ticker(json_data, response)
 
-    def get_symbols(self, symbol: str = None) -> Response[object, object]:
+    def get_symbols(self, symbol: str = None) -> Response[list[Symbol], object]:
         """Query Symbols
 
         GET /openApi/spot/v1/common/symbols

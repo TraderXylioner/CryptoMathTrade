@@ -101,9 +101,7 @@ class Spot(API):
         params:
             symbol (str, optional).
         """
-        response = validate_response(
-            self._query(**SpotCore.get_open_orders(self, symbol=symbol))
-        )
+        response = validate_response(self._query(**SpotCore.get_open_orders(self, symbol=symbol)))
         json_data = response.json()
         return _deserialize_orders(json_data, response)
 
@@ -149,9 +147,7 @@ class Spot(API):
         params:
             symbol (str, optional).
         """
-        response = validate_response(
-            self._query(**SpotCore.cancel_open_orders(self, symbol=symbol))
-        )
+        response = validate_response(self._query(**SpotCore.cancel_open_orders(self, symbol=symbol)))
         json_data = response.json()
         return _deserialize_orders(json_data, response)
 

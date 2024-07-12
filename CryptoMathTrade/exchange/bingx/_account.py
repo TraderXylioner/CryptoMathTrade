@@ -9,7 +9,7 @@ from ._deserialization import _deserialize_balance, _deserialize_deposit_address
 from .core import AccountCore, WSAccountCore
 from .._response import Response
 from ..utils import validate_response
-from ...types import Balance
+from ...types import Balance, DepositAddress, Withdraw, Coin, DepositHistory, WithdrawHistory
 
 
 class Account(API):
@@ -35,7 +35,11 @@ class Account(API):
         json_data = response.json()
         return _deserialize_balance(json_data, response)
 
-    def get_deposit_address(self, asset: str, limit: int = None, offset: int = None) -> Response[object, object]:
+    def get_deposit_address(self,
+                            asset: str,
+                            limit: int = None,
+                            offset: int = None,
+                            ) -> Response[list[DepositAddress], object]:
         """Query Deposit Address
 
         GET /openApi/wallets/v1/capital/deposit/address
@@ -62,7 +66,7 @@ class Account(API):
                  network: str = None,
                  addressTag: str = None,
                  withdrawOrderId: int = None,
-                 ) -> Response[object, object]:
+                 ) -> Response[Withdraw, object]:
         """Withdraw
 
         GET /openApi/wallets/v1/capital/withdraw/apply
@@ -97,7 +101,7 @@ class Account(API):
         json_data = response.json()
         return _deserialize_withdraw(json_data, response)
 
-    def get_coins(self, asset: str = None) -> Response[object, object]:
+    def get_coins(self, asset: str = None) -> Response[list[Coin], object]:
         """All Coins' Information
 
         GET /openApi/wallets/v1/capital/config/getall
@@ -118,7 +122,7 @@ class Account(API):
                             startTime: int = None,
                             endTime: int = None,
                             offset: int = None,
-                            ) -> Response[object, object]:
+                            ) -> Response[list[DepositHistory], object]:
         """Deposit History
 
         GET /openApi/api/v3/capital/deposit/hisrec
@@ -154,7 +158,7 @@ class Account(API):
                              startTime: int = None,
                              endTime: int = None,
                              offset: int = None,
-                             ) -> Response[object, object]:
+                             ) -> Response[list[WithdrawHistory], object]:
         """Withdraw History
 
         GET /openApi/api/v3/capital/withdraw/history
@@ -209,7 +213,11 @@ class AsyncAccount(API):
         json_data = response.json
         return _deserialize_balance(json_data, response)
 
-    async def get_deposit_address(self, asset: str, limit: int = None, offset: int = None) -> Response[object, object]:
+    async def get_deposit_address(self,
+                                  asset: str,
+                                  limit: int = None,
+                                  offset: int = None,
+                                  ) -> Response[list[DepositAddress], object]:
         """Query Deposit Address
 
         GET /openApi/wallets/v1/capital/deposit/address
@@ -238,7 +246,7 @@ class AsyncAccount(API):
                        network: str = None,
                        addressTag: str = None,
                        withdrawOrderId: int = None,
-                       ) -> Response[object, object]:
+                       ) -> Response[Withdraw, object]:
         """Withdraw
 
         POST /openApi/wallets/v1/capital/withdraw/apply
@@ -273,7 +281,7 @@ class AsyncAccount(API):
         json_data = response.json
         return _deserialize_withdraw(json_data, response)
 
-    async def get_coins(self, asset: str = None) -> Response[object, object]:
+    async def get_coins(self, asset: str = None) -> Response[list[Coin], object]:
         """All Coins' Information
 
         GET /openApi/wallets/v1/capital/config/getall
@@ -294,7 +302,7 @@ class AsyncAccount(API):
                                   startTime: int = None,
                                   endTime: int = None,
                                   offset: int = None,
-                                  ) -> Response[object, object]:
+                                  ) -> Response[list[DepositHistory], object]:
         """Deposit History
 
         GET /openApi/api/v3/capital/deposit/hisrec
@@ -330,7 +338,7 @@ class AsyncAccount(API):
                                    startTime: int = None,
                                    endTime: int = None,
                                    offset: int = None,
-                                   ) -> Response[object, object]:
+                                   ) -> Response[list[WithdrawHistory], object]:
         """Withdraw History
 
         GET /openApi/api/v3/capital/withdraw/history
