@@ -4,13 +4,13 @@ from ...types import OrderBook, Trade, Ticker, Order, Side, Balance, Kline, Full
 from .._response import Response
 
 
-def _deserialize_listen_key(data, response):
+def _deserialize_listen_key(data, response) -> Response[str, object]:
     if 'listenKey' not in data:
         raise ResponseError(data)
     return Response(data=data['listenKey'], response_object=response)
 
 
-def _deserialize_depth(data, response):
+def _deserialize_depth(data, response) -> Response[OrderBook, object]:
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -21,7 +21,7 @@ def _deserialize_depth(data, response):
                     response_object=response, )
 
 
-def _deserialize_trades(data, response):
+def _deserialize_trades(data, response) -> Response[list[Trade], object]:
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -35,7 +35,7 @@ def _deserialize_trades(data, response):
                     response_object=response, )
 
 
-def _deserialize_ticker(data, response):
+def _deserialize_ticker(data, response) -> Response[list[Ticker], object]:
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -56,7 +56,7 @@ def _deserialize_ticker(data, response):
                     )
 
 
-def _deserialize_kline(data, response):
+def _deserialize_kline(data, response) -> Response[list[Kline], object]:
     if 'msg' in data:
         raise ResponseError(data)
 
@@ -73,16 +73,14 @@ def _deserialize_kline(data, response):
                     response_object=response)
 
 
-def _deserialize_balance(data, response):
+def _deserialize_balance(data, response) -> Response[list[Balance], object]:
     if 'data' not in data:
         raise ResponseError(data)
 
-    return Response(data=[Balance(**i) for i in data['data']['balances']],
-                    response_object=response,
-                    )
+    return Response(data=[Balance(**i) for i in data['data']['balances']], response_object=response)
 
 
-def _deserialize_trades_for_ws(data, response):
+def _deserialize_trades_for_ws(data, response) -> Response[list[Trade], object]:
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
@@ -96,40 +94,40 @@ def _deserialize_trades_for_ws(data, response):
                     )
 
 
-def _deserialize_account_update_for_ws(data, response):
+def _deserialize_account_update_for_ws(data, response) -> Response[object, object]:
     return Response(data=data, response_object=response)
 
 
-def _deserialize_coins(data, response):
+def _deserialize_coins(data, response) -> Response[list[Coin], object]:
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
     return Response(data=[Coin(**i) for i in data], response_object=response)
 
 
-def _deserialize_deposit_address(data, response):
+def _deserialize_deposit_address(data, response) -> Response[list[DepositAddress], object]:
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
     return Response(data=[DepositAddress(**i) for i in data['data']], response_object=response)
 
 
-def _deserialize_withdraw(data, response):
+def _deserialize_withdraw(data, response) -> Response[Withdraw, object]:
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
     return Response(data=Withdraw(**data), response_object=response)
 
 
-def _deserialize_deposit_history(data, response):
+def _deserialize_deposit_history(data, response) -> Response[list[DepositHistory], object]:
     return Response(data=[DepositHistory(**i) for i in data], response_object=response)
 
 
-def _deserialize_withdraw_history(data, response):
+def _deserialize_withdraw_history(data, response) -> Response[list[WithdrawHistory], object]:
     return Response(data=[WithdrawHistory(**i) for i in data], response_object=response)
 
 
-def _deserialize_symbols(data, response):
+def _deserialize_symbols(data, response) -> Response[list[Symbol], object]:
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
@@ -138,16 +136,14 @@ def _deserialize_symbols(data, response):
                     )
 
 
-def _deserialize_order(data, response):
+def _deserialize_order(data, response) -> Response[FullOrder, object]:
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
-    return Response(data=FullOrder(**data),
-                    response_object=response,
-                    )
+    return Response(data=FullOrder(**data), response_object=response)
 
 
-def _deserialize_orders(data, response):
+def _deserialize_orders(data, response) -> Response[list[FullOrder], object]:
     if 'data' not in data:
         raise ResponseError(data)
     data = data['data']
