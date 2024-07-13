@@ -1,8 +1,10 @@
 from .._api import API
 from .._urls import URLS
+from ...utils import check_require_params
 
 
 class SpotCore(API):
+    @check_require_params(('symbol',))
     def get_orders(self, **kwargs) -> dict:
         """All Orders (USER_DATA)
 
@@ -31,6 +33,7 @@ class SpotCore(API):
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=self.get_payload(kwargs))
 
+    @check_require_params(('symbol',))
     def get_open_order(self, **kwargs) -> dict:
         """Query Order (USER_DATA)
 
@@ -65,6 +68,7 @@ class SpotCore(API):
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=self.get_payload(kwargs))
 
+    @check_require_params(('symbol',))
     def cancel_open_order(self, **kwargs) -> dict:
         """Cancel Order (TRADE)
 
@@ -105,6 +109,7 @@ class SpotCore(API):
                                 params=self.get_payload(kwargs),
                                 )
 
+    @check_require_params(('symbol', 'side'))
     def new_order(self, **kwargs) -> dict:
         """New Market/Limit Order (TRADE)
 

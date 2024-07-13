@@ -4,6 +4,7 @@ from ...utils import get_timestamp, check_require_params
 
 
 class MarketCore(API):
+    @check_require_params(('symbol',))
     def get_depth(self, **kwargs) -> dict:
         """Get orderbook.
 
@@ -16,10 +17,10 @@ class MarketCore(API):
 
             limit (int, optional): Default 100; max 1000.
         """
-        check_require_params(kwargs, ('symbol',))
         kwargs['limit'] = min(int(kwargs.get('limit', 100)), 1000)  # Default value and limit
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
 
+    @check_require_params(('symbol',))
     def get_trades(self, **kwargs) -> dict:
         """Recent Trades List
 
@@ -32,7 +33,6 @@ class MarketCore(API):
 
             limit (int, optional): Default 100; max 100.
         """
-        check_require_params(kwargs, ('symbol',))
         kwargs['limit'] = min(int(kwargs.get('limit', 100)), 100)  # Default value and limit
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
 
@@ -61,6 +61,7 @@ class MarketCore(API):
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=kwargs)
 
+    @check_require_params(('symbol', 'interval'))
     def get_kline(self, **kwargs) -> dict:
         """Historical K-line data
 
@@ -84,6 +85,7 @@ class MarketCore(API):
 
 
 class WSMarketCore(API):
+    @check_require_params(('symbol',))
     def get_depth(self, **kwargs) -> dict:
         """Partial Book Depth Streams
 
@@ -96,12 +98,12 @@ class WSMarketCore(API):
 
             limit (int, optional): Valid are 10, 20 or 50.
         """
-        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='sub',
                                 url=URLS.WS_BASE_URL,
                                 params=f'{kwargs["symbol"].upper()}@depth{kwargs["limit"]}',
                                 )
 
+    @check_require_params(('symbol',))
     def get_trades(self, **kwargs) -> dict:
         """Trade Streams
 
@@ -115,5 +117,4 @@ class WSMarketCore(API):
          param:
             symbol (str): the trading pair.
          """
-        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='sub', url=URLS.WS_BASE_URL, params=f'{kwargs["symbol"].upper()}@trade')

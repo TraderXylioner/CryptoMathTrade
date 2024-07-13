@@ -1,6 +1,6 @@
 from .._api import API
 from .._urls import URLS
-from ...utils import replace_param, get_timestamp
+from ...utils import replace_param, get_timestamp, check_require_params
 
 
 class AccountCore(API):
@@ -22,6 +22,7 @@ class AccountCore(API):
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_BALANCE_URL, params=self.get_payload(kwargs))
 
+    @check_require_params(('asset',))
     def get_deposit_address(self, **kwargs) -> dict:
         """Query Deposit Address
 
@@ -43,6 +44,7 @@ class AccountCore(API):
                                 params=self.get_payload(kwargs),
                                 )
 
+    @check_require_params(('asset', 'address', 'amount'))
     def withdraw(self, **kwargs) -> dict:
         """Withdraw
 
@@ -143,6 +145,7 @@ class AccountCore(API):
 
 
 class WSAccountCore(API):
+    @check_require_params(('listenKey',))
     def account_update(self, **kwargs) -> dict:
         """Subscription account balance push
 
