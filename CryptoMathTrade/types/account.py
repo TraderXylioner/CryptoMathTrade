@@ -10,43 +10,52 @@ class Balance(BaseModel):
 
 
 class WithdrawHistory(BaseModel):
+    id: str
     amount: Decimal
     coin: str
     network: str
     status: int
     address: str
-    sourceAddress: str
+    sourceAddress: str = None
+    transferType: int
+    transactionFee: str
+    confirmNo: int
+    info: str
     txId: str
-    insertTime: int
-    unlockConfirm: str
-    confirmTimes: str
+    applyTime: str
 
 
 class DepositHistory(BaseModel):
+    id: str = None
     amount: Decimal
     coin: str
     network: str
     status: int
     address: str
-    sourceAddress: str
+    addressTag: str = None
+    sourceAddress: str = None
     txId: str
     insertTime: int
-    unlockConfirm: str
+    unlockConfirm: str | int
     confirmTimes: str
 
 
 class DepositAddress(BaseModel):
-    coinId: int
+    coinId: int = None
     coin: str
-    network: str
     address: str
-    tag: str
+    network: str = None
+    url: str = None
+    isDefault: int = None
+    tag: str = None
 
 
 class Coin(BaseModel):
     coin: str
     name: str
     networkList: list
+    isLegalMoney: bool = None
+    trading: bool = None
 
 
 class Withdraw(BaseModel):
