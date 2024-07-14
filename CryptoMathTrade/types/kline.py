@@ -29,7 +29,7 @@ class Kline(BaseModel):
     highPrice: Decimal
     lowerPrice: Decimal
     closePrice: Decimal
-    transactionPrice: Decimal
+    # transactionPrice: Decimal
     closeTime: int
     amount: Decimal
 
