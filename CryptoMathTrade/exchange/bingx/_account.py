@@ -4,8 +4,10 @@ import json
 import time
 
 from ._api import API
-from ._deserialization import _deserialize_balance, _deserialize_deposit_address, _deserialize_withdraw, _deserialize_coins, \
-    _deserialize_deposit_history, _deserialize_account_update_for_ws, _deserialize_listen_key, _deserialize_withdraw_history
+from ._deserialization import _deserialize_balance, _deserialize_deposit_address, _deserialize_withdraw, \
+    _deserialize_coins, \
+    _deserialize_deposit_history, _deserialize_account_update_for_ws, _deserialize_listen_key, \
+    _deserialize_withdraw_history
 from .core import AccountCore, WSAccountCore
 from .._response import Response
 from ..utils import validate_response
@@ -44,7 +46,7 @@ class Account(API):
 
         GET /openApi/wallets/v1/capital/deposit/address
 
-        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Withdraw
+        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Main%20Account%20Deposit%20Address
 
         params:
             asset (str).
@@ -184,8 +186,8 @@ class Account(API):
 
         """
         response = validate_response(self._query(
-            **AccountCore.get_deposit_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
-                                              status=status, startTime=startTime, endTime=endTime, offset=offset)))
+            **AccountCore.get_withdraw_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
+                                               status=status, startTime=startTime, endTime=endTime, offset=offset)))
         json_data = response.json()
         return _deserialize_withdraw_history(json_data, response)
 
@@ -363,8 +365,8 @@ class AsyncAccount(API):
             offset (int, optional): Default: 0.
         """
         response = validate_response(await self._async_query(
-            **AccountCore.get_deposit_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
-                                              status=status, startTime=startTime, endTime=endTime, offset=offset)))
+            **AccountCore.get_withdraw_history(self, id=id, asset=asset, limit=limit, withdrawOrderId=withdrawOrderId,
+                                               status=status, startTime=startTime, endTime=endTime, offset=offset)))
         json_data = response.json
         return _deserialize_withdraw_history(json_data, response)
 
