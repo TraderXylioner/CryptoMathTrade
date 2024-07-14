@@ -1,5 +1,5 @@
 from ._api import API
-from ._serialization import _serialize_balance
+from ._deserialization import _serialize_balance
 from .core import AccountCore
 from .._response import Response
 from ..utils import validate_response
