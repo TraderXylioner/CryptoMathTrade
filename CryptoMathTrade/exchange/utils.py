@@ -1,5 +1,6 @@
 import json
 import time
+from functools import wraps
 from urllib.parse import urlencode
 
 import hmac
@@ -65,10 +66,18 @@ def validate_response(response):
         raise Exception(response.__dict__)  # custom exc
 
 
-def check_require_params(params: dict, require_params: tuple):
-    return_params = [i for i in require_params if i not in params]
-    if return_params:
-        raise ParameterRequiredError(return_params)
+def check_require_params(require_params: tuple):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, **kwargs):
+            missing_params = [i for i in require_params if i not in kwargs]
+            if missing_params:
+                raise ParameterRequiredError(missing_params)
+            return func(self, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 def replace_param(params: dict, param: str, new_param: str):
