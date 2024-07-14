@@ -7,11 +7,11 @@ class Symbol(BaseModel):
     symbol: str
     minQty: Decimal
     maxQty: Decimal
-    minNotional: Decimal
-    maxNotional: Decimal
-    status: int
-    tickSize: Decimal
-    stepSize: Decimal
-    apiStateSell: bool
-    apiStateBuy: bool
-    timeOnline: int
+    status: str | int
+    minNotional: Decimal = None
+    maxNotional: Decimal = None
+    tickSize: Decimal = None
+    stepSize: Decimal = None
+    apiStateSell: bool = None
+    apiStateBuy: bool = None
+    timeOnline: int = None
