@@ -1,6 +1,6 @@
 from ...types import OrderBook, Trade, Ticker, Order, Side, FullOrder, Symbol, Kline
 from .._response import Response
-from ...types.account import Balance
+from ...types.account import Balance, DepositAddress, Coin, DepositHistory, WithdrawHistory, Withdraw
 
 
 def _deserialize_depth(data, response) -> Response[OrderBook, object]:
@@ -62,3 +62,23 @@ def _deserialize_symbols(data, response) -> Response[list[Symbol], object]:
 
 def _deserialize_kline(data, response) -> Response[list[Kline], object]:
     return Response(data=data, response_object=response)
+
+
+def _deserialize_coins(data, response) -> Response[list[Coin], object]:
+    return Response(data=[Coin(**i) for i in data], response_object=response)
+
+
+def _deserialize_deposit_address(data, response) -> Response[list[DepositAddress], object]:
+    return Response(data=[DepositAddress(**data)], response_object=response)
+
+
+def _deserialize_withdraw(data, response) -> Response[Withdraw, object]:
+    return Response(data=Withdraw(**data), response_object=response)
+
+
+def _deserialize_deposit_history(data, response) -> Response[list[DepositHistory], object]:
+    return Response(data=[DepositHistory(**i) for i in data], response_object=response)
+
+
+def _deserialize_withdraw_history(data, response) -> Response[list[WithdrawHistory], object]:
+    return Response(data=[WithdrawHistory(**i) for i in data], response_object=response)

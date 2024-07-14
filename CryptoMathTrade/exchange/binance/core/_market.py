@@ -5,6 +5,7 @@ from ...utils import check_require_params, convert_list_to_json_array
 
 
 class MarketCore(API):
+    @check_require_params(('symbol',))
     def get_depth(self, **kwargs) -> dict:
         """Get orderbook.
 
@@ -17,9 +18,9 @@ class MarketCore(API):
 
             limit (int, optional): Default 100; max 5000.
         """
-        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
 
+    @check_require_params(('symbol',))
     def get_trades(self, **kwargs) -> dict:
         """Recent Trades List
 
@@ -32,7 +33,6 @@ class MarketCore(API):
 
             limit (int, optional): Default 500; max 1000.
         """
-        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
 
     def get_ticker(self, **kwargs) -> dict:
@@ -82,6 +82,7 @@ class MarketCore(API):
             kwargs['symbols'] = convert_list_to_json_array(kwargs.get('symbols'))
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=kwargs)
 
+    @check_require_params(('symbol', 'interval'))
     def get_kline(self, **kwargs) -> dict:
         """Historical K-line data
 
@@ -107,6 +108,7 @@ class MarketCore(API):
 
 
 class WSMarketCore(API):
+    @check_require_params(('symbol',))
     def get_depth(self, **kwargs) -> dict:
         """Partial Book Depth Streams
 
@@ -121,12 +123,12 @@ class WSMarketCore(API):
 
             interval (int, optional): 1000ms or 100ms.
         """
-        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='SUBSCRIBE',
                                 url=URLS.WS_BASE_URL,
                                 params=[f'{kwargs["symbol"].lower()}@depth{kwargs["limit"]}@{kwargs["interval"]}ms'],
                                 )
 
+    @check_require_params(('symbol',))
     def get_trades(self, **kwargs) -> dict:
         """Trade Streams
 
@@ -139,5 +141,4 @@ class WSMarketCore(API):
          params:
             symbol (str): the trading pair.
          """
-        check_require_params(kwargs, ('symbol',))
         return self.return_args(method='SUBSCRIBE', url=URLS.WS_BASE_URL, params=[f'{kwargs["symbol"].lower()}@trade'])
