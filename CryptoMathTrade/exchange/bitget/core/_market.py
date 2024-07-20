@@ -1,11 +1,11 @@
+from .._api import API
 from .._urls import URLS
-from ..._core import Core
 from ...utils import check_require_params, replace_param
 
 
-class MarketCore(Core):
+class MarketCore(API):
     @check_require_params(('symbol',))
-    def get_depth_args(self, **kwargs) -> dict:
+    def get_depth(self, **kwargs) -> dict:
         """Get orderbook.
 
         GET /api/v2/spot/market/orderbook
@@ -22,7 +22,7 @@ class MarketCore(Core):
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
 
     @check_require_params(('symbol',))
-    def get_trades_args(self, **kwargs) -> dict:
+    def get_trades(self, **kwargs) -> dict:
         """Recent Trades List
 
         GET /api/v2/spot/market/fills
@@ -36,7 +36,7 @@ class MarketCore(Core):
         """
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
 
-    def get_ticker_args(self, **kwargs) -> dict:
+    def get_ticker(self, **kwargs) -> dict:
         """24hr Ticker Price Change Statistics
 
         GET /api/v2/spot/market/tickers
@@ -73,7 +73,7 @@ class MarketCore(Core):
 
             interval (str): Time interval (1m, 3m, 5m can query for one month,15m can query for 52 days,30m can query for 62 days,1H can query for 83 days,2H can query for 120 days,4H can query for 240 days,6H can query for 360 days.).
 
-            limit (int, optional): Default 500; max 1000.
+            limit (int, optional): Default 100; max 1000.
 
             startTime (int, optional): Unit: ms.
 
