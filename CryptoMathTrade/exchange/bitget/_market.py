@@ -23,7 +23,7 @@ class Market(API):
             type (str, optional) The value enums：step0，step1，step2，step3，step4，step5. Default: step0.
         """
         response = validate_response(
-            self._query(**MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, type=type)))
+            self._query(**MarketCore(headers=self.headers).get_depth(symbol=symbol, limit=limit, type=type)))
         json_data = response.json()
         return _deserialize_depth(json_data, response)
 
@@ -40,7 +40,7 @@ class Market(API):
             limit (int, optional): limit the results. Default 100; max 500.
         """
         response = validate_response(
-            self._query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+            self._query(**MarketCore(headers=self.headers).get_trades(symbol=symbol, limit=limit)))
         json_data = response.json()
         return _deserialize_trades(json_data, response)
 
@@ -54,7 +54,7 @@ class Market(API):
         params:
             symbol (str, optional): the trading pair.
         """
-        response = validate_response(self._query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+        response = validate_response(self._query(**MarketCore(headers=self.headers).get_ticker(symbol=symbol)))
         json_data = response.json()
         return _deserialize_ticker(json_data, response)
 
@@ -75,7 +75,7 @@ class Market(API):
     def get_kline(self,
                   symbol: str,
                   interval: str,
-                  limit: int = 500,
+                  limit: int = 100,
                   startTime: int = None,
                   endTime: int = None,
                   ) -> Response[list[Kline], object]:
@@ -90,7 +90,7 @@ class Market(API):
 
             interval (str): Time interval (1m, 3m, 5m can query for one month,15m can query for 52 days,30m can query for 62 days,1H can query for 83 days,2H can query for 120 days,4H can query for 240 days,6H can query for 360 days.).
 
-            limit (int, optional): Default 500; max 1000.
+            limit (int, optional): Default 100; max 1000.
 
             startTime (int, optional): Unit: ms.
 
@@ -124,7 +124,7 @@ class AsyncMarket(API):
         """
         response = validate_response(
             await self._async_query(
-                **MarketCore(headers=self.headers).get_depth_args(symbol=symbol, limit=limit, type=type)))
+                **MarketCore(headers=self.headers).get_depth(symbol=symbol, limit=limit, type=type)))
         json_data = response.json
         return _deserialize_depth(json_data, response)
 
@@ -141,7 +141,7 @@ class AsyncMarket(API):
             limit (int, optional): limit the results. Default 100; max 500.
         """
         response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_trades_args(symbol=symbol, limit=limit)))
+            await self._async_query(**MarketCore(headers=self.headers).get_trades(symbol=symbol, limit=limit)))
         json_data = response.json
         return _deserialize_trades(json_data, response)
 
@@ -156,7 +156,7 @@ class AsyncMarket(API):
             symbol (str, optional): the trading pair.
         """
         response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_ticker_args(symbol=symbol)))
+            await self._async_query(**MarketCore(headers=self.headers).get_ticker(symbol=symbol)))
         json_data = response.json
         return _deserialize_ticker(json_data, response)
 
