@@ -4,14 +4,17 @@ from pydantic import BaseModel
 
 
 class Symbol(BaseModel):
+    id: int | None = None
     symbol: str
-    minQty: Decimal
-    maxQty: Decimal
+    firstCoin: str | None = None
+    secondCoin: str | None = None
+    minQty: Decimal | None = None
+    maxQty: Decimal | None = None
     status: str | int
-    minNotional: Decimal = None
-    maxNotional: Decimal = None
-    tickSize: Decimal = None
-    stepSize: Decimal = None
-    apiStateSell: bool = None
-    apiStateBuy: bool = None
-    timeOnline: int = None
+    minNotional: Decimal | None = None
+    maxNotional: Decimal | None = None
+    tickSize: Decimal | None = None
+    stepSize: Decimal | None = None
+    apiStateSell: bool | None = None
+    apiStateBuy: bool | None = None
+    timeOnline: int | None = None
