@@ -73,7 +73,6 @@ def _deserialize_kline(data, response) -> Response[list[Kline], object]:
                                 highPrice=i[2],
                                 lowerPrice=i[3],
                                 closePrice=i[4],
-                                # transactionPrice=i[5],
                                 closeTime=int(time.time()),
                                 amount=i[5]
                                 ) for i in data],
