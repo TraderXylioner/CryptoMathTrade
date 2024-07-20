@@ -7,6 +7,8 @@ class URLS:
     TRADES_URL = '/spot/quotation/v3/trades'  # https://developer-pro.bitmart.com/en/spot/#get-recent-trades-v3
     TICKER_URL = '/spot/quotation/v3/ticker'  # https://developer-pro.bitmart.com/en/spot/#get-ticker-of-a-trading-pair-v3
     TICKERS_URL = '/spot/quotation/v3/tickers'  # https://developer-pro.bitmart.com/en/spot/#get-ticker-of-all-pairs-v3
+    SYMBOLS_URL = '/spot/v1/symbols/details'  # https://developer-pro.bitmart.com/en/spot/#get-trading-pair-details-v1
+    KLINE_URL = '/spot/quotation/v3/klines'  # https://developer-pro.bitmart.com/en/spot/#get-history-k-line-v3
 
     # Account
     GET_BALANCE = '/account/v1/wallet'
