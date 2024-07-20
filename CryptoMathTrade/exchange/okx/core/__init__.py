@@ -1,2 +1,2 @@
-from ._market import MarketCore, WSMarketCore
+from ._market import MarketCore
 from ._account import AccountCore
