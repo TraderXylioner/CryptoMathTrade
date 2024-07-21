@@ -22,17 +22,6 @@ def _deserialize_trades(data, response) -> Response[list[Trade], object]:
                     )
 
 
-def _deserialize_trades_for_ws(data, response) -> Response[list[Trade], object]:
-    return Response(data=Trade(id=data.get('E'),
-                               price=data.get('p'),
-                               quantity=data.get('q'),
-                               side=Side.SELL if data.get('m') else Side.BUY,
-                               time=data.get('T'),
-                               ),
-                    response_object=response,
-                    )
-
-
 def _deserialize_ticker(data, response) -> Response[list[Ticker], object]:
     if isinstance(data, list):
         data = [Ticker(**ticker) for ticker in data]
@@ -42,6 +31,27 @@ def _deserialize_ticker(data, response) -> Response[list[Ticker], object]:
         raise Exception(data)
 
     return Response(data=data, response_object=response)
+
+
+def _deserialize_symbols(data, response) -> Response[list[Symbol], object]:
+    # TODO:
+    return Response(data=data, response_object=response)
+
+
+def _deserialize_kline(data, response) -> Response[list[Kline], object]:
+    # TODO:
+    return Response(data=data, response_object=response)
+
+
+def _deserialize_trades_for_ws(data, response) -> Response[list[Trade], object]:
+    return Response(data=Trade(id=data.get('E'),
+                               price=data.get('p'),
+                               quantity=data.get('q'),
+                               side=Side.SELL if data.get('m') else Side.BUY,
+                               time=data.get('T'),
+                               ),
+                    response_object=response,
+                    )
 
 
 def _deserialize_balance(data, response) -> Response[list[Balance], object]:
@@ -54,14 +64,6 @@ def _deserialize_order(data, response) -> Response[FullOrder, object]:
 
 def _deserialize_orders(data, response) -> Response[list[FullOrder], object]:
     return Response(data=[FullOrder(**i) for i in data], response_object=response)
-
-
-def _deserialize_symbols(data, response) -> Response[list[Symbol], object]:
-    return Response(data=data, response_object=response)
-
-
-def _deserialize_kline(data, response) -> Response[list[Kline], object]:
-    return Response(data=data, response_object=response)
 
 
 def _deserialize_coins(data, response) -> Response[list[Coin], object]:

@@ -18,7 +18,7 @@ def _deserialize_depth(data, response) -> Response[OrderBook, object]:
     data['asks'] = data['asks'][::-1]
     return Response(data=OrderBook(asks=[Order(price=ask[0], volume=ask[1]) for ask in data['asks']],
                                    bids=[Order(price=bid[0], volume=bid[1]) for bid in data['bids']], ),
-                    response_object=response, )
+                    response_object=response)
 
 
 def _deserialize_trades(data, response) -> Response[list[Trade], object]:
@@ -56,6 +56,16 @@ def _deserialize_ticker(data, response) -> Response[list[Ticker], object]:
                     )
 
 
+def _deserialize_symbols(data, response) -> Response[list[Symbol], object]:
+    if 'data' not in data:
+        raise ResponseError(data)
+
+    data = data['data']
+    return Response(data=[Symbol(**i) for i in data['symbols']],
+                    response_object=response,
+                    )
+
+
 def _deserialize_kline(data, response) -> Response[list[Kline], object]:
     if 'msg' in data:
         raise ResponseError(data)
@@ -66,7 +76,7 @@ def _deserialize_kline(data, response) -> Response[list[Kline], object]:
                                 highPrice=i[2],
                                 lowerPrice=i[3],
                                 closePrice=i[4],
-                                transactionPrice=i[5],
+                                # transactionPrice=i[5],
                                 closeTime=i[6],
                                 amount=i[7]
                                 ) for i in data],
@@ -125,15 +135,6 @@ def _deserialize_deposit_history(data, response) -> Response[list[DepositHistory
 
 def _deserialize_withdraw_history(data, response) -> Response[list[WithdrawHistory], object]:
     return Response(data=[WithdrawHistory(**i) for i in data], response_object=response)
-
-
-def _deserialize_symbols(data, response) -> Response[list[Symbol], object]:
-    if 'data' not in data:
-        raise ResponseError(data)
-    data = data['data']
-    return Response(data=[Symbol(**i) for i in data['symbols']],
-                    response_object=response,
-                    )
 
 
 def _deserialize_order(data, response) -> Response[FullOrder, object]:
