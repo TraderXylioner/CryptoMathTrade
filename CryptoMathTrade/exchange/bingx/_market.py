@@ -156,7 +156,7 @@ class AsyncMarket(API):
         json_data = response.json
         return _deserialize_ticker(json_data, response)
 
-    async def get_symbols(self, symbol: str = None) -> Response[object, object]:
+    async def get_symbols(self, symbol: str = None) -> Response[list[Symbol], object]:
         """Query Symbols
 
         GET /openApi/spot/v1/common/symbols
