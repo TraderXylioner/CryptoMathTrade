@@ -3,7 +3,7 @@ import json
 from ._api import API
 from ._deserialization import _deserialize_depth, _deserialize_trades, _deserialize_ticker, _deserialize_trades_for_ws, \
     _deserialize_symbols, _deserialize_kline
-from .core import MarketCore, WSMarketCore
+from .core import MarketCore, WebSocketMarketCore
 from ..utils import validate_response
 from .._response import Response
 from ...types import OrderBook, Trade, Ticker, Symbol, Kline
@@ -242,11 +242,11 @@ class WebSocketMarket(API):
 
             interval (int, optional): 1000ms or 100ms.
         """
-        async for response in self._ws_query(**WSMarketCore.get_depth(self,
-                                                                      symbol=symbol,
-                                                                      limit=limit,
-                                                                      interval=interval,
-                                                                      )):
+        async for response in self._ws_query(**WebSocketMarketCore.get_depth(self,
+                                                                             symbol=symbol,
+                                                                             limit=limit,
+                                                                             interval=interval,
+                                                                             )):
             json_data = json.loads(response)
             if 'result' not in json_data:
                 yield _deserialize_depth(json_data, response)
@@ -264,7 +264,7 @@ class WebSocketMarket(API):
          params:
             symbol (str): the trading pair.
          """
-        async for response in self._ws_query(**WSMarketCore.get_trades(self, symbol=symbol)):
+        async for response in self._ws_query(**WebSocketMarketCore.get_trades(self, symbol=symbol)):
             json_data = json.loads(response)
             if 'result' not in json_data:
                 yield _deserialize_trades_for_ws(json_data, response)

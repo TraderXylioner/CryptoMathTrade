@@ -84,7 +84,7 @@ class MarketCore(API):
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=kwargs)
 
 
-class WSMarketCore(API):
+class WebSocketMarketCore(API):
     @check_require_params(('symbol',))
     def get_depth(self, **kwargs) -> dict:
         """Partial Book Depth Streams

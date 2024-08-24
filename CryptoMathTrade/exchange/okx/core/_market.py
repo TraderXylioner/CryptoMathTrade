@@ -97,9 +97,9 @@ class MarketCore(API):
         replace_param(kwargs, 'interval', 'bar')
         return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=kwargs)
 
-# TODO: WSMarketCore
+# TODO: WebSocketMarketCore
 
-# class WSMarketCore(Core):
+# class WebSocketMarketCore(Core):
 #     def get_depth_args(self, **kwargs) -> dict:
 #         """Partial Book Depth Streams
 #

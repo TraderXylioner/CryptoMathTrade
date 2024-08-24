@@ -5,7 +5,7 @@ import json
 from ._api import API
 from ._deserialization import _deserialize_depth, _deserialize_trades, _deserialize_ticker, _deserialize_trades_for_ws, \
     _deserialize_symbols, _deserialize_kline
-from .core import MarketCore, WSMarketCore
+from .core import MarketCore, WebSocketMarketCore
 from .._response import Response
 from ..utils import validate_response
 from ...types import OrderBook, Trade, Ticker, Kline, Symbol
@@ -219,7 +219,7 @@ class WebSocketMarket(API):
 
             limit (int, optional): Valid are 50.
         """
-        async for response in self._ws_query(**WSMarketCore.get_depth(self, symbol=symbol, limit=limit)):
+        async for response in self._ws_query(**WebSocketMarketCore.get_depth(self, symbol=symbol, limit=limit)):
             json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
                 yield _deserialize_depth(json_data, response)
@@ -237,7 +237,7 @@ class WebSocketMarket(API):
          param:
             symbol (str): the trading pair.
          """
-        async for response in self._ws_query(**WSMarketCore.get_trades(self, symbol=symbol)):
+        async for response in self._ws_query(**WebSocketMarketCore.get_trades(self, symbol=symbol)):
             json_data = json.loads(gzip.GzipFile(fileobj=io.BytesIO(response), mode='rb').read().decode())
             if 'data' in json_data:
                 yield _deserialize_trades_for_ws(json_data, response)
