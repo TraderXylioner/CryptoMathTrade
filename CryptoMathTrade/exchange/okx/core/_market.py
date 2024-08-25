@@ -5,7 +5,7 @@ from ...utils import check_require_params, replace_param
 
 class MarketCore(API):
     @check_require_params(('symbol',))
-    def get_depth(self, **kwargs) -> dict:
+    def get_depth(self, **params) -> dict:
         """Get orderbook.
 
         GET /api/v5/market/books
@@ -17,12 +17,12 @@ class MarketCore(API):
 
             limit (int, optional): limit the results. Default 1; max 400.
         """
-        replace_param(kwargs, 'symbol', 'instId')
-        replace_param(kwargs, 'limit', 'sz')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
+        replace_param(params, 'symbol', 'instId')
+        replace_param(params, 'limit', 'sz')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
 
     @check_require_params(('symbol',))
-    def get_trades(self, **kwargs) -> dict:
+    def get_trades(self, **params) -> dict:
         """Recent Trades List
         Get recent trades (up to last 500).
 
@@ -35,10 +35,10 @@ class MarketCore(API):
 
             limit (int, optional): limit the results. Default 100; max 500.
         """
-        replace_param(kwargs, 'symbol', 'instId')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
+        replace_param(params, 'symbol', 'instId')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
 
-    def get_ticker(self, **kwargs) -> dict:
+    def get_ticker(self, **params) -> dict:
         """24hr Ticker Price Change Statistics
 
         GET /api/v5/market/ticker or /api/v5/market/tickers
@@ -50,15 +50,15 @@ class MarketCore(API):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
-        _url = URLS.TICKER_URL if kwargs.get('symbol') else URLS.TICKERS_URL
-        if kwargs.get('symbol'):
-            kwargs['symbol'] += '-SWAP'
-            replace_param(kwargs, 'symbol', 'instId')
+        _url = URLS.TICKER_URL if params.get('symbol') else URLS.TICKERS_URL
+        if params.get('symbol'):
+            params['symbol'] += '-SWAP'
+            replace_param(params, 'symbol', 'instId')
         else:
-            kwargs['instType'] = 'SPOT'
-        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=kwargs)
+            params['instType'] = 'SPOT'
+        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=params)
 
-    def get_symbols(self, **kwargs) -> dict:
+    def get_symbols(self, **params) -> dict:
         """Query Symbols
 
         GET /api/v5/public/instruments
@@ -68,12 +68,12 @@ class MarketCore(API):
         params:
             symbol (str, optional): the trading pair
         """
-        kwargs['instType'] = 'SPOT'
-        replace_param(kwargs, 'symbol', 'instId')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=kwargs)
+        params['instType'] = 'SPOT'
+        replace_param(params, 'symbol', 'instId')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=params)
 
     @check_require_params(('symbol',))
-    def get_kline(self, **kwargs) -> dict:
+    def get_kline(self, **params) -> dict:
         """Historical K-line data
 
         GET /api/v5/market/history-candles
@@ -91,11 +91,11 @@ class MarketCore(API):
 
             endTime (int, optional): Unit: ms.
         """
-        replace_param(kwargs, 'symbol', 'instId')
-        replace_param(kwargs, 'startTime', 'after')
-        replace_param(kwargs, 'endTime', 'before')
-        replace_param(kwargs, 'interval', 'bar')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=kwargs)
+        replace_param(params, 'symbol', 'instId')
+        replace_param(params, 'startTime', 'after')
+        replace_param(params, 'endTime', 'before')
+        replace_param(params, 'interval', 'bar')
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=params)
 
 # TODO: WebSocketMarketCore
 

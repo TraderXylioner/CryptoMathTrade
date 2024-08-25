@@ -5,7 +5,7 @@ from ...utils import check_require_params
 
 class SpotCore(API):
     @check_require_params(('symbol',))
-    def get_orders(self, **kwargs) -> dict:
+    def get_orders(self, **params) -> dict:
         """All Orders (USER_DATA)
 
         Get all account orders; active, canceled, or filled.
@@ -31,10 +31,10 @@ class SpotCore(API):
 
             pageSize: (int, optional), Default: 100, Max 100.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=self.get_payload(kwargs))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_ORDERS_URL, params=self.get_payload(params))
 
     @check_require_params(('symbol',))
-    def get_open_order(self, **kwargs) -> dict:
+    def get_open_order(self, **params) -> dict:
         """Query Order (USER_DATA)
 
         Check an order's status.
@@ -50,11 +50,11 @@ class SpotCore(API):
 
             clientOrderID (str, optional)
         """
-        if not kwargs.get('orderId') and not kwargs.get('clientOrderID'):
+        if not params.get('orderId') and not params.get('clientOrderID'):
             raise ValueError('Param "origClientOrderId" or "orderId" must be sent, but both were empty/null!')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.ORDER_URL, params=self.get_payload(kwargs))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.ORDER_URL, params=self.get_payload(params))
 
-    def get_open_orders(self, **kwargs) -> dict:
+    def get_open_orders(self, **params) -> dict:
         """Current Open Orders (USER_DATA)
 
         Get all open orders on a symbol.
@@ -66,10 +66,10 @@ class SpotCore(API):
         params:
             symbol (str, optional)
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=self.get_payload(kwargs))
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.OPEN_ORDERS_URL, params=self.get_payload(params))
 
     @check_require_params(('symbol',))
-    def cancel_open_order(self, **kwargs) -> dict:
+    def cancel_open_order(self, **params) -> dict:
         """Cancel Order (TRADE)
 
         Cancel an active order.
@@ -85,14 +85,14 @@ class SpotCore(API):
 
             clientOrderID (str, optional)
         """
-        if not kwargs.get('orderId') and not kwargs.get('clientOrderID'):
+        if not params.get('orderId') and not params.get('clientOrderID'):
             raise ValueError('Param "clientOrderID" or "orderId" must be sent, but both were empty/null!')
         return self.return_args(method='POST',
                                 url=URLS.BASE_URL + URLS.CANCEL_ORDER_URL,
-                                params=self.get_payload(kwargs),
+                                params=self.get_payload(params),
                                 )
 
-    def cancel_open_orders(self, **kwargs) -> dict:
+    def cancel_open_orders(self, **params) -> dict:
         """Cancel Orders (TRADE)
 
         Cancel an active orders.
@@ -106,11 +106,11 @@ class SpotCore(API):
         """
         return self.return_args(method='POST',
                                 url=URLS.BASE_URL + URLS.CANCEL_ORDERS_URL,
-                                params=self.get_payload(kwargs),
+                                params=self.get_payload(params),
                                 )
 
     @check_require_params(('symbol', 'side'))
-    def new_order(self, **kwargs) -> dict:
+    def new_order(self, **params) -> dict:
         """New Market/Limit Order (TRADE)
 
         Post a new order
@@ -148,9 +148,9 @@ class SpotCore(API):
 
             newClientOrderId (str, optional). Only letters, numbers and _,Customized order ID for users, with a limit of characters from 1 to 40. Different orders cannot use the same newClientOrderId,Only supports a query range of 2 hours
         """
-        if not kwargs.get('quantity') and not kwargs.get('quoteOrderQty'):
+        if not params.get('quantity') and not params.get('quoteOrderQty'):
             raise ValueError('Param "quoteOrderQty" or "quantity" must be sent, but both were empty/null!')
         return self.return_args(method='POST',
                                 url=URLS.BASE_URL + URLS.CREATE_ORDER_URL,
-                                params=self.get_payload(kwargs),
+                                params=self.get_payload(params),
                                 )

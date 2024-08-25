@@ -5,7 +5,7 @@ from ...utils import check_require_params
 
 class MarketCore(API):
     @check_require_params(('symbol',))
-    def get_depth(self, **kwargs) -> dict:
+    def get_depth(self, **params) -> dict:
         """Get orderbook.
 
         GET /api/v3/depth
@@ -17,10 +17,10 @@ class MarketCore(API):
 
             limit (int, optional): limit the results. Default 100; max 5000. If limit > 5000, then the response will truncate to 5000.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=kwargs)
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
 
     @check_require_params(('symbol',))
-    def get_trades(self, **kwargs) -> dict:
+    def get_trades(self, **params) -> dict:
         """Recent Trades List
         Get recent trades (up to last 500).
 
@@ -33,9 +33,9 @@ class MarketCore(API):
 
             limit (int, optional): limit the results. Default 500; max 1000.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=kwargs)
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
 
-    def get_ticker(self, **kwargs) -> dict:
+    def get_ticker(self, **params) -> dict:
         """24hr Ticker Price Change Statistics
 
         GET /api/v3/ticker/24hr
@@ -45,19 +45,19 @@ class MarketCore(API):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TICKER_URL, params=kwargs)
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TICKER_URL, params=params)
 
-    def get_symbols(self, **kwargs) -> dict:
+    def get_symbols(self, **params) -> dict:
         """Query Symbols
 
         GET /open/api/v2/market/symbols
 
         https://mexcdevelop.github.io/apidocs/spot_v2_en/#all-symbols
         """
-        return self.return_args(method='GET', url=URLS.BASE2_URL + URLS.SYMBOLS_URL, params=kwargs)
+        return self.return_args(method='GET', url=URLS.BASE2_URL + URLS.SYMBOLS_URL, params=params)
 
     @check_require_params(('symbol', 'interval'))
-    def get_kline(self, **kwargs) -> dict:
+    def get_kline(self, **params) -> dict:
         """Historical K-line data
 
         GET /api/v3/klines
@@ -75,7 +75,7 @@ class MarketCore(API):
 
             endTime (int, optional): Unit: ms.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=kwargs)
+        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=params)
 
 # TODO: WebSocketMarketCore
 
