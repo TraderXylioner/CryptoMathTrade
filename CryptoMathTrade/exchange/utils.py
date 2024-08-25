@@ -81,5 +81,5 @@ def check_require_params(require_params: tuple):
 
 
 def replace_param(params: dict, param: str, new_param: str):
-    params[new_param] = params[param]
-    params.pop(param)
+    if param in params:
+        params[new_param] = params.pop(param)
