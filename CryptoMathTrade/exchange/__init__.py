@@ -1,41 +1,37 @@
-from .binance import core as binanceCore
-from .bingx import core as bingxCore
-from .kucoin import core as kucoinCore
-from .okx import core as okxCore
-from .htx import core as htxCore
-from .bitmart import core as bitmartCore
-from .gate import core as gateCore
-from .mexc import core as mexcCore
-from .bitget import core as bitgetCore
-from .ascendex import core as ascendexCore
+from . import binance
+from . import bingx
+from . import kucoin
+from . import okx
+from . import htx
+from . import bitmart
+from . import gate
+from . import mexc
+from . import bitget
+from . import ascendex
 
 
-class ExchangeCores:
+Exchanges = {
+    "binance": binance,
+    "bingx": bingx,
+    "kucoin": kucoin,
+    "okx": okx,
+    "htx": htx,
+    "bitmart": bitmart,
+    "gate": gate,
+    "mexc": mexc,
+    "bitget": bitget,
+    "ascendex": ascendex,
+}
+
+
+def get_exchange(exchange_name):
     """
-    Class representing cores of different exchanges.
+    Get the module object for a specific exchange.
+
+    Args:
+        exchange_name (str): Name of the exchange.
+
+    Returns:
+        Module: Module object for the specified exchange.
     """
-    cores = {
-        'binance': binanceCore,
-        'bingx': bingxCore,
-        'kucoin': kucoinCore,
-        'okx': okxCore,
-        'htx': htxCore,
-        'bitmart': bitmartCore,
-        'gate': gateCore,
-        'mexc': mexcCore,
-        'bitget': bitgetCore,
-        'ascendex': ascendexCore,
-    }
-
-    @classmethod
-    def get_core(cls, exchange_name):
-        """
-        Get the core object for a specific exchange.
-
-        Args:
-            exchange_name (str): Name of the exchange.
-
-        Returns:
-            Core: Core object for the specified exchange.
-        """
-        return cls.cores.get(exchange_name)
+    return Exchanges.get(exchange_name)
