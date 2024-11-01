@@ -1,4 +1,4 @@
-from CryptoMathTrade.exchange._response import Response
+from ..._response import Response
 from CryptoMathTrade.types import Coin
 
 
