@@ -1,14 +1,11 @@
-from ._api import API
-from ._deserialization import _deserialize_symbols, _deserialize_kline, _deserialize_depth, _deserialize_trades, \
-    _deserialize_ticker
-from .core import MarketCore
-from ..utils import validate_response
-from .._response import Response
-from ...types import OrderBook, Trade, Ticker, Symbol, Kline
+from .api import API
+from ..deserialize import market as deserialize
+from ..core.market import MarketCore
+from ...utils import validate_response
 
 
 class Market(API):
-    def get_depth(self, symbol: str, limit: int = 10) -> Response[OrderBook, object]:
+    def get_depth(self, symbol: str, limit: int = 10):
         """Get orderbook.
 
         GET /api/v4/spot/order_book
@@ -21,11 +18,14 @@ class Market(API):
             limit (int, optional): limit the results. Default 10; max 5000.
         """
         response = validate_response(
-            self._query(**MarketCore(headers=self.headers).get_depth(symbol=symbol, limit=limit)))
+            self._query(
+                **MarketCore(headers=self.headers).get_depth(symbol=symbol, limit=limit)
+            )
+        )
         json_data = response.json()
-        return _deserialize_depth(json_data, response)
+        return deserialize.deserialize_depth(json_data, response)
 
-    def get_trades(self, symbol: str, limit: int = 100) -> Response[list[Trade], object]:
+    def get_trades(self, symbol: str, limit: int = 100):
         """Recent Trades List
 
         GET /api/v4/spot/trades
@@ -38,11 +38,16 @@ class Market(API):
             limit (int, optional): limit the results. Default 100; max 1000.
         """
         response = validate_response(
-            self._query(**MarketCore(headers=self.headers).get_trades(symbol=symbol, limit=limit)))
+            self._query(
+                **MarketCore(headers=self.headers).get_trades(
+                    symbol=symbol, limit=limit
+                )
+            )
+        )
         json_data = response.json()
-        return _deserialize_trades(json_data, response)
+        return deserialize.deserialize_trades(json_data, response)
 
-    def get_ticker(self, symbol: str = None) -> Response[list[Ticker], object]:
+    def get_ticker(self, symbol: str = None):
         """24hr Ticker Price Change Statistics
 
         GET /api/v4/spot/tickers
@@ -52,11 +57,13 @@ class Market(API):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned.
         """
-        response = validate_response(self._query(**MarketCore(headers=self.headers).get_ticker(symbol=symbol)))
+        response = validate_response(
+            self._query(**MarketCore(headers=self.headers).get_ticker(symbol=symbol))
+        )
         json_data = response.json()
-        return _deserialize_ticker(json_data, response)
+        return deserialize.deserialize_ticker(json_data, response)
 
-    def get_symbols(self) -> Response[list[Symbol], object]:
+    def get_symbols(self):
         """Query Symbols
 
         GET /api/v4/spot/currency_pairs
@@ -65,15 +72,16 @@ class Market(API):
         """
         response = validate_response(self._query(**MarketCore.get_symbols(self)))
         json_data = response.json()
-        return _deserialize_symbols(json_data, response)
+        return deserialize.deserialize_symbols(json_data, response)
 
-    def get_kline(self,
-                  symbol: str,
-                  interval: str = '30m',
-                  limit: int = 100,
-                  startTime: int = None,
-                  endTime: int = None,
-                  ) -> Response[list[Kline], object]:
+    def get_kline(
+        self,
+        symbol: str,
+        interval: str = "30m",
+        limit: int = 100,
+        startTime: int = None,
+        endTime: int = None,
+    ):
         """Historical K-line data
 
         GET /api/v4/spot/candlesticks
@@ -91,19 +99,24 @@ class Market(API):
 
             endTime (int, optional): Unit: ms.
         """
-        response = validate_response(self._query(**MarketCore.get_kline(self,
-                                                                        symbol=symbol,
-                                                                        interval=interval,
-                                                                        limit=limit,
-                                                                        startTime=startTime,
-                                                                        endTime=endTime,
-                                                                        )))
+        response = validate_response(
+            self._query(
+                **MarketCore.get_kline(
+                    self,
+                    symbol=symbol,
+                    interval=interval,
+                    limit=limit,
+                    startTime=startTime,
+                    endTime=endTime,
+                )
+            )
+        )
         json_data = response.json()
-        return _deserialize_kline(json_data, response)
+        return deserialize.deserialize_kline(json_data, response)
 
 
 class AsyncMarket(API):
-    async def get_depth(self, symbol: str, limit: int = 10) -> Response[OrderBook, object]:
+    async def get_depth(self, symbol: str, limit: int = 10):
         """Get orderbook.
 
         GET /api/v4/spot/order_book
@@ -116,11 +129,14 @@ class AsyncMarket(API):
             limit (int, optional): limit the results. Default 10; max 5000.
         """
         response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_depth(symbol=symbol, limit=limit)))
+            await self._async_query(
+                **MarketCore(headers=self.headers).get_depth(symbol=symbol, limit=limit)
+            )
+        )
         json_data = response.json
-        return _deserialize_depth(json_data, response)
+        return deserialize.deserialize_depth(json_data, response)
 
-    async def get_trades(self, symbol: str, limit: int = 100) -> Response[list[Trade], object]:
+    async def get_trades(self, symbol: str, limit: int = 100):
         """Recent Trades List
 
         GET /api/v4/spot/trades
@@ -133,11 +149,16 @@ class AsyncMarket(API):
             limit (int, optional): limit the results. Default 100; max 1000.
         """
         response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_trades(symbol=symbol, limit=limit)))
+            await self._async_query(
+                **MarketCore(headers=self.headers).get_trades(
+                    symbol=symbol, limit=limit
+                )
+            )
+        )
         json_data = response.json
-        return _deserialize_trades(json_data, response)
+        return deserialize.deserialize_trades(json_data, response)
 
-    async def get_ticker(self, symbol: str = None) -> Response[list[Ticker], object]:
+    async def get_ticker(self, symbol: str = None):
         """24hr Ticker Price Change Statistics
 
         GET /api/v4/spot/tickers
@@ -148,28 +169,34 @@ class AsyncMarket(API):
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned.
         """
         response = validate_response(
-            await self._async_query(**MarketCore(headers=self.headers).get_ticker(symbol=symbol)))
+            await self._async_query(
+                **MarketCore(headers=self.headers).get_ticker(symbol=symbol)
+            )
+        )
         json_data = response.json
-        return _deserialize_ticker(json_data, response)
+        return deserialize.deserialize_ticker(json_data, response)
 
-    async def get_symbols(self) -> Response[list[Symbol], object]:
+    async def get_symbols(self):
         """Query Symbols
 
         GET /api/v4/spot/currency_pairs
 
         https://www.gate.io/docs/developers/apiv4/en/#list-all-currency-pairs-supported
         """
-        response = validate_response(await self._async_query(**MarketCore.get_symbols(self)))
+        response = validate_response(
+            await self._async_query(**MarketCore.get_symbols(self))
+        )
         json_data = response.json
-        return _deserialize_symbols(json_data, response)
+        return deserialize.deserialize_symbols(json_data, response)
 
-    async def get_kline(self,
-                        symbol: str,
-                        interval: str = '30m',
-                        limit: int = 100,
-                        startTime: int = None,
-                        endTime: int = None,
-                        ) -> Response[list[Kline], object]:
+    async def get_kline(
+        self,
+        symbol: str,
+        interval: str = "30m",
+        limit: int = 100,
+        startTime: int = None,
+        endTime: int = None,
+    ):
         """Historical K-line data
 
         GET /api/v4/spot/candlesticks
@@ -187,15 +214,21 @@ class AsyncMarket(API):
 
             endTime (int, optional): Unit: ms.
         """
-        response = validate_response(await self._async_query(**MarketCore.get_kline(self,
-                                                                                    symbol=symbol,
-                                                                                    interval=interval,
-                                                                                    limit=limit,
-                                                                                    startTime=startTime,
-                                                                                    endTime=endTime,
-                                                                                    )))
+        response = validate_response(
+            await self._async_query(
+                **MarketCore.get_kline(
+                    self,
+                    symbol=symbol,
+                    interval=interval,
+                    limit=limit,
+                    startTime=startTime,
+                    endTime=endTime,
+                )
+            )
+        )
         json_data = response.json()
-        return _deserialize_kline(json_data, response)
+        return deserialize.deserialize_kline(json_data, response)
+
 
 # TODO: WebSocketMarket
 
