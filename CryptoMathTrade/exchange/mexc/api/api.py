@@ -1,4 +1,4 @@
-from CryptoMathTrade.exchange._api import BaseAPI
+from ..._api import BaseAPI
 
 
 class API(BaseAPI):

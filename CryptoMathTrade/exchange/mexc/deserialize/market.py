@@ -1,5 +1,5 @@
-from CryptoMathTrade.exchange._response import Response
-from CryptoMathTrade.exchange.mexc.deserialize.utils import validate_data
+from ..._response import Response
+from .utils import validate_data
 from CryptoMathTrade.types import OrderBook, Trade, Order, Ticker, Side, Symbol, Kline
 
 

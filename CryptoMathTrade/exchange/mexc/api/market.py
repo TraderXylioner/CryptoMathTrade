@@ -1,6 +1,6 @@
 from ..api.api import API
 from ..deserialize import market as deserialize
-from ..core import MarketCore
+from ..core.market import MarketCore
 from ...utils import validate_response
 
 

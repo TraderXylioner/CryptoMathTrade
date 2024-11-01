@@ -1,6 +1,6 @@
 from functools import wraps
 
-from CryptoMathTrade.exchange.errors import ResponseError
+from ...errors import ResponseError
 
 
 def validate_data(func):

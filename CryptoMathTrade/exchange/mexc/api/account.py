@@ -1,5 +1,5 @@
 from .api import API
-from ..core import AccountCore
+from ..core.account import AccountCore
 from ..deserialize import account as deserialize
 from ...utils import validate_response
 
