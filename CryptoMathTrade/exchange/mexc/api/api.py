@@ -1,4 +1,4 @@
-from .._api import BaseAPI
+from CryptoMathTrade.exchange._api import BaseAPI
 
 
 class API(BaseAPI):
@@ -14,6 +14,6 @@ class API(BaseAPI):
         super().__init__()
         self.api_key = api_key
         self.api_secret = api_secret
-        self.headers = {'X-MEXC-APIKEY': self.api_key} if self.api_key else {}
+        self.headers = {"X-MEXC-APIKEY": self.api_key} if self.api_key else {}
         if headers:
             self.headers.update(headers)
