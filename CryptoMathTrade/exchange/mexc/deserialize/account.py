@@ -1,5 +1,5 @@
 from ..._response import Response
-from CryptoMathTrade.types import Coin
+from ....types import Coin
 
 
 def deserialize_coins(data: dict, response) -> Response[list[Coin], object]:

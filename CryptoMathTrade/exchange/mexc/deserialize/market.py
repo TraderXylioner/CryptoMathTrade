@@ -1,6 +1,6 @@
 from ..._response import Response
 from .utils import validate_data
-from CryptoMathTrade.types import OrderBook, Trade, Order, Ticker, Side, Symbol, Kline
+from ....types import OrderBook, Trade, Order, Ticker, Side, Symbol, Kline
 
 
 @validate_data

@@ -3,7 +3,7 @@ import time
 from .utils import validate_data
 from ...errors import ResponseError
 from ..._response import Response
-from CryptoMathTrade.types import OrderBook, Trade, Ticker, Order, Side, Symbol, Kline
+from ....types import OrderBook, Trade, Ticker, Order, Side, Symbol, Kline
 
 
 @validate_data

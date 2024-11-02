@@ -2,7 +2,7 @@ import time
 
 from .utils import validate_data
 from ..._response import Response
-from CryptoMathTrade.types import OrderBook, Order, Trade, Side, Ticker, Symbol, Kline
+from ....types import OrderBook, Order, Trade, Side, Ticker, Symbol, Kline
 
 
 @validate_data
