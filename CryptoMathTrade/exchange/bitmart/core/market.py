@@ -1,10 +1,10 @@
-from .._urls import URLS
+from ..urls import URLS
 from ..._core import Core
 from ...utils import check_require_params, replace_param
 
 
 class MarketCore(Core):
-    @check_require_params(('symbol',))
+    @check_require_params(("symbol",))
     def get_depth(self, **params) -> dict:
         """Get orderbook.
 
@@ -17,9 +17,11 @@ class MarketCore(Core):
 
             limit (int, optional): limit the results. Default 35; max 50.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.DEPTH_URL, params=params)
+        return self.return_args(
+            method="GET", url=URLS.BASE_URL + URLS.DEPTH_URL, params=params
+        )
 
-    @check_require_params(('symbol',))
+    @check_require_params(("symbol",))
     def get_trades(self, **params) -> dict:
         """Recent Trades List
 
@@ -32,7 +34,9 @@ class MarketCore(Core):
 
             limit (int, optional): limit the results. Default 50; max 50.
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.TRADES_URL, params=params)
+        return self.return_args(
+            method="GET", url=URLS.BASE_URL + URLS.TRADES_URL, params=params
+        )
 
     def get_ticker(self, **params) -> dict:
         """24hr Ticker Price Change Statistics
@@ -46,8 +50,8 @@ class MarketCore(Core):
         params:
             symbol (str, optional): the trading pair, if the symbol is not sent, tickers for all symbols will be returned in an array.
         """
-        _url = URLS.TICKER_URL if 'symbol' in params else URLS.TICKERS_URL
-        return self.return_args(method='GET', url=URLS.BASE_URL + _url, params=params)
+        _url = URLS.TICKER_URL if params.get("symbol") else URLS.TICKERS_URL
+        return self.return_args(method="GET", url=URLS.BASE_URL + _url, params=params)
 
     def get_symbols(self, **params) -> dict:
         """Query Symbols
@@ -56,9 +60,11 @@ class MarketCore(Core):
 
         https://developer-pro.bitmart.com/en/spot/#get-trading-pair-details-v1
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=params)
+        return self.return_args(
+            method="GET", url=URLS.BASE_URL + URLS.SYMBOLS_URL, params=params
+        )
 
-    @check_require_params(('symbol', 'interval'))
+    @check_require_params(("symbol", "interval"))
     def get_kline(self, **params) -> dict:
         """Historical K-line data
 
@@ -77,10 +83,12 @@ class MarketCore(Core):
 
             endTime (int, optional): Unit: ms.
         """
-        replace_param(params, 'interval', 'step')
-        replace_param(params, 'startTime', 'before')
-        replace_param(params, 'endTime', 'after')
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.KLINE_URL, params=params)
+        replace_param(params, "interval", "step")
+        replace_param(params, "startTime", "before")
+        replace_param(params, "endTime", "after")
+        return self.return_args(
+            method="GET", url=URLS.BASE_URL + URLS.KLINE_URL, params=params
+        )
 
 
 # TODO: WebSocketMarketCore
