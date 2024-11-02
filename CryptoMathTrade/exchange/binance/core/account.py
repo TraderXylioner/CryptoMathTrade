@@ -1,5 +1,5 @@
-from .._api import API
-from .._urls import URLS
+from ..api.api import API
+from ..urls import URLS
 from ...utils import get_timestamp, replace_param, check_require_params
 
 
@@ -14,10 +14,13 @@ class AccountCore(API):
         params:
             asset (str, optional): If asset is blank, then query all positive assets user have.
         """
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.GET_BALANCE_URL,
-                                params=self.get_payload(params))
+        return self.return_args(
+            method="POST",
+            url=URLS.BASE_URL + URLS.GET_BALANCE_URL,
+            params=self.get_payload(params),
+        )
 
-    @check_require_params(('asset',))
+    @check_require_params(("asset",))
     def get_deposit_address(self, **params) -> dict:
         """Query Deposit Address
 
@@ -32,14 +35,15 @@ class AccountCore(API):
 
             amount (float, optional).
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET',
-                                url=URLS.BASE_URL + URLS.GET_DEPOSIT_ADDRESS_URL,
-                                params=self.get_payload(params),
-                                )
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_DEPOSIT_ADDRESS_URL,
+            params=self.get_payload(params),
+        )
 
-    @check_require_params(('asset', 'address', 'amount'))
+    @check_require_params(("asset", "address", "amount"))
     def withdraw(self, **params) -> dict:
         """Withdraw
 
@@ -63,9 +67,13 @@ class AccountCore(API):
             withdrawOrderId (str, optional): Customer-defined withdrawal ID, a combination of numbers and letters,
             with a length of less than 100 characters
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.WITHDRAW_URL, params=self.get_payload(params))
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="POST",
+            url=URLS.BASE_URL + URLS.WITHDRAW_URL,
+            params=self.get_payload(params),
+        )
 
     def get_coins(self, **params) -> dict:
         """All Coins' Information
@@ -74,8 +82,12 @@ class AccountCore(API):
 
         https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
         """
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_COINS_URL, params=self.get_payload(params))
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_COINS_URL,
+            params=self.get_payload(params),
+        )
 
     def get_deposit_history(self, **params) -> dict:
         """Deposit History
@@ -99,10 +111,13 @@ class AccountCore(API):
 
             txId (str, optional).
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_DEPOSIT_HISTORY,
-                                params=self.get_payload(params))
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_DEPOSIT_HISTORY,
+            params=self.get_payload(params),
+        )
 
     def get_withdraw_history(self, **params) -> dict:
         """Withdraw History
@@ -126,9 +141,13 @@ class AccountCore(API):
 
             offset (int, optional).
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_WITHDRAW_HISTORY,
-                                params=self.get_payload(params))
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_WITHDRAW_HISTORY,
+            params=self.get_payload(params),
+        )
+
 
 # TODO: WSAccountCore
