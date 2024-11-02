@@ -1,7 +1,7 @@
 import asyncio
 
-from .._api import BaseAPI
-from .._request import WebSocketRequest
+from ..._api import BaseAPI
+from ..._request import WebSocketRequest
 
 
 class API(BaseAPI):
@@ -17,18 +17,19 @@ class API(BaseAPI):
         super().__init__()
         self.api_key = api_key
         self.api_secret = api_secret
-        self.headers = {'X-BM-KEY': self.api_key} if self.api_key else {}
+        self.headers = {"X-BM-KEY": self.api_key} if self.api_key else {}
         if headers:
             self.headers.update(headers)
 
     @classmethod
-    async def _ws_query(cls,
-                        url: str,
-                        params: dict,
-                        method: str = 'subscribe',
-                        timeout_seconds=60,
-                        headers=None,
-                        ):
+    async def _ws_query(
+        cls,
+        url: str,
+        params: dict,
+        method: str = "subscribe",
+        timeout_seconds=60,
+        headers=None,
+    ):
         """
         params:
             url (str): WebSocket URL for the API.
@@ -45,7 +46,9 @@ class API(BaseAPI):
             "op": method,
             "args": params,
         }
-        connect = WebSocketRequest(headers=headers).open_connect(url=url, payload=payload)
+        connect = WebSocketRequest(headers=headers).open_connect(
+            url=url, payload=payload
+        )
         async for client in connect:
             while True:
                 data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
