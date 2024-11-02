@@ -1,8 +1,8 @@
 import asyncio
 import uuid
 
-from .._request import WebSocketRequest
-from .._api import BaseAPI
+from ..._request import WebSocketRequest
+from ..._api import BaseAPI
 
 
 class API(BaseAPI):
@@ -18,11 +18,13 @@ class API(BaseAPI):
         super().__init__()
         self.api_key = api_key
         self.api_secret = api_secret
-        self.headers = {'X-BX-APIKEY': self.api_key} if self.api_key else {}
+        self.headers = {"X-BX-APIKEY": self.api_key} if self.api_key else {}
         if headers:
             self.headers.update(headers)
 
-    async def _ws_query(self, url: str, params: str, method: str = 'sub', timeout_seconds=60):
+    async def _ws_query(
+        self, url: str, params: str, method: str = "sub", timeout_seconds=60
+    ):
         """
         params:
             url (str): WebSocket URL for the API.
@@ -33,16 +35,14 @@ class API(BaseAPI):
 
             timeout_seconds (int): Timeout duration for the WebSocket connection.
         """
-        payload = {
-            "reqType": method,
-            "dataType": params,
-            'id': str(uuid.uuid4())
-        }
-        connect = WebSocketRequest(headers=self.headers).open_connect(url=url, payload=payload)
+        payload = {"reqType": method, "dataType": params, "id": str(uuid.uuid4())}
+        connect = WebSocketRequest(headers=self.headers).open_connect(
+            url=url, payload=payload
+        )
         async for client in connect:
             while True:
                 data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
                 if not data:
                     raise ConnectionError  # custom error
-                await client.send('Pong')
+                await client.send("Pong")
                 yield data

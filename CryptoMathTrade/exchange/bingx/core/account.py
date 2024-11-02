@@ -1,5 +1,5 @@
-from .._api import API
-from .._urls import URLS
+from ..api.api import API
+from ..urls import URLS
 from ...utils import replace_param, get_timestamp, check_require_params
 
 
@@ -11,7 +11,11 @@ class AccountCore(API):
 
         https://bingx-api.github.io/docs/#/en-us/spot/socket/listenKey.html#generate%20Listen%20Key
         """
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.LISTEN_KEY, params=self.get_payload(params))
+        return self.return_args(
+            method="POST",
+            url=URLS.BASE_URL + URLS.LISTEN_KEY,
+            params=self.get_payload(params),
+        )
 
     def get_balance(self, **params) -> dict:
         """Query Assets
@@ -20,9 +24,13 @@ class AccountCore(API):
 
         https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
         """
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_BALANCE_URL, params=self.get_payload(params))
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_BALANCE_URL,
+            params=self.get_payload(params),
+        )
 
-    @check_require_params(('asset',))
+    @check_require_params(("asset",))
     def get_deposit_address(self, **params) -> dict:
         """Query Deposit Address
 
@@ -37,14 +45,15 @@ class AccountCore(API):
 
             offset (int): Starting record number, default is 0.
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET',
-                                url=URLS.BASE_URL + URLS.GET_DEPOSIT_ADDRESS_URL,
-                                params=self.get_payload(params),
-                                )
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_DEPOSIT_ADDRESS_URL,
+            params=self.get_payload(params),
+        )
 
-    @check_require_params(('asset', 'address', 'amount'))
+    @check_require_params(("asset", "address", "amount"))
     def withdraw(self, **params) -> dict:
         """Withdraw
 
@@ -71,9 +80,13 @@ class AccountCore(API):
 
             withdrawOrderId (str, optional): client id for withdraw
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='POST', url=URLS.BASE_URL + URLS.WITHDRAW_URL, params=self.get_payload(params))
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="POST",
+            url=URLS.BASE_URL + URLS.WITHDRAW_URL,
+            params=self.get_payload(params),
+        )
 
     def get_coins(self, **params) -> dict:
         """All Coins' Information
@@ -85,9 +98,13 @@ class AccountCore(API):
         params:
             asset (str, optional).
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_COINS_URL, params=self.get_payload(params))
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_COINS_URL,
+            params=self.get_payload(params),
+        )
 
     def get_deposit_history(self, **params) -> dict:
         """Deposit History
@@ -109,10 +126,13 @@ class AccountCore(API):
 
             offset (int, optional): Default: 0.
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_DEPOSIT_HISTORY,
-                                params=self.get_payload(params))
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_DEPOSIT_HISTORY,
+            params=self.get_payload(params),
+        )
 
     def get_withdraw_history(self, **params) -> dict:
         """Withdraw History
@@ -138,14 +158,17 @@ class AccountCore(API):
 
             offset (int, optional): Default: 0.
         """
-        replace_param(params, 'asset', 'coin')
-        params['timestamp'] = get_timestamp()
-        return self.return_args(method='GET', url=URLS.BASE_URL + URLS.GET_WITHDRAW_HISTORY,
-                                params=self.get_payload(params))
+        replace_param(params, "asset", "coin")
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_WITHDRAW_HISTORY,
+            params=self.get_payload(params),
+        )
 
 
 class WSAccountCore(API):
-    @check_require_params(('listenKey',))
+    @check_require_params(("listenKey",))
     def account_update(self, **params) -> dict:
         """Subscription account balance push
 
@@ -156,6 +179,8 @@ class WSAccountCore(API):
         :params:
             listenKey (str): Account.generate_listen_key, (listen key Valid for 1 hour).
         """
-        return self.return_args(method='sub',
-                                url=f'{URLS.WS_BASE_URL}?listenKey={params["listenKey"]}',
-                                params='ACCOUNT_UPDATE')
+        return self.return_args(
+            method="sub",
+            url=f'{URLS.WS_BASE_URL}?listenKey={params["listenKey"]}',
+            params="ACCOUNT_UPDATE",
+        )
