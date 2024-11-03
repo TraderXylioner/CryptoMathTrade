@@ -10,6 +10,22 @@ from ...utils import validate_response
 
 
 class Account(API):
+    def get_coins(self, coin: str = None):
+        """All Coins' Information
+
+        GET /openApi/wallets/v1/capital/config/getall
+
+        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
+
+        params:
+            coin (str, optional).
+        """
+        response = validate_response(
+            self._query(**AccountCore.get_coins(self, coin=coin))
+        )
+        json_data = response.json()
+        return deserialize.deserialize_coins(json_data, response)
+
     def generate_listen_key(self):
         """Generate Listen Key
 
@@ -112,22 +128,6 @@ class Account(API):
         json_data = response.json()
         return deserialize.deserialize_withdraw(json_data, response)
 
-    def get_coins(self, asset: str = None):
-        """All Coins' Information
-
-        GET /openApi/wallets/v1/capital/config/getall
-
-        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
-
-        params:
-            asset (str, optional).
-        """
-        response = validate_response(
-            self._query(**AccountCore.get_coins(self, asset=asset))
-        )
-        json_data = response.json()
-        return deserialize.deserialize_coins(json_data, response)
-
     def get_deposit_history(
         self,
         asset: str = None,
@@ -228,6 +228,22 @@ class Account(API):
 
 
 class AsyncAccount(API):
+    async def get_coins(self, coin: str = None):
+        """All Coins' Information
+
+        GET /openApi/wallets/v1/capital/config/getall
+
+        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
+
+        params:
+            coin (str, optional).
+        """
+        response = validate_response(
+            await self._async_query(**AccountCore.get_coins(self, coin=coin))
+        )
+        json_data = response.json
+        return deserialize.deserialize_coins(json_data, response)
+
     async def generate_listen_key(self):
         """Generate Listen Key
 
@@ -333,22 +349,6 @@ class AsyncAccount(API):
         )
         json_data = response.json
         return deserialize.deserialize_withdraw(json_data, response)
-
-    async def get_coins(self, asset: str = None):
-        """All Coins' Information
-
-        GET /openApi/wallets/v1/capital/config/getall
-
-        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
-
-        params:
-            asset (str, optional).
-        """
-        response = validate_response(
-            await self._async_query(**AccountCore.get_coins(self, asset=asset))
-        )
-        json_data = response.json
-        return deserialize.deserialize_coins(json_data, response)
 
     async def get_deposit_history(
         self,

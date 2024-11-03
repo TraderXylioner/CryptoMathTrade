@@ -18,10 +18,10 @@ class URLS:
     CANCEL_ORDERS_URL = "/openApi/spot/v1/trade/cancelOpenOrders"  # https://bingx-api.github.io/docs/#/en-us/spot/trade-api.html#Cancel%20orders%20by%20symbol
 
     # ACCOUNT
+    GET_COINS_URL = "/openApi/wallets/v1/capital/config/getall"  # https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
     GET_BALANCE_URL = "/openApi/spot/v1/account/balance"  # https://bingx-api.github.io/docs/#/en-us/common/account-api.html#Query%20Assets
     GET_DEPOSIT_ADDRESS_URL = "/openApi/wallets/v1/capital/deposit/address"  # https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Main%20Account%20Deposit%20Address
     WITHDRAW_URL = "/openApi/wallets/v1/capital/withdraw/apply"  # https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Withdraw
-    GET_COINS_URL = "/openApi/wallets/v1/capital/config/getall"  # https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
     GET_DEPOSIT_HISTORY = "/openApi/api/v3/capital/deposit/hisrec"  # https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Deposit%20History(supporting%20network)
     GET_WITHDRAW_HISTORY = "/openApi/api/v3/capital/withdraw/history"  # https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#Withdraw%20History%20(supporting%20network)
 
