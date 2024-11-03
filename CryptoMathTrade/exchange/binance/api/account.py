@@ -5,6 +5,17 @@ from ...utils import validate_response
 
 
 class Account(API):
+    def get_coins(self):
+        """All Coins' Information
+
+        GET /sapi/v1/capital/config/getall
+
+        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
+        """
+        response = validate_response(self._query(**AccountCore.get_coins(self)))
+        json_data = response.json()
+        return deserialize.deserialize_coins(json_data, response)
+
     def get_balance(self, asset: str = None):
         """Query Assets
 
@@ -20,17 +31,6 @@ class Account(API):
         )
         json_data = response.json()
         return deserialize.deserialize_balance(json_data, response)
-
-    def get_coins(self):
-        """All Coins' Information
-
-        GET /sapi/v1/capital/config/getall
-
-        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
-        """
-        response = validate_response(self._query(**AccountCore.get_coins(self)))
-        json_data = response.json()
-        return deserialize.deserialize_coins(json_data, response)
 
     def withdraw(
         self,
@@ -208,6 +208,19 @@ class Account(API):
 
 
 class AsyncAccount(API):
+    async def get_coins(self):
+        """All Coins' Information
+
+        GET /sapi/v1/capital/config/getall
+
+        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
+        """
+        response = validate_response(
+            await self._async_query(**AccountCore.get_coins(self))
+        )
+        json_data = response.json
+        return deserialize.deserialize_coins(json_data, response)
+
     async def get_balance(self, asset: str = None):
         """Query Assets
 
@@ -223,19 +236,6 @@ class AsyncAccount(API):
         )
         json_data = response.json
         return deserialize.deserialize_balance(json_data, response)
-
-    async def get_coins(self):
-        """All Coins' Information
-
-        GET /sapi/v1/capital/config/getall
-
-        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
-        """
-        response = validate_response(
-            await self._async_query(**AccountCore.get_coins(self))
-        )
-        json_data = response.json
-        return deserialize.deserialize_coins(json_data, response)
 
     async def withdraw(
         self,
