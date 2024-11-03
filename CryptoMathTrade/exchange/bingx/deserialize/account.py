@@ -8,7 +8,40 @@ from ....types import (
     DepositAddress,
     WithdrawHistory,
     DepositHistory,
+    Network,
 )
+
+
+@validate_data
+def deserialize_coins(data, response) -> Response[list[Coin], object]:
+    data = data["data"]
+    return Response(
+        data=[
+            Coin(
+                coin=coin.get("coin"),
+                name=coin.get("name"),
+                networks=[
+                    Network(
+                        network=network.get("network"),
+                        name=network.get("name"),
+                        depositEnable=network.get("depositEnable"),
+                        withdrawEnable=network.get("withdrawEnable"),
+                        contractAddress=network.get("contractAddress"),
+                        browserUrl=None,
+                        withdrawFee=network.get("withdrawFee"),
+                        extraWithdrawFee=None,
+                        withdrawMin=network.get("withdrawMin"),
+                        withdrawMax=network.get("withdrawMax"),
+                        minConfirm=network.get("minConfirm"),
+                        needTagOrMemo=network.get("needTagOrMemo"),
+                    )
+                    for network in coin.get("networkList")
+                ],
+            )
+            for coin in data
+        ],
+        response_object=response,
+    )
 
 
 def deserialize_listen_key(data, response) -> Response[str, object]:
@@ -20,12 +53,6 @@ def deserialize_listen_key(data, response) -> Response[str, object]:
 @validate_data
 def deserialize_account_update_for_ws(data, response) -> Response[object, object]:
     return Response(data=data, response_object=response)
-
-
-@validate_data
-def deserialize_coins(data, response) -> Response[list[Coin], object]:
-    data = data["data"]
-    return Response(data=[Coin(**i) for i in data], response_object=response)
 
 
 @validate_data

@@ -4,6 +4,23 @@ from ...utils import replace_param, get_timestamp, check_require_params
 
 
 class AccountCore(API):
+    def get_coins(self, **params) -> dict:
+        """All Coins' Information
+
+        GET /openApi/wallets/v1/capital/config/getall
+
+        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
+
+        params:
+            coin (str, optional).
+        """
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_COINS_URL,
+            params=self.get_payload(params),
+        )
+
     def generate_listen_key(self, **params) -> dict:
         """Generate Listen Key
 
@@ -85,24 +102,6 @@ class AccountCore(API):
         return self.return_args(
             method="POST",
             url=URLS.BASE_URL + URLS.WITHDRAW_URL,
-            params=self.get_payload(params),
-        )
-
-    def get_coins(self, **params) -> dict:
-        """All Coins' Information
-
-        GET /openApi/wallets/v1/capital/config/getall
-
-        https://bingx-api.github.io/docs/#/en-us/common/wallet-api.html#All%20Coins'%20Information
-
-        params:
-            asset (str, optional).
-        """
-        replace_param(params, "asset", "coin")
-        params["timestamp"] = get_timestamp()
-        return self.return_args(
-            method="GET",
-            url=URLS.BASE_URL + URLS.GET_COINS_URL,
             params=self.get_payload(params),
         )
 
