@@ -4,6 +4,20 @@ from ...utils import get_timestamp, replace_param, check_require_params
 
 
 class AccountCore(API):
+    def get_coins(self, **params) -> dict:
+        """All Coins' Information
+
+        GET /sapi/v1/capital/config/getall
+
+        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
+        """
+        params["timestamp"] = get_timestamp()
+        return self.return_args(
+            method="GET",
+            url=URLS.BASE_URL + URLS.GET_COINS_URL,
+            params=self.get_payload(params),
+        )
+
     def get_balance(self, **params) -> dict:
         """Query Assets
 
@@ -72,20 +86,6 @@ class AccountCore(API):
         return self.return_args(
             method="POST",
             url=URLS.BASE_URL + URLS.WITHDRAW_URL,
-            params=self.get_payload(params),
-        )
-
-    def get_coins(self, **params) -> dict:
-        """All Coins' Information
-
-        GET /sapi/v1/capital/config/getall
-
-        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
-        """
-        params["timestamp"] = get_timestamp()
-        return self.return_args(
-            method="GET",
-            url=URLS.BASE_URL + URLS.GET_COINS_URL,
             params=self.get_payload(params),
         )
 
