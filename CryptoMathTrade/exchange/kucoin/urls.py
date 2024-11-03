@@ -10,5 +10,8 @@ class URLS:
     SYMBOLS_URL = "/api/v2/symbols"  # https://www.kucoin.com/docs/rest/spot-trading/market-data/get-symbols-list
     KLINE_URL = "/api/v1/market/candles"  # https://www.kucoin.com/docs/rest/spot-trading/market-data/get-klines
 
+    # Account
+    COINS_URL = "/api/v3/currencies"  # https://www.kucoin.com/docs/rest/spot-trading/market-data/get-currency-list
+
     # WS
     WS_BASE_URL = "wss://ws-api-spot.kucoin.com/"
