@@ -9,5 +9,8 @@ class URLS:
     SYMBOLS_URL = "/api/v2/spot/public/symbols"  # https://www.bitget.com/api-doc/spot/market/Get-Symbols
     KLINE_URL = "/api/v2/spot/market/candles"  # https://www.bitget.com/api-doc/spot/market/Get-Candle-Data
 
+    # Account
+    COINS_URL = "/api/v2/spot/public/coins"  # https://www.bitget.com/api-doc/spot/market/Get-Coin-List
+
     # WS
     WS_BASE_URL = "wss://ws.bitget.com/v2/ws/public"  # https://www.bitget.com/api-doc/spot/websocket/public/Depth-Channel
