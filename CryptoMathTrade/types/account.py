@@ -50,12 +50,25 @@ class DepositAddress(BaseModel):
     tag: str = None
 
 
+class Network(BaseModel):
+    network: str
+    name: str | None = None
+    depositEnable: bool
+    withdrawEnable: bool
+    contractAddress: str | None = None
+    browserUrl: str | None = None
+    withdrawFee: float
+    extraWithdrawFee: float | None = None
+    withdrawMin: float
+    withdrawMax: float | None = None
+    minConfirm: int | None = None
+    needTagOrMemo: bool | None = None
+
+
 class Coin(BaseModel):
     coin: str
-    name: str
-    networkList: list
-    isLegalMoney: bool = None
-    trading: bool = None
+    name: str | None = None
+    networks: list[Network] | None = None
 
 
 class Withdraw(BaseModel):
