@@ -12,5 +12,8 @@ class URLS:
     SYMBOLS_URL = "/v2/settings/common/symbols"  # https://huobiapi.github.io/docs/spot/v1/en/#get-all-supported-trading-symbol-v2
     KLINE_URL = "/market/history/kline"  # https://huobiapi.github.io/docs/spot/v1/en/#get-klines-candles
 
+    # Account
+    COINS_URL = "/v1/settings/common/chains"  # https://huobiapi.github.io/docs/spot/v1/en/#get-chains-information
+
     # WS
     WS_BASE_URL = "wss://api.huobi.pro/ws"
