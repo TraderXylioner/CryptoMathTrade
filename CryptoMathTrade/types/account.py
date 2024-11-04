@@ -57,7 +57,7 @@ class Network(BaseModel):
     withdrawEnable: bool
     contractAddress: str | None = None
     browserUrl: str | None = None
-    withdrawFee: float
+    withdrawFee: float | None = None
     extraWithdrawFee: float | None = None
     withdrawMin: float
     withdrawMax: float | None = None
@@ -68,7 +68,7 @@ class Network(BaseModel):
 class Coin(BaseModel):
     coin: str
     name: str | None = None
-    networks: list[Network] | None = None
+    networks: list[Network | None]
 
 
 class Withdraw(BaseModel):
