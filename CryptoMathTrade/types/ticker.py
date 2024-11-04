@@ -11,5 +11,5 @@ class Ticker(BaseModel):
     lowPrice: float
     lastPrice: float
     volume: float
-    quoteVolume: float
-    closeTime: int
+    quoteVolume: float | None = None
+    closeTime: int | None = None
