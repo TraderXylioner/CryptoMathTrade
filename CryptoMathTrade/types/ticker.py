@@ -2,8 +2,9 @@ from pydantic import BaseModel
 
 
 class Ticker(BaseModel):
+    id: int | None = None
     symbol: str
-    openPrice: float
+    openPrice: float | None = None
     highPrice: float
     lowPrice: float
     lastPrice: float

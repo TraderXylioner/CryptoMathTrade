@@ -66,6 +66,7 @@ class Network(BaseModel):
 
 
 class Coin(BaseModel):
+    id: int | None = None
     coin: str
     name: str | None = None
     networks: list[Network | None]
