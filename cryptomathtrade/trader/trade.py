@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from CryptoMathTrade.types import Order, Deals, Deal
+from cryptomathtrade.types import Order, Deals, Deal
 
 
 def trade_by_amount(orders: list[Order], amount: Decimal | float) -> Deals:
