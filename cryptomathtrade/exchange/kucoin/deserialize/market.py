@@ -63,7 +63,11 @@ def deserialize_ticker(data, response) -> Response[list[Ticker], object]:
         data = [
             Ticker(
                 symbol=data.get("symbol"),
-                openPrice=float(data.get("last")) - float(data.get("changePrice")),
+                openPrice=(
+                    float(data.get("last")) - float(data.get("changePrice"))
+                    if data.get("last") and data.get("changePrice")
+                    else None
+                ),
                 highPrice=data.get("high"),
                 lowPrice=data.get("low"),
                 lastPrice=data.get("last", 0.0),
