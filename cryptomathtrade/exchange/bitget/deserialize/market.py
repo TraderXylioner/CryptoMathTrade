@@ -73,6 +73,8 @@ def deserialize_symbols(data, response) -> Response[list[Symbol], object]:
         data=[
             Symbol(
                 symbol=i["symbol"],
+                firstCoin=i.get("baseCoin"),
+                secondCoin=i.get("quoteCoin"),
                 minQty=i["minTradeAmount"],
                 maxQty=i["maxTradeAmount"],
                 status=i["status"],
