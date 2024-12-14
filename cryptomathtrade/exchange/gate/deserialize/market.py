@@ -39,6 +39,8 @@ def deserialize_ticker(data, response) -> Response[list[Ticker], object]:
         data=[
             Ticker(
                 symbol=ticker.get("currency_pair"),
+                firstCoin=ticker.get("currency_pair").split("_")[0],
+                secondCoin=ticker.get("currency_pair").split("_")[1],
                 openPrice=float(ticker.get("last"))
                 / (1 + float(ticker.get("change_percentage")) / 100),
                 highPrice=ticker.get("high_24h"),
