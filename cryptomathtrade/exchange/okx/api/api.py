@@ -3,9 +3,9 @@ import base64
 import datetime
 import hmac
 
-from .._api import BaseAPI
-from .._request import WebSocketRequest
-from ..utils import check_api_keys
+from cryptomathtrade.exchange._api import BaseAPI
+from cryptomathtrade.exchange._request import WebSocketRequest
+from cryptomathtrade.exchange.utils import check_api_keys
 
 
 class API(BaseAPI):
@@ -22,18 +22,19 @@ class API(BaseAPI):
         self.api_key = api_key
         self.api_secret = api_secret
         self.passphrase = passphrase
-        self.headers = {'OK-ACCESS-KEY': self.api_key} if self.api_key else {}
+        self.headers = {"OK-ACCESS-KEY": self.api_key} if self.api_key else {}
         if headers:
             self.headers.update(headers)
 
     @classmethod
-    async def _ws_query(cls,
-                        url: str,
-                        params: dict,
-                        method: str = 'subscribe',
-                        timeout_seconds=60,
-                        headers=None,
-                        ):
+    async def _ws_query(
+        cls,
+        url: str,
+        params: dict,
+        method: str = "subscribe",
+        timeout_seconds=60,
+        headers=None,
+    ):
         """
         params:
             url (str): WebSocket URL for the API.
@@ -50,7 +51,9 @@ class API(BaseAPI):
             "op": method,
             "args": params,
         }
-        connect = WebSocketRequest(headers=headers).open_connect(url=url, payload=payload)
+        connect = WebSocketRequest(headers=headers).open_connect(
+            url=url, payload=payload
+        )
         async for client in connect:
             while True:
                 data = await asyncio.wait_for(client.recv(), timeout=timeout_seconds)
@@ -63,27 +66,32 @@ class API(BaseAPI):
         return str(timestamp) + str.upper(method) + request_path + body
 
     def _get_sign(self, message: str):
-        mac = hmac.new(bytes(self.api_secret, encoding='utf8'), bytes(message, encoding='utf-8'), digestmod='sha256')
+        mac = hmac.new(
+            bytes(self.api_secret, encoding="utf8"),
+            bytes(message, encoding="utf-8"),
+            digestmod="sha256",
+        )
         d = mac.digest()
         return base64.b64encode(d)
 
     @check_api_keys
     def get_payload(self, path: str, method: str, payload: dict = None):
         """
-          params:
-              payload (dict): Additional payload parameters.
+        params:
+            payload (dict): Additional payload parameters.
 
-          Returns:
-              dict: Payload with timestamp and signature.
-          """
+        Returns:
+            dict: Payload with timestamp and signature.
+        """
         if payload is None:
             payload = {}
         now = datetime.datetime.utcnow()
         t = now.isoformat("T", "milliseconds")
         timestamp = t + "Z"
         sign = self._get_sign(self.pre_hash(timestamp, method, path, ""))
-        return {'OK-ACCESS-KEY': self.api_key,
-                'OK-ACCESS-SIGN': sign,
-                'OK-ACCESS-TIMESTAMP': timestamp,
-                'OK-ACCESS-PASSPHRASE': self.passphrase,
-                }
+        return {
+            "OK-ACCESS-KEY": self.api_key,
+            "OK-ACCESS-SIGN": sign,
+            "OK-ACCESS-TIMESTAMP": timestamp,
+            "OK-ACCESS-PASSPHRASE": self.passphrase,
+        }
