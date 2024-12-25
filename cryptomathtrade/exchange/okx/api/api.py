@@ -3,9 +3,9 @@ import base64
 import datetime
 import hmac
 
-from cryptomathtrade.exchange._api import BaseAPI
-from cryptomathtrade.exchange._request import WebSocketRequest
-from cryptomathtrade.exchange.utils import check_api_keys
+from ..._api import BaseAPI
+from ..._request import WebSocketRequest
+from ...utils import check_api_keys
 
 
 class API(BaseAPI):

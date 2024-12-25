@@ -1,5 +1,5 @@
-from cryptomathtrade.exchange.okx.api.api import API
-from .._urls import URLS
+from ..api.api import API
+from ..urls import URLS
 from ...utils import check_require_params, replace_param
 
 
