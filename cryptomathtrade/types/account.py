@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Extra
 
 
 class Balance(BaseModel):
@@ -50,7 +50,7 @@ class DepositAddress(BaseModel):
     tag: str = None
 
 
-class Network(BaseModel):
+class Network(BaseModel, extra=Extra.allow):
     network: str
     name: str | None = None
     depositEnable: bool
