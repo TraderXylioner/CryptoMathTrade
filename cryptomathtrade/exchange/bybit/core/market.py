@@ -1,6 +1,6 @@
 from ..api.api import API
 from ..urls import URLS
-from ...utils import check_require_params, convert_list_to_json_array
+from ...utils import check_require_params
 
 
 class MarketCore(API):
@@ -17,6 +17,7 @@ class MarketCore(API):
 
             limit (int, optional): Default 1; max 200.
         """
+        params["category"] = "spot"
         return self.return_args(
             method="GET", url=URLS.BASE_URL + URLS.DEPTH_URL, params=params
         )
