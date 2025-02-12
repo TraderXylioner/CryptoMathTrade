@@ -1,5 +1,6 @@
 from . import binance
 from . import bingx
+from . import bybit
 from . import kucoin
 from . import okx
 from . import htx
@@ -13,6 +14,7 @@ from . import ascendex
 Exchanges = {
     "binance": binance,
     "bingx": bingx,
+    "bybit": bybit,
     "kucoin": kucoin,
     "okx": okx,
     "htx": htx,
