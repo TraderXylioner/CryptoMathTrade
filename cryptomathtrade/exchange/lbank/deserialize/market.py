@@ -5,7 +5,7 @@ from ....types import OrderBook, Order, Ticker
 
 @validate_data
 def deserialize_depth(data, response) -> Response[OrderBook, object]:
-    ...
+    data = data["data"]
     return Response(
         data=OrderBook(
             asks=[Order(price=ask[0], volume=ask[1]) for ask in data["asks"]],
@@ -17,6 +17,7 @@ def deserialize_depth(data, response) -> Response[OrderBook, object]:
 
 @validate_data
 def deserialize_ticker(data, response) -> Response[list[Ticker], object]:
+    data = data["data"]
     return Response(
         data=[
             Ticker(
