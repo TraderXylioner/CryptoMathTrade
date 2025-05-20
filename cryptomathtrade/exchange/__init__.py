@@ -24,6 +24,7 @@ Exchanges = {
     "mexc": mexc,
     "bitget": bitget,
     "ascendex": ascendex,
+    'lbank': lbank,
 }
 
 
