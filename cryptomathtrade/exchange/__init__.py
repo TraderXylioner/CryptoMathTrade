@@ -9,6 +9,7 @@ from . import gate
 from . import mexc
 from . import bitget
 from . import ascendex
+from . import lbank
 
 
 Exchanges = {
