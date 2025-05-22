@@ -10,6 +10,7 @@ from . import mexc
 from . import bitget
 from . import ascendex
 from . import lbank
+from . import xt
 
 
 Exchanges = {
@@ -25,6 +26,7 @@ Exchanges = {
     "bitget": bitget,
     "ascendex": ascendex,
     "lbank": lbank,
+    "xt": xt,
 }
 
 
