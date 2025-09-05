@@ -13,6 +13,7 @@ from . import lbank
 from . import xt
 from . import weex
 from . import coinex
+from . import ourbit
 
 
 Exchanges = {
@@ -31,6 +32,7 @@ Exchanges = {
     "xt": xt,
     "weex": weex,
     "coinex": coinex,
+    "ourbit": ourbit,
 }
 
 
