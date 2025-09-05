@@ -29,7 +29,7 @@ class Market(API):
 
 
 class AsyncMarket(API):
-    async def get_depth(self, symbol: str, limit: int = 150, interval: int = 0):
+    async def get_depth(self, symbol: str, limit: int = 50, interval: int = 0):
         """Get orderbook.
 
         GET /spot/depth
