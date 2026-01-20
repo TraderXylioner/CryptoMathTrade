@@ -9,6 +9,7 @@ def deserialize_coins(data: dict, response) -> Response[list[Coin], object]:
     return Response(
         data=[
             Coin(
+                id=coin.get("coinId"),
                 coin=coin.get("coin"),
                 networks=[
                     Network(
