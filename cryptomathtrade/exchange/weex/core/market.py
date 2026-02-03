@@ -8,18 +8,18 @@ class MarketCore(API):
     def get_depth(self, **params) -> dict:
         """Get orderbook.
 
-        GET /api/spot/v1/market/depth
+        GET /api/v2/market/depth
 
-        https://www.weex.com/api-doc/spot/V1/MarketDataAPI/GetDepthData
+        https://www.weex.com/api-doc/spot/MarketDataAPI/GetDepthData
 
         param:
             symbol (str): the trading pair
 
-            limit (int, optional): 	Number of entries (default: 150)
+            limit (int, optional): 	Number of entries (Only 15 and 200)
 
             type (str, optional): Default: step0: no aggregation.Values: step0, step1, step2, step3, step4, step5
         """
-        params['symbol'] += '_SPBL'
+        # params['symbol'] += '_SPBL'
         return self.return_args(
             method="GET", url=URLS.BASE_URL + URLS.DEPTH_URL, params=params
         )

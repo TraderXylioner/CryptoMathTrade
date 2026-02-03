@@ -1,6 +1,6 @@
 class URLS:
     # HTTP
-    BASE_URL = "https://contract-openapi.weex.com"
+    BASE_URL = "https://api-spot.weex.com"
 
     # Market
-    DEPTH_URL = "/api/spot/v1/market/depth"  # https://www.weex.com/api-doc/spot/V1/MarketDataAPI/GetDepthData
+    DEPTH_URL = "/api/v2/market/depth"  # https://www.weex.com/api-doc/spot/MarketDataAPI/GetDepthData

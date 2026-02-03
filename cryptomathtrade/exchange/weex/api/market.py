@@ -5,17 +5,17 @@ from ...utils import validate_response
 
 
 class Market(API):
-    def get_depth(self, symbol: str, limit: int = 150, type: str = 'step0'):
+    def get_depth(self, symbol: str, limit: int = 15, type: str = 'step0'):
         """Get orderbook.
 
-        GET /api/spot/v1/market/depth
+        GET /api/v2/market/depth
 
-        https://www.weex.com/api-doc/spot/V1/MarketDataAPI/GetDepthData
+        https://www.weex.com/api-doc/spot/MarketDataAPI/GetDepthData
 
         param:
             symbol (str): the trading pair
 
-            limit (int, optional): 	Number of entries (default: 150)
+            limit (int, optional): 	Number of entries (Only 15 and 200)
 
             type (str, optional): Default: step0: no aggregation.Values: step0, step1, step2, step3, step4, step5
         """
@@ -29,17 +29,17 @@ class Market(API):
 
 
 class AsyncMarket(API):
-    async def get_depth(self, symbol: str, limit: int = 150, type: str = 'step0'):
+    async def get_depth(self, symbol: str, limit: int = 15, type: str = 'step0'):
         """Get orderbook.
 
-        GET /api/spot/v1/market/depth
+        GET /api/v2/market/depth
 
-        https://www.weex.com/api-doc/spot/V1/MarketDataAPI/GetDepthData
+        https://www.weex.com/api-doc/spot/MarketDataAPI/GetDepthData
 
         param:
             symbol (str): the trading pair
 
-            limit (int, optional): 	Number of entries (default: 150)
+            limit (int, optional): 	Number of entries (Only 15 and 200)
 
             type (str, optional): Default: step0: no aggregation.Values: step0, step1, step2, step3, step4, step5
         """
