@@ -59,7 +59,7 @@ class Network(BaseModel, extra=Extra.allow):
     browserUrl: str | None = None
     withdrawFee: float | None = None
     extraWithdrawFee: float | None = None
-    withdrawMin: float
+    withdrawMin: float | None = None
     withdrawMax: float | None = None
     minConfirm: int | None = None
     needTagOrMemo: bool | None = None
