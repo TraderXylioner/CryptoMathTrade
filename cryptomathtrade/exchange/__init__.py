@@ -15,6 +15,7 @@ from . import weex
 from . import coinex
 from . import ourbit
 from . import poloniex
+from . import whitebit
 
 
 Exchanges = {
@@ -35,6 +36,7 @@ Exchanges = {
     "coinex": coinex,
     "ourbit": ourbit,
     "poloniex": poloniex,
+    "whitebit": whitebit,
 }
 
 
