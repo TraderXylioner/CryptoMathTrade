@@ -47,7 +47,7 @@ def deserialize_ticker(data, response) -> Response[list[Ticker], object]:
                 lowPrice=ticker.get("low24h"),
                 lastPrice=ticker.get("last"),
                 volume=ticker.get("vol24h"),
-                quoteVolume=ticker.get("volCcy24h"),
+                volumeQuote=ticker.get("volCcy24h"),
                 closeTime=ticker.get("ts"),
             )
             for ticker in data

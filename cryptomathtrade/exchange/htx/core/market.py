@@ -4,7 +4,7 @@ from ...utils import check_require_params, replace_param
 
 
 class MarketCore(API):
-    @check_require_params(("symbol",))
+    @check_require_params(("symbol", "type"))
     def get_depth(self, **params) -> dict:
         """Get orderbook.
 
@@ -26,7 +26,7 @@ class MarketCore(API):
 
             limit (int, optional): limit the results. Default 20 or 150; max 20 or 150.
 
-            type (str, optional): Market depth aggregation level, details below	step0, step1, step2, step3, step4, step5. Default step0.
+            type (str): Market depth aggregation level, details below	step0, step1, step2, step3, step4, step5. Default step0.
         """
         replace_param(params, "limit", "depth")
         return self.return_args(
