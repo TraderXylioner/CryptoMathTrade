@@ -17,6 +17,8 @@ from . import ourbit
 from . import poloniex
 from . import whitebit
 from . import bitunix
+from . import backpack
+from . import bitrue
 
 
 Exchanges = {
@@ -39,6 +41,8 @@ Exchanges = {
     "poloniex": poloniex,
     "whitebit": whitebit,
     "bitunix": bitunix,
+    "backpack": backpack,
+    "bitrue": bitrue,
 }
 
 
