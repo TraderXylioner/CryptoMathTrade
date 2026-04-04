@@ -19,6 +19,9 @@ from . import whitebit
 from . import bitunix
 from . import backpack
 from . import bitrue
+from . import orangex
+from . import tapbit
+from . import toobit
 
 
 Exchanges = {
@@ -43,6 +46,9 @@ Exchanges = {
     "bitunix": bitunix,
     "backpack": backpack,
     "bitrue": bitrue,
+    "orangex": orangex,
+    "tapbit": tapbit,
+    "toobit": toobit,
 }
 
 
