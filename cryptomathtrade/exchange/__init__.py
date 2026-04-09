@@ -22,6 +22,7 @@ from . import bitrue
 from . import orangex
 from . import tapbit
 from . import toobit
+from . import hotcoin
 
 
 Exchanges = {
@@ -49,6 +50,7 @@ Exchanges = {
     "orangex": orangex,
     "tapbit": tapbit,
     "toobit": toobit,
+    "hotcoin": hotcoin,
 }
 
 
