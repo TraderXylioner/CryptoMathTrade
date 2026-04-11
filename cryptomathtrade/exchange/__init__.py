@@ -23,6 +23,8 @@ from . import orangex
 from . import tapbit
 from . import toobit
 from . import hotcoin
+from . import coinw
+from . import digifinex
 
 
 Exchanges = {
@@ -51,6 +53,8 @@ Exchanges = {
     "tapbit": tapbit,
     "toobit": toobit,
     "hotcoin": hotcoin,
+    "coinw": coinw,
+    "digifinex": digifinex,
 }
 
 
