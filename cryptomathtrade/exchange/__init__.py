@@ -25,6 +25,7 @@ from . import toobit
 from . import hotcoin
 from . import coinw
 from . import digifinex
+from . import kcex
 
 
 Exchanges = {
@@ -55,6 +56,7 @@ Exchanges = {
     "hotcoin": hotcoin,
     "coinw": coinw,
     "digifinex": digifinex,
+    "kcex": kcex,
 }
 
 
