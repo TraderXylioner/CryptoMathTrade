@@ -26,6 +26,7 @@ from . import hotcoin
 from . import coinw
 from . import digifinex
 from . import kcex
+from . import phemex
 
 
 Exchanges = {
@@ -57,6 +58,7 @@ Exchanges = {
     "coinw": coinw,
     "digifinex": digifinex,
     "kcex": kcex,
+    "phemex": phemex,
 }
 
 
